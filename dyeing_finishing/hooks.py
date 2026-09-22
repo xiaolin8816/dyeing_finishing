@@ -1,7 +1,7 @@
 app_name = "dyeing_finishing"
-app_title = "dyeing_finishing"
+app_title = "印染整理"
 app_publisher = "Xiaolin Hang"
-app_description = "App for the dyeing and weaving industry"
+app_description = "印染与后整理业务管理"
 app_email = "674199886@qq.com"
 app_license = "mit"
 
@@ -261,4 +261,3 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-

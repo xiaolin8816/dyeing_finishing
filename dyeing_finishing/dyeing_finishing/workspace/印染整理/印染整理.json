@@ -1,0 +1,19 @@
+{
+ "app": "dyeing_finishing",
+ "charts": [],
+ "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">印染整理</span>\",\"col\":12}}]",
+ "custom_blocks": [],
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "dye",
+ "is_hidden": 0,
+ "label": "印染整理",
+ "links": [],
+ "module": "dyeing_finishing",
+ "name": "印染整理",
+ "public": 1,
+ "roles": [],
+ "shortcuts": [],
+ "title": "印染整理"
+}

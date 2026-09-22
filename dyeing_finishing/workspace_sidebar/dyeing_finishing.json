@@ -1,0 +1,22 @@
+{
+ "app": "dyeing_finishing",
+ "doctype": "Workspace Sidebar",
+ "header_icon": "dye",
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "dye",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "印染整理",
+   "link_to": "印染整理",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "module": "dyeing_finishing",
+ "name": "dyeing_finishing",
+ "title": "印染整理"
+}
