@@ -1,6 +1,6 @@
 
 #日常
-cd "/root/桌面/erpnext-os-py-xiaolin/erpnext-tools/dyeing_finishing" && git add -A && git commit -m "2026-9-15-1" && git push -u origin develop --force
+cd "/root/桌面/erpnext-os-py-xiaolin/erpnext-tools/dyeing_finishing" && git add -A && git commit -m "2026-9-15-1" && git push -u origin main --force
 
 
 #新装第一步：
