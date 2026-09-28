@@ -29,7 +29,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "\u751f\u4ea7\u5de5\u5e8f\u7f16\u7801",
+   "label": "生产工序编码",
    "reqd": 1,
    "unique": 1
   },
@@ -38,55 +38,59 @@
    "fieldtype": "Data",
    "in_global_search": 1,
    "in_list_view": 1,
-   "label": "\u751f\u4ea7\u5de5\u5e8f\u540d\u79f0",
+   "label": "生产工序名称",
    "reqd": 1
   },
   {
    "fieldname": "parent_production_operation",
    "fieldtype": "Link",
-   "label": "\u4e0a\u7ea7\u751f\u4ea7\u5de5\u5e8f",
+   "label": "上级生产工序",
    "options": "Production Operation"
   },
   {
    "fieldname": "sub_operation_code",
    "fieldtype": "Data",
-   "label": "\u539f\u5206\u5de5\u5e8f\u7f16\u7801"
+   "label": "上级工序编码",
+   "fetch_from": "parent_production_operation.production_operation_code",
+   "read_only": 1
   },
   {
    "fieldname": "sub_operation_name",
    "fieldtype": "Data",
-   "label": "\u539f\u5206\u5de5\u5e8f\u540d\u79f0"
+   "label": "上级工序名称",
+   "fetch_from": "parent_production_operation.production_operation_name",
+   "read_only": 1
   },
   {
    "fieldname": "sequence_no",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "\u5de5\u5e8f\u987a\u5e8f\u53f7"
+   "label": "工序顺序号"
   },
   {
    "default": "1",
    "fieldname": "allow_quantity_entry",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "\u5141\u8bb8\u767b\u8bb0\u4ea7\u91cf"
+   "label": "允许登记产量"
   },
   {
    "fieldname": "erpnext_operation",
    "fieldtype": "Link",
-   "label": "ERPNext \u5de5\u5e8f",
+   "label": "ERPNext 工序",
    "options": "Operation"
   },
   {
    "fieldname": "description",
    "fieldtype": "Small Text",
-   "label": "\u5de5\u5e8f\u8bf4\u660e"
+   "label": "工序说明"
   },
   {
    "default": "0",
    "fieldname": "disabled",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "\u505c\u7528"
+   "label": "停用"
   }
  ],
  "grid_page_length": 50,
