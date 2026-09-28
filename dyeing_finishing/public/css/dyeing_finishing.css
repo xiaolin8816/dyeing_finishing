@@ -1,0 +1,7 @@
+/* 物料列表：滚动数据时固定表头。 */
+.layout-main-section-wrapper.dyeing-item-list .frappe-list .result-container .result > .list-row-container:first-child {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--subtle-fg);
+}

@@ -1,0 +1,124 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-09-28 21:58:28.137387",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "batch_no",
+  "barcode",
+  "color",
+  "roll_count",
+  "weight_qty",
+  "uom",
+  "target_location",
+  "width",
+  "gsm",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u80da\u5e03",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u80da\u5e03\u540d\u79f0",
+   "read_only": 1
+  },
+  {
+   "description": "\u63d0\u4ea4\u5165\u5e93\u65f6\u81ea\u52a8\u7f16\u53f7",
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u6279\u6b21",
+   "options": "Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "barcode",
+   "fieldtype": "Data",
+   "label": "\u6761\u7801"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u989c\u8272"
+  },
+  {
+   "default": "0",
+   "fieldname": "roll_count",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "\u5339\u6570",
+   "precision": "2"
+  },
+  {
+   "fieldname": "weight_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "\u91cd\u91cf",
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "default": "kg",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u5355\u4f4d",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "default": "\u80da\u5e03A\u533a - \u6c85\u6cf0",
+   "fieldname": "target_location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u5165\u5e93\u8d27\u4f4d",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "width",
+   "fieldtype": "Data",
+   "label": "\u95e8\u5e45"
+  },
+  {
+   "fieldname": "gsm",
+   "fieldtype": "Data",
+   "label": "\u514b\u91cd"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "\u5907\u6ce8"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-28 23:21:05.257888",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Customer Grey Fabric Receipt Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

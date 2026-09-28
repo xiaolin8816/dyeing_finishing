@@ -27,7 +27,7 @@ app_logo_url = "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
+app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
 # app_include_js = "/assets/dyeing_finishing/js/dyeing_finishing.js"
 
 # include js, css files in header of web template
@@ -263,3 +263,6 @@ app_logo_url = "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+
+# 物料列表视图
+doctype_list_js = {"Item": "public/js/item_list.js"}
