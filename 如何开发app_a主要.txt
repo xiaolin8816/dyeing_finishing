@@ -1,4 +1,17 @@
 
+
+
+# 更新   刷新   重启所有服务  仅编译我的app
+bench --site fjnb migrate && bench --site hxl clear-cache && bench restart && bench build --app dyeing_finishing --force
+# 字段导入到自己的app内
+bench --site hxl export-fixtures
+
+
+# 登录docker内部
+docker exec -it neizhang-backend-1 bash
+
+
+
 #日常
 cd "/root/桌面/erpnext-os-py-xiaolin/erpnext-tools/dyeing_finishing" && git add -A && git commit -m "2026-9-15-1" && git push -u origin main --force
 

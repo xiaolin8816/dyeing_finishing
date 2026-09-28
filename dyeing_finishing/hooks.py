@@ -4,6 +4,8 @@ app_publisher = "Xiaolin Hang"
 app_description = "印染与后整理业务管理"
 app_email = "674199886@qq.com"
 app_license = "mit"
+# APP图标
+app_logo_url = "/assets/fengjing_app/images/fengjing-logo.svg"
 
 # Apps
 # ------------------
