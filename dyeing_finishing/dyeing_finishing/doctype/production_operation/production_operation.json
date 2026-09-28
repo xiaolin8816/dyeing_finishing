@@ -2,22 +2,97 @@
  "actions": [],
  "allow_bulk_edit": 1,
  "allow_rename": 1,
+ "autoname": "field:production_operation_code",
  "creation": "2026-09-28 19:06:28.804717",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_yd1m"
+  "section_break_yd1m",
+  "production_operation_code",
+  "production_operation_name",
+  "parent_production_operation",
+  "sub_operation_code",
+  "sub_operation_name",
+  "sequence_no",
+  "allow_quantity_entry",
+  "erpnext_operation",
+  "description",
+  "disabled"
  ],
  "fields": [
   {
    "fieldname": "section_break_yd1m",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "production_operation_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u751f\u4ea7\u5de5\u5e8f\u7f16\u7801",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "production_operation_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "\u751f\u4ea7\u5de5\u5e8f\u540d\u79f0",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parent_production_operation",
+   "fieldtype": "Link",
+   "label": "\u4e0a\u7ea7\u751f\u4ea7\u5de5\u5e8f",
+   "options": "Production Operation"
+  },
+  {
+   "fieldname": "sub_operation_code",
+   "fieldtype": "Data",
+   "label": "\u539f\u5206\u5de5\u5e8f\u7f16\u7801"
+  },
+  {
+   "fieldname": "sub_operation_name",
+   "fieldtype": "Data",
+   "label": "\u539f\u5206\u5de5\u5e8f\u540d\u79f0"
+  },
+  {
+   "fieldname": "sequence_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u5de5\u5e8f\u987a\u5e8f\u53f7"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_quantity_entry",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "\u5141\u8bb8\u767b\u8bb0\u4ea7\u91cf"
+  },
+  {
+   "fieldname": "erpnext_operation",
+   "fieldtype": "Link",
+   "label": "ERPNext \u5de5\u5e8f",
+   "options": "Operation"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "\u5de5\u5e8f\u8bf4\u660e"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "\u505c\u7528"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-28 19:06:28.804717",
+ "modified": "2026-09-28 19:34:28.108153",
  "modified_by": "Administrator",
  "module": "dyeing_finishing",
  "name": "Production Operation",
@@ -38,7 +113,9 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
+ "search_fields": "production_operation_code,production_operation_name,sub_operation_code,sub_operation_name",
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "production_operation_name"
 }

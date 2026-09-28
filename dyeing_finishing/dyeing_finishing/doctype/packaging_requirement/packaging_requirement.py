@@ -1,9 +1,12 @@
 # Copyright (c) 2026, Xiaolin Hang and contributors
 # For license information, please see license.txt
 
-# import frappe
 from frappe.model.document import Document
+from frappe.model.naming import getseries
 
 
 class PackagingRequirement(Document):
-	pass
+    def autoname(self):
+        if not self.packaging_requirement_code:
+            self.packaging_requirement_code = getseries("Packaging Requirement-", 4)
+        self.name = self.packaging_requirement_code

@@ -1,19 +1,72 @@
 {
  "app": "dyeing_finishing",
  "charts": [],
- "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">印染整理</span>\",\"col\":12}}]",
+ "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>\u5370\u67d3\u6574\u7406</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>\u57fa\u7840\u8d44\u6599</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-card\",\"type\":\"card\",\"data\":{\"card_name\":\"\u5370\u67d3\u57fa\u7840\u8d44\u6599\",\"col\":4}}]",
+ "creation": "2026-09-28 19:18:12.916039",
  "custom_blocks": [],
+ "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 0,
  "icon": "dye",
+ "idx": 0,
  "is_hidden": 0,
- "label": "印染整理",
- "links": [],
+ "label": "\u5370\u67d3\u6574\u7406",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u5370\u67d3\u57fa\u7840\u8d44\u6599",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u52a0\u5de5\u8981\u6c42",
+   "link_count": 0,
+   "link_to": "Process Requirement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u5305\u88c5\u8981\u6c42",
+   "link_count": 0,
+   "link_to": "Packaging Requirement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u751f\u4ea7\u5de5\u5e8f",
+   "link_count": 0,
+   "link_to": "Production Operation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-09-28 19:54:55.071189",
+ "modified_by": "Administrator",
  "module": "dyeing_finishing",
- "name": "印染整理",
+ "name": "\u5370\u67d3\u6574\u7406",
+ "number_cards": [],
+ "owner": "Administrator",
  "public": 1,
+ "quick_lists": [],
  "roles": [],
+ "sequence_id": 0.0,
  "shortcuts": [],
- "title": "印染整理"
+ "title": "\u5370\u67d3\u6574\u7406",
+ "type": "Workspace"
 }

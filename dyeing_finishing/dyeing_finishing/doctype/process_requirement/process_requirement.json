@@ -2,44 +2,44 @@
  "actions": [],
  "allow_bulk_edit": 1,
  "allow_rename": 1,
- "autoname": "field:packaging_requirement_code",
- "creation": "2026-09-28 19:05:57.689263",
+ "autoname": "field:process_requirement_code",
+ "creation": "2026-09-28 19:03:20.744692",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_iwtj",
-  "packaging_requirement_code",
-  "packaging_requirement_name",
+  "section_break_lu6o",
+  "process_requirement_code",
+  "process_requirement_name",
   "description",
   "disabled"
  ],
  "fields": [
   {
-   "fieldname": "section_break_iwtj",
+   "fieldname": "section_break_lu6o",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "packaging_requirement_code",
+   "fieldname": "process_requirement_code",
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "包装要求编码",
+   "label": "加工要求编码",
    "reqd": 1,
    "unique": 1,
    "read_only": 1
   },
   {
-   "fieldname": "packaging_requirement_name",
+   "fieldname": "process_requirement_name",
    "fieldtype": "Data",
    "in_global_search": 1,
    "in_list_view": 1,
-   "label": "包装要求名称",
+   "label": "加工要求名称",
    "reqd": 1
   },
   {
    "fieldname": "description",
    "fieldtype": "Small Text",
-   "label": "包装说明"
+   "label": "加工说明"
   },
   {
    "default": "0",
@@ -52,10 +52,10 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-28 19:34:28.003959",
+ "modified": "2026-09-28 19:34:27.760850",
  "modified_by": "Administrator",
  "module": "dyeing_finishing",
- "name": "Packaging Requirement",
+ "name": "Process Requirement",
  "owner": "Administrator",
  "permissions": [
   {
@@ -73,9 +73,9 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
- "search_fields": "packaging_requirement_code,packaging_requirement_name",
+ "search_fields": "process_requirement_code,process_requirement_name",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
- "title_field": "packaging_requirement_name"
+ "title_field": "process_requirement_name"
 }
