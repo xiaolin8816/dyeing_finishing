@@ -279,6 +279,6 @@ doctype_js = {
 }
 doc_events = {
     "Sales Order": {
-        "validate": "dyeing_finishing.dyeing_finishing.dyeing_finishing.sales_order.validate",
+        "validate": "dyeing_finishing.dyeing_finishing.sales_order.validate",
     },
 }

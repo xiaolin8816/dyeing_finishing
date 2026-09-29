@@ -53,12 +53,24 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "Sales Order Item-custom_color_no",
+    "dt": "Sales Order Item",
+    "fieldname": "custom_color_no",
+    "label": "色号",
+    "fieldtype": "Link",
+    "options": "Color Master",
+    "insert_after": "custom_dyeing_section",
+    "module": "dyeing_finishing",
+    "in_list_view": 1
+  },
+  {
+    "doctype": "Custom Field",
     "name": "Sales Order Item-custom_process_type",
     "dt": "Sales Order Item",
     "fieldname": "custom_process_type",
     "label": "加工类型",
     "fieldtype": "Select",
-    "insert_after": "custom_color",
+    "insert_after": "custom_color_product_name",
     "module": "dyeing_finishing",
     "in_list_view": 1,
     "options": "染色\n单定\n前定染色\n定边染色\n精练染色",
@@ -71,9 +83,21 @@
     "fieldname": "custom_color",
     "label": "颜色",
     "fieldtype": "Data",
-    "insert_after": "custom_dyeing_section",
+    "insert_after": "custom_color_no",
     "module": "dyeing_finishing",
     "in_list_view": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Order Item-custom_color_product_name",
+    "dt": "Sales Order Item",
+    "fieldname": "custom_color_product_name",
+    "label": "成品名称",
+    "fieldtype": "Data",
+    "insert_after": "custom_color",
+    "module": "dyeing_finishing",
+    "in_list_view": 1,
+    "read_only": 1
   },
   {
     "doctype": "Custom Field",

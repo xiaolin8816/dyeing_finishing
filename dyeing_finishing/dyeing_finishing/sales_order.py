@@ -1,3 +1,6 @@
+import frappe
+
+
 def make_finished_specification(item):
     width = str(item.get("custom_finished_width") or "").strip()
     gsm = str(item.get("custom_finished_gsm") or "").strip()
@@ -7,12 +10,35 @@ def make_finished_specification(item):
     return "*".join(value for value in (width, gsm_value) if value)
 
 
+def apply_color_master(item, customer):
+    """将已选择色号的颜色与成品名称写入销售订单明细。"""
+    if not item.get("custom_color_no"):
+        return
+
+    color_master = frappe.db.get_value(
+        "Color Master",
+        item.custom_color_no,
+        ["color_name", "product_name", "customer_name", "status"],
+        as_dict=True,
+    )
+    if not color_master:
+        frappe.throw(f"色号 {item.custom_color_no} 不存在")
+    if color_master.status != "启用":
+        frappe.throw(f"色号 {item.custom_color_no} 已停用，不能用于销售订单")
+    if color_master.customer_name != customer:
+        frappe.throw(f"色号 {item.custom_color_no} 不属于当前客户 {customer}")
+
+    item.custom_color = color_master.color_name
+    item.custom_color_product_name = color_master.product_name
+
+
 def validate(doc, method=None):
-    """同步页面上的客户订单号与 ERPNext 原生 po_no，并生成成品规格。"""
+    """同步客户订单号、色号资料与成品规格。"""
     if doc.custom_customer_order_no:
         doc.po_no = doc.custom_customer_order_no
     elif doc.po_no:
         doc.custom_customer_order_no = doc.po_no
 
     for item in doc.get("items") or []:
+        apply_color_master(item, doc.customer)
         item.custom_finished_specification = make_finished_specification(item)
