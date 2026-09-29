@@ -266,3 +266,19 @@ app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
 
 # 物料列表视图
 doctype_list_js = {"Item": "public/js/item_list.js"}
+
+# 销售订单印染扩展字段与显示名称
+fixtures = [
+    {"dt": "Custom Field", "filters": [["module", "=", "dyeing_finishing"]]},
+    {"dt": "Property Setter", "filters": [["module", "=", "dyeing_finishing"]]},
+]
+
+# 销售订单客户订单号同步
+doctype_js = {
+    "Sales Order": "public/js/sales_order.js",
+}
+doc_events = {
+    "Sales Order": {
+        "validate": "dyeing_finishing.dyeing_finishing.dyeing_finishing.sales_order.validate",
+    },
+}

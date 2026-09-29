@@ -2,7 +2,7 @@
  "actions": [],
  "allow_bulk_edit": 1,
  "allow_rename": 1,
- "autoname": "format:CGBR-.YYYY.-.####",
+ "autoname": "CGBR.YYYY.MM.####",
  "creation": "2026-09-28 21:58:28.323733",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -26,7 +26,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "\u5ba2\u6237",
+   "label": "客户",
    "options": "Customer",
    "reqd": 1
   },
@@ -35,7 +35,7 @@
    "fieldname": "customer_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "\u5ba2\u6237\u540d\u79f0",
+   "label": "客户名称",
    "read_only": 1
   },
   {
@@ -43,46 +43,46 @@
    "fieldname": "receipt_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "\u5165\u5e93\u65e5\u671f",
+   "label": "入库日期",
    "reqd": 1
   },
   {
-   "default": "\u80da\u5e03\u4ed3\u5e93 - \u6c85\u6cf0",
+   "default": "胚布仓库 - 沅泰",
    "fieldname": "target_warehouse",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "\u5165\u5e93\u4ed3\u5e93",
+   "label": "入库仓库",
    "options": "Warehouse",
    "reqd": 1
   },
   {
    "fieldname": "section_break_items",
    "fieldtype": "Section Break",
-   "label": "\u576f\u5e03\u660e\u7ec6"
+   "label": "坯布明细"
   },
   {
    "fieldname": "items",
    "fieldtype": "Table",
-   "label": "\u576f\u5e03\u660e\u7ec6",
+   "label": "坯布明细",
    "options": "Customer Grey Fabric Receipt Item",
    "reqd": 1
   },
   {
    "fieldname": "section_break_result",
    "fieldtype": "Section Break",
-   "label": "\u7cfb\u7edf\u5355\u636e"
+   "label": "系统单据"
   },
   {
    "fieldname": "stock_entry",
    "fieldtype": "Link",
-   "label": "\u5e93\u5b58\u5165\u5e93\u5355",
+   "label": "库存入库单",
    "options": "Stock Entry",
    "read_only": 1
   },
   {
    "fieldname": "remarks",
    "fieldtype": "Small Text",
-   "label": "\u5907\u6ce8"
+   "label": "备注"
   },
   {
    "fieldname": "amended_from",

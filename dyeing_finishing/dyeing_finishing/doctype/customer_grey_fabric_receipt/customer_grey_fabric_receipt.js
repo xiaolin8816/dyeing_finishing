@@ -1,19 +1,2 @@
-frappe.ui.form.on("Customer Grey Fabric Receipt", {
-	setup(frm) {
-		frm.set_query("target_warehouse", () => ({
-			filters: {
-				name: "胚布仓库 - 沅泰",
-				is_group: 0,
-				disabled: 0,
-			},
-		}));
-
-		frm.set_query("target_location", "items", () => ({
-			filters: {
-				parent_warehouse: "胚布货位 - 沅泰",
-				is_group: 0,
-				disabled: 0,
-			},
-		}));
-	},
-});
+frappe.ui.form.on("Customer Grey Fabric Receipt", {setup(frm) {frm.set_query("target_warehouse", () => ({filters: {name: "胚布仓库 - 沅泰", is_group: 0, disabled: 0}})); frm.set_query("target_location", "items", () => ({filters: {parent_warehouse: "胚布货位 - 沅泰", is_group: 0, disabled: 0}})); frm.set_query("grey_fabric_master", "items", () => ({filters: {enabled: 1}}));}});
+frappe.ui.form.on("Customer Grey Fabric Receipt Item", {grey_fabric_master(frm, cdt, cdn) {const row=locals[cdt][cdn]; if (!row.grey_fabric_master) return; frappe.db.get_doc("Grey Fabric Master", row.grey_fabric_master).then((master) => {frappe.model.set_value(cdt,cdn,"item_code",master.item_code); frappe.model.set_value(cdt,cdn,"item_name",master.fabric_name); frappe.model.set_value(cdt,cdn,"uom",master.stock_uom); frappe.model.set_value(cdt,cdn,"color",master.default_color || ""); frappe.model.set_value(cdt,cdn,"width",master.width || ""); frappe.model.set_value(cdt,cdn,"gsm",master.gsm || ""); frappe.model.set_value(cdt,cdn,"target_location",master.default_warehouse || "");});}});

@@ -1,0 +1,154 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 0,
+ "autoname": "field:item_code",
+ "creation": "2026-09-29 10:30:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "fabric_name",
+  "specification",
+  "column_break_dimensions",
+  "width",
+  "gsm",
+  "stock_uom",
+  "section_break_defaults",
+  "default_color",
+  "default_warehouse",
+  "has_batch_no",
+  "enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "胚布编码",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "fabric_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "胚布名称",
+   "reqd": 1
+  },
+  {
+   "fieldname": "specification",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "规格"
+  },
+  {
+   "fieldname": "width",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "门幅"
+  },
+  {
+   "fieldname": "gsm",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "克重"
+  },
+  {
+   "default": "kg",
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "单位",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_color",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "颜色"
+  },
+  {
+   "default": "胚布A区 - 沅泰",
+   "fieldname": "default_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "货位",
+   "options": "Warehouse"
+  },
+  {
+   "default": "1",
+   "fieldname": "has_batch_no",
+   "fieldtype": "Check",
+   "label": "是否启用批次管理"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "状态"
+  },
+  {
+   "fieldname": "column_break_dimensions",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_defaults",
+   "fieldtype": "Section Break",
+   "label": "默认设置"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-29 10:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Grey Fabric Master",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "fabric_name"
+}

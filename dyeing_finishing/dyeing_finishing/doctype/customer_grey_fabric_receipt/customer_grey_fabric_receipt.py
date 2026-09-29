@@ -73,6 +73,7 @@ class CustomerGreyFabricReceipt(Document):
         stock_entry = frappe.get_doc(
             {
                 "doctype": "Stock Entry",
+                "stock_entry_type": "Material Receipt",
                 "purpose": "Material Receipt",
                 "company": company,
                 "posting_date": self.receipt_date,

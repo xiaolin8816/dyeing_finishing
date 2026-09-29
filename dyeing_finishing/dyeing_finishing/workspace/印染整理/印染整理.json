@@ -1,7 +1,7 @@
 {
  "app": "dyeing_finishing",
  "charts": [],
- "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>\u5370\u67d3\u6574\u7406</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>\u57fa\u7840\u8d44\u6599</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-card\",\"type\":\"card\",\"data\":{\"card_name\":\"\u5370\u67d3\u57fa\u7840\u8d44\u6599\",\"col\":4}},{\"id\":\"customer-grey-fabric-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u80da\u5e03\u7ba1\u7406</b></span>\",\"col\":12}},{\"id\":\"customer-grey-fabric-card\",\"type\":\"card\",\"data\":{\"card_name\":\"\u5ba2\u6237\u80da\u5e03\u5165\u5e93\",\"col\":4}}]",
+ "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>\u5370\u67d3\u6574\u7406</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>\u57fa\u7840\u8d44\u6599</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-card\",\"type\":\"card\",\"data\":{\"card_name\":\"\u5370\u67d3\u57fa\u7840\u8d44\u6599\",\"col\":4}},{\"id\":\"customer-grey-fabric-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u80da\u5e03\u7ba1\u7406</b></span>\",\"col\":12}},{\"id\":\"customer-grey-fabric-card\",\"type\":\"card\",\"data\":{\"card_name\":\"\u5ba2\u6237\u80da\u5e03\u5165\u5e93\",\"col\":4}},{\"id\":\"grey-fabric-stock-card\",\"type\":\"card\",\"data\":{\"card_name\":\"\u80da\u5e03\u5e93\u5b58\",\"col\":4}}]",
  "creation": "2026-09-28 19:18:12.916039",
  "custom_blocks": [],
  "docstatus": 0,
@@ -17,7 +17,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "\u5370\u67d3\u57fa\u7840\u8d44\u6599",
-   "link_count": 3,
+   "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -74,9 +74,38 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u80da\u5e03\u6863\u6848",
+   "link_count": 0,
+   "link_to": "Grey Fabric Master",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "\u80da\u5e03\u5e93\u5b58",
+   "link_count": 1,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "\u80da\u5e03\u5e93\u5b58",
+   "link_count": 0,
+   "link_to": "Grey Fabric Stock",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-09-28 22:09:38.884783",
+ "modified": "2026-09-29 10:25:57.626746",
  "modified_by": "Administrator",
  "module": "dyeing_finishing",
  "name": "\u5370\u67d3\u6574\u7406",

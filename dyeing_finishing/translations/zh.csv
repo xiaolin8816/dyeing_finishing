@@ -5996,7 +5996,7 @@ Section Heading,节标题
 Section Leader,节标题
 Throttled,节流
 Scopes,范围
-Draft,草稿
+Draft,已保存
 Medical Code,药品代码
 Medical Code Standard,药品代码标准
 Get from,选
@@ -12508,3 +12508,5 @@ Oct 2050,2050年10月
 Nov 2050,2050年11月
 Dec 2050,2050年12月
 Customer Grey Fabric Receipt,客户胚布入库
+Grey Fabric Master,胚布档案
+Grey Fabric Stock,胚布库存

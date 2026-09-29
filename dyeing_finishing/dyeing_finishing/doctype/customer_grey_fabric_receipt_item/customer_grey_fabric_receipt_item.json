@@ -7,6 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "grey_fabric_master",
   "item_code",
   "item_name",
   "batch_no",
@@ -22,54 +23,64 @@
  ],
  "fields": [
   {
-   "fieldname": "item_code",
+   "fieldname": "grey_fabric_master",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "\u80da\u5e03",
-   "options": "Item",
-   "reqd": 1
+   "label": "胚布编码",
+   "options": "Grey Fabric Master",
+   "reqd": 1,
+   "in_list_view": 1
   },
   {
-   "fetch_from": "item_code.item_name",
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 0,
+   "label": "胚布编码",
+   "options": "Item",
+   "reqd": 1,
+   "read_only": 1,
+   "fetch_from": "grey_fabric_master.item_code"
+  },
+  {
+   "fetch_from": "grey_fabric_master.fabric_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "\u80da\u5e03\u540d\u79f0",
+   "label": "胚布名称",
    "read_only": 1
   },
   {
-   "description": "\u63d0\u4ea4\u5165\u5e93\u65f6\u81ea\u52a8\u7f16\u53f7",
+   "description": "提交入库时自动编号",
    "fieldname": "batch_no",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "\u6279\u6b21",
+   "label": "批次",
    "options": "Batch",
    "read_only": 1
   },
   {
    "fieldname": "barcode",
    "fieldtype": "Data",
-   "label": "\u6761\u7801"
+   "label": "条码"
   },
   {
    "fieldname": "color",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "\u989c\u8272"
+   "label": "颜色"
   },
   {
    "default": "0",
    "fieldname": "roll_count",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "\u5339\u6570",
+   "label": "匹数",
    "precision": "2"
   },
   {
    "fieldname": "weight_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "\u91cd\u91cf",
+   "label": "重量",
    "precision": "2",
    "reqd": 1
   },
@@ -78,32 +89,32 @@
    "fieldname": "uom",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "\u5355\u4f4d",
+   "label": "单位",
    "options": "UOM",
-   "reqd": 1
+   "reqd": 1,
+   "read_only": 1
   },
   {
-   "default": "\u80da\u5e03A\u533a - \u6c85\u6cf0",
    "fieldname": "target_location",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "\u5165\u5e93\u8d27\u4f4d",
+   "label": "入库货位",
    "options": "Warehouse"
   },
   {
    "fieldname": "width",
    "fieldtype": "Data",
-   "label": "\u95e8\u5e45"
+   "label": "门幅"
   },
   {
    "fieldname": "gsm",
    "fieldtype": "Data",
-   "label": "\u514b\u91cd"
+   "label": "克重"
   },
   {
    "fieldname": "remarks",
    "fieldtype": "Small Text",
-   "label": "\u5907\u6ce8"
+   "label": "备注"
   }
  ],
  "grid_page_length": 50,
