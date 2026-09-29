@@ -130,5 +130,16 @@
     "property_type": "Check",
     "value": "1",
     "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-delivery_date-insert_after",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "delivery_date",
+    "property": "insert_after",
+    "property_type": "Data",
+    "value": "custom_finished_specification",
+    "module": "dyeing_finishing"
   }
 ]

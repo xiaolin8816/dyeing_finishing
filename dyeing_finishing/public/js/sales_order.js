@@ -46,43 +46,56 @@ function set_requirement_tab(frm, active) {
     );
 }
 
-function bind_single_item_add_button(frm) {
+function configure_item_grid_buttons(frm) {
     const grid = frm.fields_dict.items?.grid;
-    const button = grid?.wrapper?.find(".grid-add-row");
-    if (!button?.length) return;
+    if (!grid?.wrapper) return;
 
-    button.off("click").on("click.dyeingSingleItemAdd", function (event) {
+    if (!$("#dyeing-hide-add-multiple-rows").length) {
+        $("head").append(
+            '<style id="dyeing-hide-add-multiple-rows">.grid-add-multiple-rows { display: none !important; }</style>'
+        );
+    }
+    grid.wrapper.find(".grid-add-multiple-rows").remove();
+
+    const add_button = grid.wrapper.find(".grid-add-row");
+    add_button.off("click").on("click.dyeingAddOneRow", function (event) {
         event.preventDefault();
         event.stopImmediatePropagation();
-        grid.add_new_row(null, null, false, null, true);
+
+        if (grid.wrapper.find(".grid-row-open").length) {
+            frappe.msgprint({
+                title: "请先关闭编辑行",
+                message: "请先点击编辑行右上角的向下箭头关闭当前编辑行，再点击“添加一行”。",
+                indicator: "orange",
+            });
+            return false;
+        }
+
+        grid.add_new_row(null, null, true, null, true);
+        grid.set_focus_on_row();
         return false;
     });
 }
 
-function bind_single_row_insert_buttons(row) {
-    const form = row?.grid_form?.wrapper;
-    if (!form?.length) return;
+function hide_item_edit_buttons(frm) {
+    const grid = frm.fields_dict.items?.grid;
+    if (!grid?.wrapper) return;
 
-    const bind_insert = (selector, insert_below) => {
-        form.find(selector).off("click").on("click.dyeingSingleRowInsert", function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            row.insert(true, insert_below);
-            return false;
-        });
-    };
-
-    bind_insert(".grid-insert-row", false);
-    bind_insert(".grid-insert-row-below", true);
+    grid.wrapper.attr("data-dyeing-item-grid", "1");
+    if (!$("#dyeing-hide-item-edit-buttons").length) {
+        $("head").append(
+            '<style id="dyeing-hide-item-edit-buttons">[data-dyeing-item-grid="1"] .btn-open-row { display: none !important; }</style>'
+        );
+    }
 }
-
 frappe.ui.form.on("Sales Order", {
     refresh(frm) {
         if (!frm.doc.custom_customer_order_no && frm.doc.po_no) {
             frm.set_value("custom_customer_order_no", frm.doc.po_no);
         }
         set_requirement_tab(frm, frm._dyeing_requirement_tab || "process");
-        bind_single_item_add_button(frm);
+        configure_item_grid_buttons(frm);
+        hide_item_edit_buttons(frm);
     },
     custom_customer_order_no(frm) {
         if (frm.doc.po_no !== frm.doc.custom_customer_order_no) {
@@ -93,25 +106,6 @@ frappe.ui.form.on("Sales Order", {
         if (frm.doc.custom_customer_order_no !== frm.doc.po_no) {
             frm.set_value("custom_customer_order_no", frm.doc.po_no);
         }
-    },
-    items_on_form_rendered(frm) {
-        const row = frm.cur_grid;
-        const button = row?.grid_form?.wrapper?.find(".grid-collapse-row");
-        if (!button?.length) return;
-
-        button
-            .attr("title", "返回物料列表")
-            .attr("aria-label", "返回物料列表")
-            .text("返回物料")
-            .off("click.dyeingReturn")
-            .on("click.dyeingReturn", function (event) {
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                row.toggle_view();
-                return false;
-            });
-
-        bind_single_row_insert_buttons(row);
     },
 });
 
