@@ -56,19 +56,20 @@ class ProductionFlowCard(Document):
                 frappe.throw(_("批次 {0} 的计划领用数量不能大于库存数量").format(row.batch_no))
 
 
-def _batch_stock_query(customer=None, order_type=None, batch_no=None):
+def _batch_stock_query(customer=None, order_type=None, batch_no=None, location=None):
     customer_condition = "COALESCE(receipt.customer, '') = %(customer)s" if order_type == "来料加工" else "COALESCE(receipt.customer, '') = ''"
     batch_condition = "AND stock.batch_no = %(batch_no)s" if batch_no else ""
+    location_condition = "AND stock.location = %(location)s" if location else ""
     return frappe.db.sql(
         f"""
-        SELECT stock.batch_no, stock.item_name AS grey_fabric_name, stock.color,
-            stock.stock_roll_count, stock.stock_qty, '胚布仓库 - 沅泰' AS warehouse,
+        SELECT stock.batch_no, stock.item_code, stock.item_name AS grey_fabric_name, stock.color,
+            COALESCE(master.specification, '') AS specification, stock.stock_roll_count, stock.stock_qty, '胚布仓库 - 沅泰' AS warehouse,
             stock.location
         FROM (
             SELECT COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) AS batch_no,
-                MAX(item.item_name) AS item_name,
+                sle.item_code, MAX(item.item_name) AS item_name,
                 MAX(receipt_item.color) AS color,
-                MAX(receipt_rolls.stock_roll_count) AS stock_roll_count,
+                GREATEST(MAX(receipt_rolls.stock_roll_count) - COALESCE(MAX(issued_rolls.issue_roll_count), 0), 0) AS stock_roll_count,
                 SUM(sle.actual_qty) AS stock_qty,
                 sle.warehouse AS location
             FROM `tabStock Ledger Entry` sle
@@ -86,6 +87,12 @@ def _batch_stock_query(customer=None, order_type=None, batch_no=None):
                 WHERE receipt_item.batch_no IS NOT NULL AND receipt_item.batch_no != ''
                 GROUP BY receipt_item.batch_no
             ) receipt_rolls ON receipt_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
+            LEFT JOIN (
+                SELECT issue_item.batch_no, SUM(issue_item.issue_roll_count) AS issue_roll_count
+                FROM `tabGrey Fabric Issue Item` issue_item
+                INNER JOIN `tabGrey Fabric Issue` issue ON issue.name = issue_item.parent AND issue.docstatus = 1
+                GROUP BY issue_item.batch_no
+            ) issued_rolls ON issued_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
             WHERE sle.is_cancelled = 0
                 AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) IS NOT NULL
                 AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) != ''
@@ -94,15 +101,16 @@ def _batch_stock_query(customer=None, order_type=None, batch_no=None):
                     WHERE lft >= (SELECT lft FROM `tabItem Group` WHERE name = '胚布')
                     AND rgt <= (SELECT rgt FROM `tabItem Group` WHERE name = '胚布')
                 )
-            GROUP BY COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no), sle.warehouse
+            GROUP BY COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no), sle.item_code, sle.warehouse
             HAVING SUM(sle.actual_qty) > 0
         ) stock
+        LEFT JOIN `tabGrey Fabric Master` master ON master.name = stock.item_code
         LEFT JOIN `tabCustomer Grey Fabric Receipt Item` receipt_item ON receipt_item.batch_no = stock.batch_no
         LEFT JOIN `tabCustomer Grey Fabric Receipt` receipt ON receipt.name = receipt_item.parent AND receipt.docstatus = 1
-        WHERE {customer_condition} {batch_condition}
+        WHERE {customer_condition} {batch_condition} {location_condition}
         ORDER BY stock.batch_no, stock.stock_qty DESC
         """,
-        {"customer": customer or "", "batch_no": batch_no or ""},
+        {"customer": customer or "", "batch_no": batch_no or "", "location": location or ""},
         as_dict=True,
     )
 
@@ -116,8 +124,8 @@ def get_available_grey_fabric_batches(doctype, txt, searchfield, start, page_len
 
 
 @frappe.whitelist()
-def get_batch_stock_details(batch_no, customer=None, order_type=None):
-    rows = _batch_stock_query(customer, order_type, batch_no)
+def get_batch_stock_details(batch_no, customer=None, order_type=None, location=None):
+    rows = _batch_stock_query(customer, order_type, batch_no, location)
     return rows[0] if rows else None
 
 

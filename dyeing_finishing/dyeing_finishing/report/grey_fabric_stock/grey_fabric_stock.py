@@ -22,7 +22,8 @@ def execute(filters=None):
             COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) AS batch_no,
             MAX(receipt.customer) AS customer, MAX(receipt_item.color) AS color,
             MAX(receipt_item.width) AS width, MAX(receipt_item.gsm) AS gsm,
-            sle.warehouse, MAX(receipt_rolls.stock_roll_count) AS stock_roll_count,
+            sle.warehouse,
+            GREATEST(MAX(receipt_rolls.stock_roll_count) - COALESCE(MAX(issued_rolls.issue_roll_count), 0), 0) AS stock_roll_count,
             SUM(sle.actual_qty) AS stock_qty, MAX(item.stock_uom) AS stock_uom,
             MAX(receipt.receipt_date) AS receipt_date
         FROM `tabStock Ledger Entry` sle
@@ -40,6 +41,12 @@ def execute(filters=None):
             WHERE receipt_item.batch_no IS NOT NULL AND receipt_item.batch_no != ''
             GROUP BY receipt_item.batch_no
         ) receipt_rolls ON receipt_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
+        LEFT JOIN (
+            SELECT issue_item.batch_no, SUM(issue_item.issue_roll_count) AS issue_roll_count
+            FROM `tabGrey Fabric Issue Item` issue_item
+            INNER JOIN `tabGrey Fabric Issue` issue ON issue.name = issue_item.parent AND issue.docstatus = 1
+            GROUP BY issue_item.batch_no
+        ) issued_rolls ON issued_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
         WHERE sle.is_cancelled = 0
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) IS NOT NULL
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) != ''
