@@ -130,7 +130,7 @@
     },
     {
       "fieldname": "issue_roll_count",
-      "label": "本次出库匹数",
+      "label": "出库匹数",
       "fieldtype": "Float",
       "reqd": 1,
       "precision": "2",
@@ -138,7 +138,7 @@
     },
     {
       "fieldname": "issue_qty",
-      "label": "本次出库数量",
+      "label": "出库数量",
       "fieldtype": "Float",
       "reqd": 1,
       "precision": "2",
