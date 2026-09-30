@@ -10,9 +10,9 @@
     "details_tab",
     "document_info_section",
     "document_number",
+    "flow_card",
     "document_status",
     "outbound_date",
-    "flow_card",
     "document_column_2",
     "sales_order",
     "customer",
@@ -75,7 +75,8 @@
       "fieldtype": "Link",
       "options": "Production Flow Card",
       "reqd": 1,
-      "in_list_view": 1
+      "in_list_view": 1,
+      "read_only_depends_on": "eval:!doc.__islocal"
     },
     {
       "fieldname": "document_column_2",
