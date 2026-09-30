@@ -67,7 +67,8 @@
       "label": "出库日期",
       "fieldtype": "Date",
       "reqd": 1,
-      "in_list_view": 1
+      "in_list_view": 1,
+      "default": "Today"
     },
     {
       "fieldname": "flow_card",
