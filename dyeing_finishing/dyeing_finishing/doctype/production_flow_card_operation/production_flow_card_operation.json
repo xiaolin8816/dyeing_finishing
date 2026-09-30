@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-09-30 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "module": "dyeing_finishing",
+ "name": "Production Flow Card Operation",
+ "owner": "Administrator",
+ "field_order": [
+  "operation",
+  "operation_code",
+  "operation_name",
+  "sequence_no",
+  "operation_status",
+  "job_card"
+ ],
+ "fields": [
+  {
+   "fieldname": "operation",
+   "label": "工序",
+   "fieldtype": "Link",
+   "options": "Production Operation",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "operation_code",
+   "label": "工序编码",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 0
+  },
+  {
+   "fieldname": "operation_name",
+   "label": "工序名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "sequence_no",
+   "label": "顺序号",
+   "fieldtype": "Int",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "operation_status",
+   "label": "工序状态",
+   "fieldtype": "Select",
+   "options": "待生产\n生产中\n已完成\n暂停",
+   "default": "待生产",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "job_card",
+   "label": "工序作业卡",
+   "fieldtype": "Link",
+   "options": "Job Card",
+   "in_list_view": 1
+  }
+ ]
+}

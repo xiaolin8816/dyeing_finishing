@@ -180,8 +180,10 @@ function set_requirement_tab(frm, active) {
     }));
     const field = frm.get_field("custom_requirement_tabs_html");
     if (!field || !field.$wrapper) return;
-    field.$wrapper.html(`<div class="dyeing-requirement-tabs"><button type="button" class="btn btn-sm ${active === "process" ? "btn-primary" : "btn-default"}" data-dyeing-requirement-tab="process">加工要求</button><button type="button" class="btn btn-sm ${active === "packaging" ? "btn-primary" : "btn-default"}" data-dyeing-requirement-tab="packaging">包装要求</button><button type="button" class="btn btn-sm btn-default" data-dyeing-requirement-select="${active}">选择${active === "process" ? "加工要求" : "包装要求"}</button></div>`);
-    field.$wrapper.off("click.dyeingRequirementTabs").on("click.dyeingRequirementTabs", "[data-dyeing-requirement-tab]", function(){ set_requirement_tab(frm, $(this).data("dyeing-requirement-tab")); }).on("click.dyeingRequirementTabs", "[data-dyeing-requirement-select]", function(){ open_requirement_multi_select(frm, $(this).data("dyeing-requirement-select")); });
+    const can_select_requirements = frm.is_new() || frm.doc.docstatus === 0;
+    const disabled_attribute = can_select_requirements ? "" : "disabled title=\"单据已审核或已取消，不能修改明细\"";
+    field.$wrapper.html(`<div class="dyeing-requirement-tabs"><button type="button" class="btn btn-sm ${active === "process" ? "btn-primary" : "btn-default"}" data-dyeing-requirement-tab="process">加工要求</button><button type="button" class="btn btn-sm ${active === "packaging" ? "btn-primary" : "btn-default"}" data-dyeing-requirement-tab="packaging">包装要求</button><button type="button" class="btn btn-sm btn-default" data-dyeing-requirement-select="${active}" ${disabled_attribute}>选择${active === "process" ? "加工要求" : "包装要求"}</button></div>`);
+    field.$wrapper.off("click.dyeingRequirementTabs").on("click.dyeingRequirementTabs", "[data-dyeing-requirement-tab]", function(){ set_requirement_tab(frm, $(this).data("dyeing-requirement-tab")); }).on("click.dyeingRequirementTabs", "[data-dyeing-requirement-select]", function(){ if (can_select_requirements) open_requirement_multi_select(frm, $(this).data("dyeing-requirement-select")); });
 }
 
 function set_color_no_query(frm) {

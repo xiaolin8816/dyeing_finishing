@@ -254,5 +254,45 @@
     "insert_after": "custom_finished_gsm",
     "in_list_view": 1,
     "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Order-custom_list_finished_product_name",
+    "dt": "Sales Order",
+    "fieldname": "custom_list_finished_product_name",
+    "label": "成品名称",
+    "fieldtype": "Data",
+    "insert_after": "customer_name",
+    "module": "dyeing_finishing",
+    "read_only": 1,
+    "hidden": 1,
+    "in_list_view": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Order-custom_list_color_no",
+    "dt": "Sales Order",
+    "fieldname": "custom_list_color_no",
+    "label": "色号",
+    "fieldtype": "Link",
+    "options": "Color Master",
+    "insert_after": "custom_list_finished_product_name",
+    "module": "dyeing_finishing",
+    "read_only": 1,
+    "hidden": 1,
+    "in_list_view": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Order-custom_list_color",
+    "dt": "Sales Order",
+    "fieldname": "custom_list_color",
+    "label": "颜色",
+    "fieldtype": "Data",
+    "insert_after": "custom_list_color_no",
+    "module": "dyeing_finishing",
+    "read_only": 1,
+    "hidden": 1,
+    "in_list_view": 1
   }
 ]

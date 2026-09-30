@@ -1,0 +1,93 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2026-09-30 10:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "istable": 1,
+  "module": "dyeing_finishing",
+  "name": "Production Flow Card Grey Fabric Issue",
+  "owner": "Administrator",
+  "field_order": [
+    "batch_no",
+    "grey_fabric_name",
+    "color",
+    "stock_roll_count",
+    "stock_qty",
+    "planned_roll_count",
+    "planned_qty",
+    "warehouse",
+    "location"
+  ],
+  "fields": [
+    {
+      "fieldname": "batch_no",
+      "label": "批次",
+      "fieldtype": "Link",
+      "options": "Batch",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "grey_fabric_name",
+      "label": "胚布名称",
+      "fieldtype": "Data",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "color",
+      "label": "颜色",
+      "fieldtype": "Data",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "stock_roll_count",
+      "label": "库存匹数",
+      "fieldtype": "Float",
+      "precision": "2",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "stock_qty",
+      "label": "库存数量",
+      "fieldtype": "Float",
+      "precision": "2",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "planned_roll_count",
+      "label": "计划领用匹数",
+      "fieldtype": "Float",
+      "precision": "2",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "planned_qty",
+      "label": "计划领用数量",
+      "fieldtype": "Float",
+      "precision": "2",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "warehouse",
+      "label": "仓库",
+      "fieldtype": "Link",
+      "options": "Warehouse",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "location",
+      "label": "货位",
+      "fieldtype": "Link",
+      "options": "Warehouse",
+      "read_only": 1,
+      "in_list_view": 1
+    }
+  ]
+}

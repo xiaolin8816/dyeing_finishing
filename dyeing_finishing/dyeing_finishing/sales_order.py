@@ -32,6 +32,16 @@ def apply_color_master(item, customer):
     item.custom_color_product_name = color_master.product_name
 
 
+def set_list_item_summary(doc):
+    """将第一条物料的印染资料汇总到销售订单主表，用于主列表显示。"""
+    item = next(iter(doc.get("items") or []), None)
+    doc.custom_list_finished_product_name = (
+        item.get("custom_color_product_name") or item.get("item_name") or ""
+    ) if item else ""
+    doc.custom_list_color_no = item.get("custom_color_no") or "" if item else ""
+    doc.custom_list_color = item.get("custom_color") or "" if item else ""
+
+
 def validate(doc, method=None):
     """同步客户订单号、色号资料与成品规格。"""
     if doc.custom_customer_order_no:
@@ -42,3 +52,5 @@ def validate(doc, method=None):
     for item in doc.get("items") or []:
         apply_color_master(item, doc.customer)
         item.custom_finished_specification = make_finished_specification(item)
+
+    set_list_item_summary(doc)

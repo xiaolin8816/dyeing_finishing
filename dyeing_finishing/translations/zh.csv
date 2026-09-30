@@ -12511,3 +12511,11 @@ Customer Grey Fabric Receipt,客户胚布入库
 Grey Fabric Master,胚布档案
 Grey Fabric Stock,胚布库存
 Color Master,色号档案
+Production Flow Card,生产流转卡
+Production Operation Code,工序编码
+Production Operation Name,工序名称
+Sequence No,工序顺序号
+Process Requirement Code,加工编码
+Process Requirement Name,加工名称
+Packaging Requirement Code,包装编码
+Packaging Requirement Name,包装名称

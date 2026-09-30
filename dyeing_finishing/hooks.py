@@ -46,7 +46,7 @@ app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+# doctype_list_js configured with other list scripts below.
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -265,7 +265,11 @@ app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
 # ignore_translatable_strings_from = []
 
 # 物料列表视图
-doctype_list_js = {"Item": "public/js/item_list.js"}
+doctype_list_js = {
+    "Item": "public/js/item_list.js",
+    "Sales Order": "public/js/sales_order_list.js",
+    "Production Flow Card": "public/js/production_flow_card_list.js",
+}
 
 # 销售订单印染扩展字段与显示名称
 fixtures = [
