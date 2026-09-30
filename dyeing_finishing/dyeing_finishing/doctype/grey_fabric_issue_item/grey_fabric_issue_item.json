@@ -1,182 +1,183 @@
 {
-  "actions": [],
-  "allow_rename": 1,
-  "creation": "2026-09-30 16:00:00.000000",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": [
-    "batch_no",
-    "grey_fabric_name",
-    "stock_roll_count",
-    "stock_qty",
-    "issue_roll_count",
-    "issue_qty",
-    "planned_roll_count",
-    "planned_qty",
-    "color",
-    "item_code",
-    "specification",
-    "flow_card_grey_fabric_issue",
-    "source_type",
-    "issued_roll_count",
-    "issued_qty",
-    "warehouse",
-    "location",
-    "shortage_roll_count",
-    "shortage_qty"
-  ],
-  "fields": [
-    {
-      "fieldname": "flow_card_grey_fabric_issue",
-      "label": "流转卡胚布领用明细",
-      "fieldtype": "Link",
-      "options": "Production Flow Card Grey Fabric Issue",
-      "hidden": 1,
-      "read_only": 1
-    },
-    {
-      "fieldname": "source_type",
-      "label": "出库来源",
-      "fieldtype": "Select",
-      "options": "自动带出\n补充批次",
-      "read_only": 1,
-      "default": "补充批次"
-    },
-    {
-      "fieldname": "batch_no",
-      "label": "批次",
-      "fieldtype": "Link",
-      "options": "Batch",
-      "reqd": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "item_code",
-      "label": "胚布编码",
-      "fieldtype": "Link",
-      "options": "Item",
-      "read_only": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "grey_fabric_name",
-      "label": "胚布名称",
-      "fieldtype": "Data",
-      "read_only": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "specification",
-      "label": "胚布规格",
-      "fieldtype": "Data",
-      "read_only": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "color",
-      "label": "颜色",
-      "fieldtype": "Data",
-      "read_only": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "stock_roll_count",
-      "label": "库存匹数",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "stock_qty",
-      "label": "库存数量",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "planned_roll_count",
-      "label": "计划领用匹数",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "planned_qty",
-      "label": "计划领用数量",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "issued_roll_count",
-      "label": "已出库匹数",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2"
-    },
-    {
-      "fieldname": "issued_qty",
-      "label": "已出库数量",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2"
-    },
-    {
-      "fieldname": "issue_roll_count",
-      "label": "出库匹数",
-      "fieldtype": "Float",
-      "reqd": 1,
-      "precision": "2",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "issue_qty",
-      "label": "出库数量",
-      "fieldtype": "Float",
-      "reqd": 1,
-      "precision": "2",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "warehouse",
-      "label": "仓库",
-      "fieldtype": "Link",
-      "options": "Warehouse",
-      "read_only": 1
-    },
-    {
-      "fieldname": "location",
-      "label": "货位",
-      "fieldtype": "Link",
-      "options": "Warehouse",
-      "read_only": 1
-    },
-    {
-      "fieldname": "shortage_roll_count",
-      "label": "缺少匹数",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2"
-    },
-    {
-      "fieldname": "shortage_qty",
-      "label": "缺少数量",
-      "fieldtype": "Float",
-      "read_only": 1,
-      "precision": "2"
-    }
-  ],
-  "istable": 1,
-  "links": [],
-  "modified": "2026-09-30 16:00:00.000000",
-  "modified_by": "Administrator",
-  "module": "dyeing_finishing",
-  "name": "Grey Fabric Issue Item",
-  "owner": "Administrator",
-  "permissions": []
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-09-30 16:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "batch_no",
+  "source_type",
+  "grey_fabric_name",
+  "stock_roll_count",
+  "stock_qty",
+  "issue_roll_count",
+  "issue_qty",
+  "planned_roll_count",
+  "planned_qty",
+  "color",
+  "item_code",
+  "specification",
+  "flow_card_grey_fabric_issue",
+  "issued_roll_count",
+  "issued_qty",
+  "warehouse",
+  "location",
+  "shortage_roll_count",
+  "shortage_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "flow_card_grey_fabric_issue",
+   "label": "流转卡胚布领用明细",
+   "fieldtype": "Link",
+   "options": "Production Flow Card Grey Fabric Issue",
+   "hidden": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_type",
+   "label": "出库来源",
+   "fieldtype": "Select",
+   "options": "自动带出\n补充批次",
+   "read_only": 1,
+   "default": "补充批次",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "batch_no",
+   "label": "批次",
+   "fieldtype": "Link",
+   "options": "Batch",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item_code",
+   "label": "胚布编码",
+   "fieldtype": "Link",
+   "options": "Item",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "grey_fabric_name",
+   "label": "胚布名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "specification",
+   "label": "胚布规格",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "color",
+   "label": "颜色",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "stock_roll_count",
+   "label": "库存匹数",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "stock_qty",
+   "label": "库存数量",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "planned_roll_count",
+   "label": "计划领用匹数",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "planned_qty",
+   "label": "计划领用数量",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "issued_roll_count",
+   "label": "已出库匹数",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2"
+  },
+  {
+   "fieldname": "issued_qty",
+   "label": "已出库数量",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2"
+  },
+  {
+   "fieldname": "issue_roll_count",
+   "label": "出库匹数",
+   "fieldtype": "Float",
+   "reqd": 1,
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "issue_qty",
+   "label": "出库数量",
+   "fieldtype": "Float",
+   "reqd": 1,
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "label": "仓库",
+   "fieldtype": "Link",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location",
+   "label": "货位",
+   "fieldtype": "Link",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shortage_roll_count",
+   "label": "缺少匹数",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2"
+  },
+  {
+   "fieldname": "shortage_qty",
+   "label": "缺少数量",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "2"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-30 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Grey Fabric Issue Item",
+ "owner": "Administrator",
+ "permissions": []
 }
