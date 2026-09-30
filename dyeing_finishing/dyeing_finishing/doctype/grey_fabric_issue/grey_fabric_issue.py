@@ -62,12 +62,15 @@ class GreyFabricIssue(Document):
         card = frappe.get_doc("Production Flow Card", self.flow_card)
         plans = {row.name: row for row in card.get("grey_fabric_issues") or []}
         by_batch = defaultdict(lambda: {"rolls": 0.0, "qty": 0.0})
+        automatic_batches = {row.batch_no for row in self.items if row.source_type == "自动带出" and row.batch_no}
         for row in self.items:
             plan = plans.get(row.flow_card_grey_fabric_issue)
             if not plan:
                 frappe.throw(_("第 {0} 行未关联有效的流转卡胚布领用明细").format(row.idx))
             if not row.batch_no:
                 frappe.throw(_("第 {0} 行请选择批次").format(row.idx))
+            if row.source_type == "补充批次" and row.batch_no in automatic_batches:
+                frappe.throw(_("第 {0} 行补充批次不能重复选择系统自动带出的批次").format(row.idx))
             if flt(row.issue_roll_count) < 0 or flt(row.issue_qty) < 0:
                 frappe.throw(_("第 {0} 行出库匹数和数量不能小于 0").format(row.idx))
             if not flt(row.issue_roll_count) and not flt(row.issue_qty):
@@ -185,10 +188,11 @@ def get_available_grey_fabric_batches(doctype, txt, searchfield, start, page_len
     filters = frappe.parse_json(filters) or {}
     if not filters.get("flow_card"):
         return []
+    excluded_batches = set(filters.get("exclude_batches") or [])
     card = frappe.get_doc("Production Flow Card", filters.get("flow_card"))
     plan = next((row for row in card.get("grey_fabric_issues") or [] if row.name == filters.get("source_row")), None)
     rows = _batch_stock_query(card.customer, "来料加工", location=plan.location if plan else None)
-    return [(row.batch_no,row.grey_fabric_name,row.color,row.location) for row in rows if (not plan or not plan.grey_fabric_name or row.grey_fabric_name == plan.grey_fabric_name) and (not plan or not plan.color or not row.color or row.color.strip() == plan.color.strip()) and txt.lower() in row.batch_no.lower()][start:start+page_len]
+    return [(row.batch_no,row.grey_fabric_name,row.color,row.location) for row in rows if (not plan or not plan.grey_fabric_name or row.grey_fabric_name == plan.grey_fabric_name) and (not plan or not plan.color or not row.color or row.color.strip() == plan.color.strip()) and row.batch_no not in excluded_batches and txt.lower() in row.batch_no.lower()][start:start+page_len]
 
 
 @frappe.whitelist()
