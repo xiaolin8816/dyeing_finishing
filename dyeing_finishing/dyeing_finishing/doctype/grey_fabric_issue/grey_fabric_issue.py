@@ -183,14 +183,12 @@ def get_grey_fabric_issue_flow_card_details(flow_card):
 @frappe.validate_and_sanitize_search_inputs
 def get_available_grey_fabric_batches(doctype, txt, searchfield, start, page_len, filters):
     filters = frappe.parse_json(filters) or {}
-    if not filters.get("flow_card") or not filters.get("source_row"):
+    if not filters.get("flow_card"):
         return []
     card = frappe.get_doc("Production Flow Card", filters.get("flow_card"))
     plan = next((row for row in card.get("grey_fabric_issues") or [] if row.name == filters.get("source_row")), None)
-    if not plan:
-        return []
-    rows = _batch_stock_query(card.customer, "来料加工", location=plan.location)
-    return [(row.batch_no,row.grey_fabric_name,row.color,row.location) for row in rows if (not plan.grey_fabric_name or row.grey_fabric_name == plan.grey_fabric_name) and (not plan.color or not row.color or row.color.strip() == plan.color.strip()) and txt.lower() in row.batch_no.lower()][start:start+page_len]
+    rows = _batch_stock_query(card.customer, "来料加工", location=plan.location if plan else None)
+    return [(row.batch_no,row.grey_fabric_name,row.color,row.location) for row in rows if (not plan or not plan.grey_fabric_name or row.grey_fabric_name == plan.grey_fabric_name) and (not plan or not plan.color or not row.color or row.color.strip() == plan.color.strip()) and txt.lower() in row.batch_no.lower()][start:start+page_len]
 
 
 @frappe.whitelist()
