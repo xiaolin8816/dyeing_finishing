@@ -6,21 +6,21 @@
   "editable_grid": 1,
   "engine": "InnoDB",
   "field_order": [
-    "flow_card_grey_fabric_issue",
-    "source_type",
     "batch_no",
-    "item_code",
     "grey_fabric_name",
-    "specification",
-    "color",
     "stock_roll_count",
     "stock_qty",
-    "planned_roll_count",
-    "planned_qty",
-    "issued_roll_count",
-    "issued_qty",
     "issue_roll_count",
     "issue_qty",
+    "planned_roll_count",
+    "planned_qty",
+    "color",
+    "item_code",
+    "specification",
+    "flow_card_grey_fabric_issue",
+    "source_type",
+    "issued_roll_count",
+    "issued_qty",
     "warehouse",
     "location",
     "shortage_roll_count",
@@ -41,7 +41,6 @@
       "fieldtype": "Select",
       "options": "自动带出\n补充批次",
       "read_only": 1,
-      "in_list_view": 1,
       "default": "补充批次"
     },
     {
@@ -118,16 +117,14 @@
       "label": "已出库匹数",
       "fieldtype": "Float",
       "read_only": 1,
-      "precision": "2",
-      "in_list_view": 1
+      "precision": "2"
     },
     {
       "fieldname": "issued_qty",
       "label": "已出库数量",
       "fieldtype": "Float",
       "read_only": 1,
-      "precision": "2",
-      "in_list_view": 1
+      "precision": "2"
     },
     {
       "fieldname": "issue_roll_count",
