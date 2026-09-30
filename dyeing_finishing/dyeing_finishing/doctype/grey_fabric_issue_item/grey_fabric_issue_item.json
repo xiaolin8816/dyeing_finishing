@@ -41,7 +41,8 @@
       "fieldtype": "Select",
       "options": "自动带出\n补充批次",
       "read_only": 1,
-      "in_list_view": 1
+      "in_list_view": 1,
+      "default": "补充批次"
     },
     {
       "fieldname": "batch_no",
