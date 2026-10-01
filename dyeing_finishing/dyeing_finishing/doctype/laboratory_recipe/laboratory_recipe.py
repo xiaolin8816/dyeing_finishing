@@ -18,6 +18,8 @@ class LaboratoryRecipe(Document):
         self._set_color_details()
         self._set_grey_fabric_details()
         if self.recipe_status == "已确认":
+            if not self.reviewer:
+                frappe.throw(_("配方状态为已确认时，请填写审核人"))
             self.confirmation_date = self.confirmation_date or getdate(nowdate())
             frappe.db.set_value("Color Master", self.color_no, "lab_record", self.name, update_modified=False)
 
