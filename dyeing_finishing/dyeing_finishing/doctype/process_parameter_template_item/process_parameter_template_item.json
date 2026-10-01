@@ -6,7 +6,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "sequence_no",
   "process_stage",
   "parameter_name",
   "unit",
@@ -15,13 +14,6 @@
   "instruction"
  ],
  "fields": [
-  {
-   "fieldname": "sequence_no",
-   "label": "顺序号",
-   "fieldtype": "Int",
-   "reqd": 1,
-   "in_list_view": 1
-  },
   {
    "fieldname": "process_stage",
    "label": "工艺阶段",

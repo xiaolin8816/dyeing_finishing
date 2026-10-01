@@ -20,7 +20,6 @@ def get_process_parameter_template_items(template_name):
         "process_type": template.process_type,
         "items": [
         {
-            "sequence_no": row.sequence_no,
             "process_stage": row.process_stage,
             "parameter_name": row.parameter_name,
             "unit": row.unit,
