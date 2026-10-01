@@ -12,6 +12,9 @@ TARGET_WAREHOUSE = "生产中转仓 - 沅泰"
 
 class GreyFabricIssue(Document):
     def before_insert(self):
+        # 修订单保留原单追溯关系，但不能继承已取消原单的库存凭证。
+        if self.amended_from:
+            self.stock_entry = None
         self.document_number = self.name
         self.outbound_date = self.outbound_date or getdate(nowdate())
 
