@@ -4,18 +4,20 @@ from frappe import _
 
 def execute(filters=None):
     columns = [
-        {"label": _("胚布编码"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 130},
-        {"label": _("胚布名称"), "fieldname": "item_name", "fieldtype": "Data", "width": 180},
-        {"label": _("批次"), "fieldname": "batch_no", "fieldtype": "Link", "options": "Batch", "width": 145},
+        {"label": _("序号"), "fieldname": "sequence_no", "fieldtype": "Int", "width": 65},
         {"label": _("客户"), "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 170},
+        {"label": _("批次"), "fieldname": "batch_no", "fieldtype": "Link", "options": "Batch", "width": 145},
+        {"label": _("胚布名称"), "fieldname": "item_name", "fieldtype": "Data", "width": 180},
         {"label": _("颜色"), "fieldname": "color", "fieldtype": "Data", "width": 100},
-        {"label": _("门幅"), "fieldname": "width", "fieldtype": "Data", "width": 90},
-        {"label": _("克重"), "fieldname": "gsm", "fieldtype": "Data", "width": 90},
-        {"label": _("仓库"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 150},
-        {"label": _("库存货位"), "fieldname": "location", "fieldtype": "Link", "options": "Warehouse", "width": 180},
         {"label": _("库存匹数"), "fieldname": "stock_roll_count", "fieldtype": "Float", "precision": 2, "width": 110},
-        {"label": _("库存重量"), "fieldname": "stock_qty", "fieldtype": "Float", "precision": 2, "width": 110},
+        {"label": _("库存数量"), "fieldname": "stock_qty", "fieldtype": "Float", "precision": 2, "width": 110},
+        {"label": _("入库匹数"), "fieldname": "receipt_roll_count", "fieldtype": "Float", "precision": 2, "width": 110},
+        {"label": _("入库数量"), "fieldname": "receipt_qty", "fieldtype": "Float", "precision": 2, "width": 110},
+        {"label": _("出库匹数"), "fieldname": "issue_roll_count", "fieldtype": "Float", "precision": 2, "width": 110},
+        {"label": _("出库数量"), "fieldname": "issue_qty", "fieldtype": "Float", "precision": 2, "width": 110},
         {"label": _("单位"), "fieldname": "stock_uom", "fieldtype": "Link", "options": "UOM", "width": 75},
+        {"label": _("货位编号"), "fieldname": "location", "fieldtype": "Link", "options": "Warehouse", "width": 180},
+        {"label": _("仓库"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 150},
         {"label": _("入库日期"), "fieldname": "receipt_date", "fieldtype": "Date", "width": 100},
     ]
     data = frappe.db.sql("""
@@ -39,8 +41,12 @@ def execute(filters=None):
                     0
                 )
             END AS stock_roll_count,
-            SUM(sle.actual_qty) AS stock_qty, MAX(item.stock_uom) AS stock_uom,
-            MAX(receipt.receipt_date) AS receipt_date
+            SUM(sle.actual_qty) AS stock_qty,
+            COALESCE(MAX(receipt_rolls.receipt_roll_count), 0) AS receipt_roll_count,
+            COALESCE(MAX(receipt_rolls.receipt_qty), 0) AS receipt_qty,
+            COALESCE(MAX(issued_rolls.issue_roll_count), 0) AS issue_roll_count,
+            COALESCE(MAX(issued_rolls.issue_qty), 0) AS issue_qty,
+            MAX(item.stock_uom) AS stock_uom, MAX(receipt.receipt_date) AS receipt_date
         FROM `tabStock Ledger Entry` sle
         INNER JOIN `tabItem` item ON item.name = sle.item_code
         LEFT JOIN `tabWarehouse` stock_warehouse ON stock_warehouse.name = sle.warehouse
@@ -50,13 +56,24 @@ def execute(filters=None):
         LEFT JOIN `tabCustomer Grey Fabric Receipt` receipt
             ON receipt.name = receipt_item.parent AND receipt.docstatus = 1
         LEFT JOIN (
-            SELECT receipt_item.batch_no, SUM(receipt_item.roll_count) AS stock_roll_count
+            SELECT receipt_item.batch_no,
+                SUM(receipt_item.roll_count) AS receipt_roll_count,
+                SUM(receipt_item.weight_qty) AS receipt_qty,
+                SUM(receipt_item.roll_count) AS stock_roll_count
             FROM `tabCustomer Grey Fabric Receipt Item` receipt_item
             INNER JOIN `tabCustomer Grey Fabric Receipt` receipt
                 ON receipt.name = receipt_item.parent AND receipt.docstatus = 1
             WHERE receipt_item.batch_no IS NOT NULL AND receipt_item.batch_no != ''
             GROUP BY receipt_item.batch_no
         ) receipt_rolls ON receipt_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
+        LEFT JOIN (
+            SELECT issue_item.batch_no,
+                SUM(issue_item.issue_roll_count) AS issue_roll_count,
+                SUM(issue_item.issue_qty) AS issue_qty
+            FROM `tabGrey Fabric Issue Item` issue_item
+            INNER JOIN `tabGrey Fabric Issue` issue ON issue.name = issue_item.parent AND issue.docstatus = 1
+            GROUP BY issue_item.batch_no
+        ) issued_rolls ON issued_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
         LEFT JOIN (
             SELECT item_code, batch_no, warehouse, SUM(roll_delta) AS roll_delta
             FROM (
@@ -96,4 +113,6 @@ def execute(filters=None):
         HAVING SUM(sle.actual_qty) > 0
         ORDER BY receipt_date DESC, batch_no DESC
     """, as_dict=True)
+    for sequence_no, row in enumerate(data, start=1):
+        row.sequence_no = sequence_no
     return columns, data
