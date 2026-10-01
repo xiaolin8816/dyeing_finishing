@@ -50,7 +50,3 @@ class LaboratoryRecipe(Document):
         template = frappe.get_doc("Process Parameter Template", self.process_parameter_template)
         if template.status != "启用":
             frappe.throw(_("只能选择状态为启用的工艺参数模板"))
-        if not self.process_type:
-            self.process_type = template.process_type
-        elif self.process_type != template.process_type:
-            frappe.throw(_("加工类型必须与工艺参数模板的加工类型一致"))

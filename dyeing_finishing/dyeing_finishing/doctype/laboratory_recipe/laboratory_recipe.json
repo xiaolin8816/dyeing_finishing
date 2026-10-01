@@ -20,7 +20,6 @@
   "color_no",
   "color",
   "document_column_4",
-  "process_type",
   "process_parameter_template",
   "sampler",
   "customer_section",
@@ -125,12 +124,6 @@
    "fieldname": "document_column_4",
    "label": "",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "process_type",
-   "label": "加工类型",
-   "fieldtype": "Select",
-   "options": "染色\n单定\n前定染色\n定边染色\n精练染色"
   },
   {
    "fieldname": "sampler",

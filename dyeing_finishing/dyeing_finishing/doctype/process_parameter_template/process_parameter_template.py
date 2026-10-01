@@ -12,12 +12,10 @@ class ProcessParameterTemplate(Document):
 
 
 @frappe.whitelist()
-def get_process_parameter_template_items(template_name, process_type=None):
+def get_process_parameter_template_items(template_name):
     template = frappe.get_doc("Process Parameter Template", template_name)
     if template.status != "启用":
         frappe.throw(_("只能引用状态为启用的工艺参数模板"))
-    if process_type and template.process_type != process_type:
-        frappe.throw(_("加工类型必须与工艺参数模板的加工类型一致"))
     return {
         "process_type": template.process_type,
         "items": [
