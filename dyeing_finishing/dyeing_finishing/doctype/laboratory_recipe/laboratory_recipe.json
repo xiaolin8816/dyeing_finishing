@@ -8,12 +8,14 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "details_tab",
   "document_section",
   "recipe_no",
   "recipe_status",
   "document_column_2",
   "recipe_version",
   "sampling_date",
+  "confirmation_date",
   "document_column_3",
   "color_no",
   "color",
@@ -34,12 +36,6 @@
   "fabric_column_3",
   "bath_ratio",
   "color_light_requirement",
-  "review_section",
-  "reviewer",
-  "confirmation_date",
-  "review_note",
-  "attachments_tab",
-  "attachment_section",
   "color_card_image",
   "sample_image",
   "formula_tab",
@@ -48,11 +44,20 @@
   "process_tab",
   "process_section",
   "process_parameters",
+  "attachments_tab",
+  "attachment_section",
+  "color_card_image",
+  "sample_image",
   "remarks_tab",
   "remarks_section",
   "remark"
  ],
  "fields": [
+  {
+   "fieldname": "details_tab",
+   "label": "详细信息",
+   "fieldtype": "Tab Break"
+  },
   {
    "fieldname": "document_section",
    "label": "单据信息",
@@ -218,26 +223,10 @@
    "description": "例如：深浅、偏红、偏黄"
   },
   {
-   "fieldname": "review_section",
-   "label": "审核确认",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "reviewer",
-   "label": "审核人",
-   "fieldtype": "Link",
-   "options": "Employee"
-  },
-  {
    "fieldname": "confirmation_date",
    "label": "确认日期",
    "fieldtype": "Date",
    "read_only": 1
-  },
-  {
-   "fieldname": "review_note",
-   "label": "审核说明",
-   "fieldtype": "Small Text"
   },
   {
    "fieldname": "attachments_tab",
