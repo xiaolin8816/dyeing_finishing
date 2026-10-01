@@ -78,7 +78,8 @@
    "options": "草稿\n待确认\n已确认\n停用",
    "default": "草稿",
    "reqd": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "read_only": 1
   },
   {
    "fieldname": "document_column_2",

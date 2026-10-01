@@ -28,6 +28,7 @@ frappe.ui.form.on("Laboratory Recipe", {
      });
     });
    }, "操作");
+   frm.disable_form();
   } else if (frm.doc.recipe_status !== "停用") {
    frm.add_custom_button("确认配方", () => {
     frappe.confirm("确认后将作为该色号的当前化验配方。是否继续？", () => {

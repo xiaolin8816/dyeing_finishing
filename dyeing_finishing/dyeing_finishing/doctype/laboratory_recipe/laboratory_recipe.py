@@ -15,6 +15,7 @@ class LaboratoryRecipe(Document):
         self.recipe_status = self.recipe_status or "草稿"
 
     def validate(self):
+        self._prevent_confirmed_recipe_changes()
         self.recipe_no = self.name
         self.sampling_date = self.sampling_date or getdate(nowdate())
         self.recipe_version = self.recipe_version or "V1"
@@ -24,6 +25,20 @@ class LaboratoryRecipe(Document):
         if self.recipe_status == "已确认":
             self.confirmation_date = self.confirmation_date or getdate(nowdate())
             frappe.db.set_value("Color Master", self.color_no, "lab_record", self.name, update_modified=False)
+
+    def _prevent_confirmed_recipe_changes(self):
+        if self.is_new():
+            return
+
+        previous_status = frappe.db.get_value("Laboratory Recipe", self.name, "recipe_status")
+        if previous_status == "已确认" and not self.flags.allow_cancel_recipe_confirmation:
+            frappe.throw(_("已确认的配方不能修改，请先取消确认"))
+        if (
+            previous_status != "已确认"
+            and self.recipe_status == "已确认"
+            and not self.flags.allow_recipe_confirmation
+        ):
+            frappe.throw(_("请使用“确认配方”操作确认配方"))
 
     def _set_color_details(self):
         if not self.color_no:
@@ -81,6 +96,7 @@ def confirm_recipe(name):
 
     recipe.recipe_status = "已确认"
     recipe.confirmation_date = getdate(nowdate())
+    recipe.flags.allow_recipe_confirmation = True
     recipe.save()
     return recipe.name
 
@@ -93,6 +109,7 @@ def cancel_recipe_confirmation(name):
 
     recipe.recipe_status = "草稿"
     recipe.confirmation_date = None
+    recipe.flags.allow_cancel_recipe_confirmation = True
     recipe.save()
 
     if frappe.db.get_value("Color Master", recipe.color_no, "lab_record") == recipe.name:
