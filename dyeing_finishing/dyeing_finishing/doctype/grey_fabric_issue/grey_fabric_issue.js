@@ -6,7 +6,7 @@ frappe.ui.form.on("Grey Fabric Issue", {
  refresh(frm) {
   loadPlanRows(frm);
   if (frm.doc.docstatus===2) {
-   frm.add_custom_button("重新打开",()=>reopenIssue(frm),"胚布出库");
+   frm.add_custom_button("重新打开",()=>reopenIssue(frm));
   } else if (frm.is_new() || frm.doc.docstatus===0) {
    frm.add_custom_button("新增补充批次",()=>addSupplement(frm),"胚布出库");
   }
