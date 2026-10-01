@@ -19,6 +19,7 @@
   "customer_product_column_3",
   "product_name",
   "grey_fabric_section",
+  "grey_fabric_batch",
   "grey_fabric",
   "grey_fabric_column_2",
   "grey_fabric_code",
@@ -107,18 +108,24 @@
    "label": "胚布资料"
   },
   {
-   "fieldname": "grey_fabric",
+   "fieldname": "grey_fabric_batch",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "胚布",
-   "options": "Grey Fabric Master"
+   "label": "胚布批次",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "grey_fabric",
+   "fieldtype": "Link",
+   "label": "胚布档案",
+   "options": "Grey Fabric Master",
+   "read_only": 1
   },
   {
    "fieldname": "grey_fabric_column_2",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "grey_fabric.item_code",
    "fieldname": "grey_fabric_code",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -130,7 +137,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "grey_fabric.fabric_name",
    "fieldname": "grey_fabric_name",
    "fieldtype": "Data",
    "in_list_view": 1,
