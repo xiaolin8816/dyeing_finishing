@@ -14,19 +14,16 @@
         }));
     }
 
-    function apply_widths(options) {
-        const widths = current_report?._stock_report_column_widths || {};
-        options.columns = options.columns.map((column) => {
+    function apply_widths(report, datatable = report.datatable) {
+        if (!datatable) return;
+        const widths = report._stock_report_column_widths || {};
+        datatable.getColumns().forEach((column) => {
             const width = Number(widths[column.fieldname]);
-            return Number.isFinite(width) && width >= MIN_WIDTH
-                ? { ...column, width }
-                : column;
+            if (!Number.isFinite(width) || width < MIN_WIDTH) return;
+            datatable.datamanager.updateColumn(column.colIndex, { width });
         });
-        return options;
-    }
-
-    function refresh_report(report) {
-        window.setTimeout(() => report.refresh(), 0);
+        // DataTable 会同时更新表头和内容列，避免出现错位。
+        datatable.style.refreshColumnWidth();
     }
 
     function load_widths(report) {
@@ -35,7 +32,7 @@
             args: { report_name: REPORT_NAME },
         }).then((response) => {
             report._stock_report_column_widths = response.message || {};
-            refresh_report(report);
+            apply_widths(report);
         });
     }
 
@@ -77,8 +74,8 @@
                     args: { report_name: REPORT_NAME, widths: next_widths },
                 }).then((response) => {
                     report._stock_report_column_widths = response.message || {};
+                    apply_widths(report);
                     dialog.hide();
-                    refresh_report(report);
                     frappe.show_alert({ message: "列表列宽已应用给所有用户", indicator: "green" });
                 });
             },
@@ -91,7 +88,7 @@
             }).then(() => {
                 report._stock_report_column_widths = {};
                 dialog.hide();
-                refresh_report(report);
+                report.refresh();
             });
         });
         dialog.show();
@@ -106,8 +103,8 @@
                 report.page.add_menu_item("调整列表列宽", () => show_width_dialog(report));
             }
         },
-        get_datatable_options(options) {
-            return apply_widths(options);
+        after_datatable_render(datatable) {
+            if (current_report) apply_widths(current_report, datatable);
         },
     };
 })();
