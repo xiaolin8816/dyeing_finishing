@@ -28,8 +28,15 @@
         listview.columns = [subject, tag, ...ordered_fields].filter(Boolean);
     }
 
+    function has_active_filter(listview) {
+        return listview.filter_area.get().some((filter) => {
+            const value = filter[3];
+            return Array.isArray(value) ? value.some(Boolean) : Boolean(value);
+        });
+    }
+
     function apply_current_month_filter(listview) {
-        if (listview.__laboratory_recipe_default_filter_applied || listview.filter_area.get().length) {
+        if (listview.__laboratory_recipe_default_filter_applied || has_active_filter(listview)) {
             return;
         }
 
