@@ -130,6 +130,8 @@ class GreyFabricIssue(Document):
                     "t_warehouse": TARGET_WAREHOUSE,
                     "batch_no": row.batch_no,
                     "custom_roll_count": flt(row.issue_roll_count),
+                    "custom_grey_fabric_issue": self.name,
+                    "custom_production_flow_card": self.flow_card,
                     "use_serial_batch_fields": 1,
                     "allow_zero_valuation_rate": 1,
                 }

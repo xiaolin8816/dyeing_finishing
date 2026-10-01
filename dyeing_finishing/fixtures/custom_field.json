@@ -307,5 +307,29 @@
     "read_only": 1,
     "in_list_view": 1,
     "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Stock Entry Detail-custom_grey_fabric_issue",
+    "dt": "Stock Entry Detail",
+    "fieldname": "custom_grey_fabric_issue",
+    "label": "胚布出库单",
+    "fieldtype": "Link",
+    "options": "Grey Fabric Issue",
+    "insert_after": "custom_roll_count",
+    "read_only": 1,
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Stock Entry Detail-custom_production_flow_card",
+    "dt": "Stock Entry Detail",
+    "fieldname": "custom_production_flow_card",
+    "label": "生产流转卡",
+    "fieldtype": "Link",
+    "options": "Production Flow Card",
+    "insert_after": "custom_grey_fabric_issue",
+    "read_only": 1,
+    "module": "dyeing_finishing"
   }
 ]

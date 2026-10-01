@@ -4,7 +4,6 @@ from frappe import _
 
 def execute(filters=None):
     columns = [
-        {"label": _("序号"), "fieldname": "sequence_no", "fieldtype": "Int", "width": 65},
         {"label": _("客户"), "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 170},
         {"label": _("批次"), "fieldname": "batch_no", "fieldtype": "Link", "options": "Batch", "width": 145},
         {"label": _("胚布名称"), "fieldname": "item_name", "fieldtype": "Data", "width": 180},
@@ -103,6 +102,7 @@ def execute(filters=None):
         WHERE sle.is_cancelled = 0
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) IS NOT NULL
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) != ''
+          AND sle.warehouse != '生产中转仓 - 沅泰'
           AND item.item_group IN (
             SELECT name FROM `tabItem Group`
             WHERE lft >= (SELECT lft FROM `tabItem Group` WHERE name = '胚布')
@@ -113,6 +113,4 @@ def execute(filters=None):
         HAVING SUM(sle.actual_qty) > 0
         ORDER BY receipt_date DESC, batch_no DESC
     """, as_dict=True)
-    for sequence_no, row in enumerate(data, start=1):
-        row.sequence_no = sequence_no
     return columns, data

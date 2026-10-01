@@ -11,7 +11,7 @@ def execute():
     issues = frappe.get_all(
         "Grey Fabric Issue",
         filters={"docstatus": 1, "stock_entry": ["!=", ""]},
-        fields=["name", "stock_entry"],
+        fields=["name", "stock_entry", "flow_card"],
     )
     for issue in issues:
         issue_items = frappe.get_all(
@@ -30,7 +30,10 @@ def execute():
             frappe.db.set_value(
                 "Stock Entry Detail",
                 stock_item.name,
-                "custom_roll_count",
-                flt(issue_item.issue_roll_count),
+                {
+                    "custom_roll_count": flt(issue_item.issue_roll_count),
+                    "custom_grey_fabric_issue": issue.name,
+                    "custom_production_flow_card": issue.flow_card,
+                },
                 update_modified=False,
             )

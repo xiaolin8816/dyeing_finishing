@@ -1,7 +1,7 @@
 {
  "app": "dyeing_finishing",
  "charts": [],
- "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>印染整理</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>基础资料</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-card\",\"type\":\"card\",\"data\":{\"card_name\":\"印染基础资料\",\"col\":4}},{\"id\":\"dyeing-recipe-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>配方管理</b></span>\",\"col\":12}},{\"id\":\"dyeing-recipe-card\",\"type\":\"card\",\"data\":{\"card_name\":\"配方管理\",\"col\":4}},{\"id\":\"customer-grey-fabric-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>胚布管理</b></span>\",\"col\":12}},{\"id\":\"customer-grey-fabric-card\",\"type\":\"card\",\"data\":{\"card_name\":\"客户胚布入库\",\"col\":4}},{\"id\":\"grey-fabric-stock-card\",\"type\":\"card\",\"data\":{\"card_name\":\"胚布库存\",\"col\":4}},{\"id\":\"grey-fabric-issue-card\",\"type\":\"card\",\"data\":{\"card_name\":\"胚布出库\",\"col\":4}},{\"id\":\"production-management-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>生产管理</b></span>\",\"col\":12}},{\"id\":\"production-flow-card\",\"type\":\"card\",\"data\":{\"card_name\":\"生产管理\",\"col\":4}}]",
+ "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>印染整理</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>基础资料</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-card\",\"type\":\"card\",\"data\":{\"card_name\":\"印染基础资料\",\"col\":4}},{\"id\":\"dyeing-recipe-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\\\\\"h4\\\\\\\"><b>配方管理</b></span>\",\"col\":12}},{\"id\":\"dyeing-recipe-card\",\"type\":\"card\",\"data\":{\"card_name\":\"配方管理\",\"col\":4}},{\"id\":\"customer-grey-fabric-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>胚布管理</b></span>\",\"col\":12}},{\"id\":\"customer-grey-fabric-card\",\"type\":\"card\",\"data\":{\"card_name\":\"客户胚布入库\",\"col\":4}},{\"id\":\"grey-fabric-stock-card\",\"type\":\"card\",\"data\":{\"card_name\":\"胚布库存\",\"col\":4}},{\"id\":\"production-transit-warehouse-stock-card\",\"type\":\"card\",\"data\":{\"card_name\":\"生产中转仓库存\",\"col\":4}},{\"id\":\"grey-fabric-issue-card\",\"type\":\"card\",\"data\":{\"card_name\":\"胚布出库\",\"col\":4}},{\"id\":\"production-management-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>生产管理</b></span>\",\"col\":12}},{\"id\":\"production-flow-card\",\"type\":\"card\",\"data\":{\"card_name\":\"生产管理\",\"col\":4}}]",
  "creation": "2026-09-28 19:18:12.916039",
  "custom_blocks": [],
  "docstatus": 0,
@@ -168,6 +168,25 @@
   },
   {
    "hidden": 0,
+   "is_query_report": 1,
+   "label": "生产中转仓库存",
+   "link_count": 1,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "生产中转仓库存",
+   "link_count": 0,
+   "link_to": "Production Transit Warehouse Stock",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
    "is_query_report": 0,
    "label": "生产管理",
    "link_count": 1,
@@ -187,7 +206,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-01 17:00:00.000000",
+ "modified": "2026-10-01 20:30:00.000000",
  "modified_by": "Administrator",
  "module": "dyeing_finishing",
  "name": "印染整理",
