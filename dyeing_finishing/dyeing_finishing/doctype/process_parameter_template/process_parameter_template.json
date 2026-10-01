@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 0,
+ "autoname": "GPT.YY.MM.DD.###",
+ "creation": "2026-10-01 17:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "template_section",
+  "template_no",
+  "template_name",
+  "template_column_2",
+  "process_type",
+  "status",
+  "parameter_section",
+  "parameter_items",
+  "remark_section",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_section",
+   "label": "模板信息",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "template_no",
+   "label": "模板编号",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "template_name",
+   "label": "模板名称",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "template_column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "process_type",
+   "label": "加工类型",
+   "fieldtype": "Select",
+   "options": "染色\n单定\n前定染色\n定边染色\n精练染色",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "状态",
+   "fieldtype": "Select",
+   "options": "启用\n停用",
+   "default": "启用",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "parameter_section",
+   "label": "参数项目",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "parameter_items",
+   "label": "参数项目",
+   "fieldtype": "Table",
+   "options": "Process Parameter Template Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "remark_section",
+   "label": "说明",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "label": "说明",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "grid_page_length": 50,
+ "links": [],
+ "modified": "2026-10-01 17:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Process Parameter Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock User",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "template_name",
+ "track_changes": 1
+}

@@ -11,7 +11,7 @@
   "parameter_name",
   "unit",
   "default_value",
-  "parameter_value",
+  "is_required",
   "instruction"
  ],
  "fields": [
@@ -27,6 +27,7 @@
    "label": "工艺阶段",
    "fieldtype": "Select",
    "options": "前处理\n染色\n后处理\n定型整理",
+   "reqd": 1,
    "in_list_view": 1
   },
   {
@@ -46,18 +47,18 @@
    "fieldname": "default_value",
    "label": "默认值",
    "fieldtype": "Data",
-   "read_only": 1,
    "in_list_view": 1
   },
   {
-   "fieldname": "parameter_value",
-   "label": "实际参数值",
-   "fieldtype": "Data",
+   "fieldname": "is_required",
+   "label": "是否必填",
+   "fieldtype": "Check",
+   "default": "0",
    "in_list_view": 1
   },
   {
    "fieldname": "instruction",
-   "label": "操作说明",
+   "label": "填写说明",
    "fieldtype": "Small Text"
   }
  ],
@@ -66,7 +67,7 @@
  "modified": "2026-10-01 17:00:00.000000",
  "modified_by": "Administrator",
  "module": "dyeing_finishing",
- "name": "Laboratory Recipe Process Parameter",
+ "name": "Process Parameter Template Item",
  "owner": "Administrator",
  "permissions": []
 }

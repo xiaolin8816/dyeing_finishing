@@ -21,6 +21,7 @@
   "color",
   "document_column_4",
   "process_type",
+  "process_parameter_template",
   "sampler",
   "customer_section",
   "customer",
@@ -295,6 +296,12 @@
    "fieldname": "remark",
    "label": "备注",
    "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "process_parameter_template",
+   "label": "工艺参数模板",
+   "fieldtype": "Link",
+   "options": "Process Parameter Template"
   }
  ],
  "grid_page_length": 50,
