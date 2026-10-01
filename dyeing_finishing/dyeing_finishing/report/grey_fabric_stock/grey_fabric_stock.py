@@ -11,7 +11,8 @@ def execute(filters=None):
         {"label": _("颜色"), "fieldname": "color", "fieldtype": "Data", "width": 100},
         {"label": _("门幅"), "fieldname": "width", "fieldtype": "Data", "width": 90},
         {"label": _("克重"), "fieldname": "gsm", "fieldtype": "Data", "width": 90},
-        {"label": _("库存货位"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 180},
+        {"label": _("仓库"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 150},
+        {"label": _("库存货位"), "fieldname": "location", "fieldtype": "Link", "options": "Warehouse", "width": 180},
         {"label": _("库存匹数"), "fieldname": "stock_roll_count", "fieldtype": "Float", "precision": 2, "width": 110},
         {"label": _("库存重量"), "fieldname": "stock_qty", "fieldtype": "Float", "precision": 2, "width": 110},
         {"label": _("单位"), "fieldname": "stock_uom", "fieldtype": "Link", "options": "UOM", "width": 75},
@@ -22,7 +23,7 @@ def execute(filters=None):
             COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) AS batch_no,
             MAX(receipt.customer) AS customer, MAX(receipt_item.color) AS color,
             MAX(receipt_item.width) AS width, MAX(receipt_item.gsm) AS gsm,
-            sle.warehouse,
+            '胚布仓库 - 沅泰' AS warehouse, sle.warehouse AS location,
             GREATEST(MAX(receipt_rolls.stock_roll_count) - COALESCE(MAX(issued_rolls.issue_roll_count), 0), 0) AS stock_roll_count,
             SUM(sle.actual_qty) AS stock_qty, MAX(item.stock_uom) AS stock_uom,
             MAX(receipt.receipt_date) AS receipt_date
