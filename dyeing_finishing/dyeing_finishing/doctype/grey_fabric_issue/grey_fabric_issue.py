@@ -37,9 +37,17 @@ class GreyFabricIssue(Document):
 
         # 取消库存转移后，原单直接恢复为草稿，用户可在同一张单据修改后再次提交。
         self.db_set({"stock_entry": None, "docstatus": 0}, update_modified=False)
+        frappe.db.sql(
+            """UPDATE `tabGrey Fabric Issue Item`
+            SET docstatus = 0
+            WHERE parent = %s AND parenttype = 'Grey Fabric Issue'""",
+            self.name,
+        )
         self.stock_entry = None
         self.docstatus = 0
-        self.add_comment("Edit", _("已取消关联库存凭证，单据已恢复为草稿，可修改后再次提交。"))
+        for row in self.items:
+            row.docstatus = 0
+        self.add_comment("Edit", _("已取消关联库存凭证，单据及明细已恢复为草稿，可修改后再次提交。"))
 
     def _set_flow_card_details(self):
         if not self.flow_card:
