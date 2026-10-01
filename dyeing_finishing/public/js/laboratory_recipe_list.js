@@ -1,5 +1,32 @@
 (() => {
     const VERSION_WIDTH = 72;
+    const FIELD_ORDER = [
+        "recipe_no",
+        "customer_name",
+        "finished_product_name",
+        "color_no",
+        "color",
+        "recipe_status",
+        "recipe_version",
+        "sampling_date",
+        "name",
+    ];
+
+    function order_columns(listview) {
+        const columns_by_field = new Map(
+            listview.columns
+                .filter((column) => column.df?.fieldname)
+                .map((column) => [column.df.fieldname, column])
+        );
+        const subject = listview.columns.find((column) => column.type === "Subject");
+        const tag = listview.columns.find((column) => column.type === "Tag");
+        const ordered_fields = FIELD_ORDER
+            .filter((fieldname) => fieldname !== "recipe_no")
+            .map((fieldname) => columns_by_field.get(fieldname))
+            .filter(Boolean);
+
+        listview.columns = [subject, tag, ...ordered_fields].filter(Boolean);
+    }
 
     function apply_recipe_version_width(listview) {
         const width = `${VERSION_WIDTH}px`;
@@ -12,7 +39,11 @@
     }
 
     frappe.listview_settings["Laboratory Recipe"] = {
+        onload(listview) {
+            order_columns(listview);
+        },
         refresh(listview) {
+            order_columns(listview);
             window.setTimeout(() => apply_recipe_version_width(listview), 0);
         },
     };
