@@ -70,6 +70,20 @@
                 fieldtype: "DateRange",
                 condition: "between",
             },
+            {
+                fieldname: "color_no",
+                label: "色号",
+                fieldtype: "Link",
+                options: "Color Master",
+                condition: "=",
+            },
+            {
+                fieldname: "customer_name",
+                label: "客户名称",
+                fieldtype: "Link",
+                options: "Customer",
+                condition: "=",
+            },
         ],
         onload(listview) {
             order_columns(listview);
