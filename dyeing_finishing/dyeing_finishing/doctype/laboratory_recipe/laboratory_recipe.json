@@ -22,10 +22,8 @@
   "document_column_4",
   "process_parameter_template",
   "sampler",
-  "customer_section",
   "customer",
   "customer_name",
-  "customer_column_2",
   "finished_product_name",
   "fabric_section",
   "grey_fabric_batch",
@@ -149,22 +147,12 @@
    "options": "Employee"
   },
   {
-   "fieldname": "customer_section",
-   "label": "客户与产品",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "customer",
    "label": "客户",
    "fieldtype": "Link",
    "options": "Customer",
    "read_only": 1,
    "hidden": 1
-  },
-  {
-   "fieldname": "customer_column_2",
-   "label": "",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "fabric_section",
