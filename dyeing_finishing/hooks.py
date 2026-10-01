@@ -287,3 +287,6 @@ doc_events = {
         "validate": "dyeing_finishing.dyeing_finishing.sales_order.validate",
     },
 }
+
+# 胚布出库匹数历史数据补齐
+after_migrate = ["dyeing_finishing.patches.v1_0.backfill_grey_fabric_issue_roll_counts.execute"]

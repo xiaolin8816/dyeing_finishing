@@ -294,5 +294,18 @@
     "read_only": 1,
     "hidden": 1,
     "in_list_view": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Stock Entry Detail-custom_roll_count",
+    "dt": "Stock Entry Detail",
+    "fieldname": "custom_roll_count",
+    "label": "匹数",
+    "fieldtype": "Float",
+    "precision": "2",
+    "insert_after": "batch_no",
+    "read_only": 1,
+    "in_list_view": 1,
+    "module": "dyeing_finishing"
   }
 ]

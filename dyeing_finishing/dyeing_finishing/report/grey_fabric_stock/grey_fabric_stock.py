@@ -24,7 +24,14 @@ def execute(filters=None):
             MAX(receipt.customer) AS customer, MAX(receipt_item.color) AS color,
             MAX(receipt_item.width) AS width, MAX(receipt_item.gsm) AS gsm,
             '胚布仓库 - 沅泰' AS warehouse, sle.warehouse AS location,
-            GREATEST(MAX(receipt_rolls.stock_roll_count) - COALESCE(MAX(issued_rolls.issue_roll_count), 0), 0) AS stock_roll_count,
+            CASE
+                WHEN sle.warehouse = '生产中转仓 - 沅泰' THEN GREATEST(COALESCE(MAX(transfer_rolls.roll_delta), 0), 0)
+                ELSE GREATEST(
+                    COALESCE(MAX(receipt_rolls.stock_roll_count), 0)
+                    + COALESCE(MAX(transfer_rolls.roll_delta), 0),
+                    0
+                )
+            END AS stock_roll_count,
             SUM(sle.actual_qty) AS stock_qty, MAX(item.stock_uom) AS stock_uom,
             MAX(receipt.receipt_date) AS receipt_date
         FROM `tabStock Ledger Entry` sle
@@ -43,11 +50,31 @@ def execute(filters=None):
             GROUP BY receipt_item.batch_no
         ) receipt_rolls ON receipt_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
         LEFT JOIN (
-            SELECT issue_item.batch_no, SUM(issue_item.issue_roll_count) AS issue_roll_count
-            FROM `tabGrey Fabric Issue Item` issue_item
-            INNER JOIN `tabGrey Fabric Issue` issue ON issue.name = issue_item.parent AND issue.docstatus = 1
-            GROUP BY issue_item.batch_no
-        ) issued_rolls ON issued_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
+            SELECT item_code, batch_no, warehouse, SUM(roll_delta) AS roll_delta
+            FROM (
+                SELECT detail.item_code, detail.batch_no, detail.t_warehouse AS warehouse,
+                    SUM(detail.custom_roll_count) AS roll_delta
+                FROM `tabStock Entry Detail` detail
+                INNER JOIN `tabStock Entry` entry ON entry.name = detail.parent AND entry.docstatus = 1
+                WHERE detail.batch_no IS NOT NULL AND detail.batch_no != ''
+                  AND detail.t_warehouse IS NOT NULL AND detail.t_warehouse != ''
+                  AND detail.custom_roll_count != 0
+                GROUP BY detail.item_code, detail.batch_no, detail.t_warehouse
+                UNION ALL
+                SELECT detail.item_code, detail.batch_no, detail.s_warehouse AS warehouse,
+                    -SUM(detail.custom_roll_count) AS roll_delta
+                FROM `tabStock Entry Detail` detail
+                INNER JOIN `tabStock Entry` entry ON entry.name = detail.parent AND entry.docstatus = 1
+                WHERE detail.batch_no IS NOT NULL AND detail.batch_no != ''
+                  AND detail.s_warehouse IS NOT NULL AND detail.s_warehouse != ''
+                  AND detail.custom_roll_count != 0
+                GROUP BY detail.item_code, detail.batch_no, detail.s_warehouse
+            ) roll_movements
+            GROUP BY item_code, batch_no, warehouse
+        ) transfer_rolls
+            ON transfer_rolls.item_code = sle.item_code
+            AND transfer_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
+            AND transfer_rolls.warehouse = sle.warehouse
         WHERE sle.is_cancelled = 0
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) IS NOT NULL
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) != ''

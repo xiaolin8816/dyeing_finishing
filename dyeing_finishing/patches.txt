@@ -5,3 +5,4 @@
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
 dyeing_finishing.patches.v1_0.create_process_parameter_templates
+dyeing_finishing.patches.v1_0.backfill_grey_fabric_issue_roll_counts
