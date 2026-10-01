@@ -28,6 +28,20 @@
         listview.columns = [subject, tag, ...ordered_fields].filter(Boolean);
     }
 
+    function apply_current_month_filter(listview) {
+        if (listview.__laboratory_recipe_default_filter_applied || listview.filter_area.get().length) {
+            return;
+        }
+
+        listview.__laboratory_recipe_default_filter_applied = true;
+        listview.filter_area.add(
+            listview.doctype,
+            "sampling_date",
+            "between",
+            [frappe.datetime.month_start(), frappe.datetime.month_end()]
+        );
+    }
+
     function apply_recipe_version_width(listview) {
         const width = `${VERSION_WIDTH}px`;
         listview.$result.find('[data-fieldname="recipe_version"]').css({
@@ -41,6 +55,7 @@
     frappe.listview_settings["Laboratory Recipe"] = {
         onload(listview) {
             order_columns(listview);
+            apply_current_month_filter(listview);
         },
         refresh(listview) {
             order_columns(listview);
