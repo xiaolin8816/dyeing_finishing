@@ -17,6 +17,7 @@ frappe.ui.form.on("Color Master", {
         show_color_no(frm);
         frm.set_query("grey_fabric_batch", () => ({
             query: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batches",
+            filters: {customer: frm.doc.customer_name},
         }));
     },
 
@@ -39,7 +40,10 @@ frappe.ui.form.on("Color Master", {
         }
         frappe.call({
             method: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batch_details",
-            args: {batch_no: frm.doc.grey_fabric_batch},
+            args: {
+                batch_no: frm.doc.grey_fabric_batch,
+                customer: frm.doc.customer_name,
+            },
             callback: ({message}) => {
                 if (!message) return;
                 frm.set_value("grey_fabric", message.grey_fabric || "");
@@ -53,5 +57,8 @@ frappe.ui.form.on("Color Master", {
         const customer = (frm.doc.customer_name || "").trim();
         const customer_code = customer.includes("/") ? customer.split("/", 1)[0].trim() : "";
         frm.set_value("customer_code", customer_code);
+        if (frm.doc.grey_fabric_batch) {
+            frm.set_value("grey_fabric_batch", "");
+        }
     },
 });

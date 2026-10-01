@@ -3,7 +3,8 @@ frappe.ui.form.on("Laboratory Recipe", {
   frm.set_query("color_no", () => ({filters:{status:"启用"}}));
   frm.set_query("process_parameter_template", () => ({filters:{status:"启用"}}));
   frm.set_query("grey_fabric_batch", () => ({
-   query: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batches"
+   query: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batches",
+   filters: {customer: frm.doc.customer}
   }));
   frm.set_query("item_code", "recipe_items", () => ({
    filters: {
@@ -35,7 +36,10 @@ frappe.ui.form.on("Laboratory Recipe", {
   }
   frappe.call({
    method: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batch_details",
-   args: {batch_no: frm.doc.grey_fabric_batch},
+   args: {
+    batch_no: frm.doc.grey_fabric_batch,
+    customer: frm.doc.customer
+   },
    callback: ({message}) => {
     if (!message) return;
     frm.set_value("grey_fabric", message.grey_fabric || "");
