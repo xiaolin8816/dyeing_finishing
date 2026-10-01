@@ -2,6 +2,9 @@ frappe.ui.form.on("Laboratory Recipe", {
  setup(frm) {
   frm.set_query("color_no", () => ({filters:{status:"启用"}}));
   frm.set_query("process_parameter_template", () => ({filters:{status:"启用"}}));
+  frm.set_query("grey_fabric_batch", () => ({
+   query: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batches"
+  }));
   frm.set_query("item_code", "recipe_items", () => ({
    filters: {
     item_group: ["in", ["染料", "助剂"]],
@@ -15,7 +18,30 @@ frappe.ui.form.on("Laboratory Recipe", {
    frm.set_value("color", color.color_name || "");
    frm.set_value("customer", color.customer_name || "");
    frm.set_value("finished_product_name", color.product_name || "");
-   if (!frm.doc.grey_fabric) frm.set_value("grey_fabric", color.grey_fabric || "");
+   frm.set_value("grey_fabric_batch", color.grey_fabric_batch || "");
+   if (!color.grey_fabric_batch) {
+    frm.set_value("grey_fabric", color.grey_fabric || "");
+    frm.set_value("grey_fabric_code", color.grey_fabric_code || "");
+    frm.set_value("grey_fabric_name", color.grey_fabric_name || "");
+   }
+  });
+ },
+ grey_fabric_batch(frm) {
+  if (!frm.doc.grey_fabric_batch) {
+   frm.set_value("grey_fabric", "");
+   frm.set_value("grey_fabric_code", "");
+   frm.set_value("grey_fabric_name", "");
+   return;
+  }
+  frappe.call({
+   method: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batch_details",
+   args: {batch_no: frm.doc.grey_fabric_batch},
+   callback: ({message}) => {
+    if (!message) return;
+    frm.set_value("grey_fabric", message.grey_fabric || "");
+    frm.set_value("grey_fabric_code", message.grey_fabric_code || "");
+    frm.set_value("grey_fabric_name", message.grey_fabric_name || "");
+   }
   });
  },
  process_parameter_template(frm) {

@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import getdate, nowdate
+from frappe.utils import cint, getdate, nowdate
 
 
 class LaboratoryRecipe(Document):
@@ -32,10 +32,23 @@ class LaboratoryRecipe(Document):
         self.customer = color_master.customer_name
         self.customer_name = frappe.db.get_value("Customer", self.customer, "customer_name") or self.customer
         self.finished_product_name = color_master.product_name
-        if not self.grey_fabric:
+        if not self.grey_fabric_batch:
+            self.grey_fabric_batch = color_master.grey_fabric_batch
+        if not self.grey_fabric and not self.grey_fabric_batch:
             self.grey_fabric = color_master.grey_fabric
 
     def _set_grey_fabric_details(self):
+        if self.grey_fabric_batch:
+            batch = frappe.get_doc("Batch", self.grey_fabric_batch)
+            item = frappe.get_doc("Item", batch.item)
+            if cint(batch.disabled) or cint(item.disabled) or item.item_group != "胚布":
+                frappe.throw(_("只能选择启用的胚布库存批次"))
+
+            self.grey_fabric = frappe.db.get_value("Grey Fabric Master", {"item_code": item.name})
+            self.grey_fabric_code = item.name
+            self.grey_fabric_name = item.item_name
+            return
+
         if not self.grey_fabric:
             self.grey_fabric_code = None
             self.grey_fabric_name = None
