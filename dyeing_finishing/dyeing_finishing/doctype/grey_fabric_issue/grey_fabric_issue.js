@@ -3,7 +3,14 @@ frappe.ui.form.on("Grey Fabric Issue", {
   frm.set_query("flow_card", () => ({filters:{docstatus:["!=",2]}}));
   frm.set_query("batch_no", "items", (doc, cdt, cdn) => {const row=locals[cdt][cdn];return {query:"dyeing_finishing.dyeing_finishing.doctype.grey_fabric_issue.grey_fabric_issue.get_available_grey_fabric_batches",filters:{flow_card:frm.doc.flow_card,source_row:row.flow_card_grey_fabric_issue,exclude_batches:(frm.doc.items||[]).filter(item=>item.source_type==="自动带出"&&item.batch_no).map(item=>item.batch_no)}};});
  },
- refresh(frm) {loadPlanRows(frm);if (frm.is_new() || frm.doc.docstatus===0) frm.add_custom_button("新增补充批次",()=>addSupplement(frm),"胚布出库");},
+ refresh(frm) {
+  loadPlanRows(frm);
+  if (frm.doc.docstatus===2) {
+   frm.add_custom_button("重新打开",()=>reopenIssue(frm),"胚布出库");
+  } else if (frm.is_new() || frm.doc.docstatus===0) {
+   frm.add_custom_button("新增补充批次",()=>addSupplement(frm),"胚布出库");
+  }
+ },
  flow_card(frm) {
   if (!frm.doc.flow_card) {frm.clear_table("items");frm.refresh_field("items");return;}
   frappe.call({method:"dyeing_finishing.dyeing_finishing.doctype.grey_fabric_issue.grey_fabric_issue.get_grey_fabric_issue_flow_card_details",args:{flow_card:frm.doc.flow_card},freeze:true,freeze_message:"正在带出流转卡胚布资料…",callback:({message})=>{
@@ -25,3 +32,5 @@ function setIssueDefaults(frm,cdt,cdn){const row=locals[cdt][cdn];const others=(
 
 function loadPlanRows(frm){if(!frm.doc.flow_card||frm._greyFabricPlans)return;frappe.call({method:"dyeing_finishing.dyeing_finishing.doctype.grey_fabric_issue.grey_fabric_issue.get_grey_fabric_issue_flow_card_details",args:{flow_card:frm.doc.flow_card},callback:({message})=>{frm._greyFabricPlans=(message&&message.plan_rows)||[];}});}
 function assignPlanFromBatch(frm,cdt,cdn,detail){const row=locals[cdt][cdn];if(row.flow_card_grey_fabric_issue){setIssueDefaults(frm,cdt,cdn);setShortage(cdt,cdn);setTotals(frm);return;}const plans=(frm._greyFabricPlans||[]).filter(plan=>(!plan.grey_fabric_name||plan.grey_fabric_name===detail.grey_fabric_name)&&(!plan.color||!detail.color||plan.color.trim()===detail.color.trim())&&(!plan.location||plan.location===detail.location));if(!plans.length){frappe.msgprint("所选批次没有对应的流转卡胚布领用计划，不能出库。");frappe.model.set_value(cdt,cdn,"batch_no","");return;}const apply=plan=>{["grey_fabric_name","color","planned_roll_count","planned_qty","warehouse","location"].forEach(f=>frappe.model.set_value(cdt,cdn,f,plan[f]||""));frappe.model.set_value(cdt,cdn,"flow_card_grey_fabric_issue",plan.name);frappe.model.set_value(cdt,cdn,"source_type","补充批次");setIssueDefaults(frm,cdt,cdn);setShortage(cdt,cdn);setTotals(frm);};if(plans.length===1){apply(plans[0]);return;}const options=plans.map(plan=>`${plan.name}｜${plan.grey_fabric_name||"未填写胚布"}｜${plan.color||"无颜色"}`);frappe.prompt([{fieldname:"plan",label:"胚布领用计划",fieldtype:"Select",options:options.join("\n"),reqd:1}],values=>apply(plans[options.indexOf(values.plan)]),"选择胚布领用计划","确定");}
+
+function reopenIssue(frm){frappe.confirm("重新打开后，原单会恢复为草稿，可直接修改并重新提交。是否继续？",()=>{frappe.call({method:"dyeing_finishing.dyeing_finishing.doctype.grey_fabric_issue.grey_fabric_issue.reopen_grey_fabric_issue",args:{name:frm.doc.name},freeze:true,freeze_message:"正在重新打开单据…",callback:()=>{frappe.show_alert({message:"单据已恢复为草稿",indicator:"green"});frm.reload_doc();}});});}

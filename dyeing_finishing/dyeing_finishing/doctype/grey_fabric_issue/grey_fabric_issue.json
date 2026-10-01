@@ -278,6 +278,5 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "document_number",
- "allow_amend": 1
+ "title_field": "document_number"
 }

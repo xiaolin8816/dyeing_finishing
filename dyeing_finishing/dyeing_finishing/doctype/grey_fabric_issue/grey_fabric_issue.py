@@ -197,3 +197,26 @@ def get_grey_fabric_issue_batch_details(batch_no, customer, location=None):
     if not detail:
         frappe.throw(_("未找到当前客户名下的可用胚布批次"))
     return detail
+
+@frappe.whitelist()
+def reopen_grey_fabric_issue(name):
+    """将已取消的胚布出库单恢复为草稿，供原单直接修改后再次提交。"""
+    issue = frappe.get_doc("Grey Fabric Issue", name)
+    if issue.docstatus != 2:
+        frappe.throw(_("只有已取消的胚布出库单可以重新打开"))
+
+    if issue.stock_entry:
+        entry = frappe.get_doc("Stock Entry", issue.stock_entry)
+        if entry.docstatus == 1:
+            frappe.throw(_("关联库存凭证尚未取消，不能重新打开胚布出库单"))
+
+    frappe.db.set_value(
+        "Grey Fabric Issue",
+        issue.name,
+        {"docstatus": 0, "stock_entry": None},
+        update_modified=True,
+    )
+    reopened = frappe.get_doc("Grey Fabric Issue", issue.name)
+    reopened.add_comment("Edit", _("单据已重新打开，可修改后再次提交。"))
+    return reopened.name
+
