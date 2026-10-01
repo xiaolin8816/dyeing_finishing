@@ -52,6 +52,10 @@
         ]);
     }
 
+    function hide_unused_top_filters(listview) {
+        listview.page.fields_dict.recipe_no?.$wrapper?.hide();
+    }
+
     function apply_recipe_version_width(listview) {
         const width = `${VERSION_WIDTH}px`;
         listview.$result.find('[data-fieldname="recipe_version"]').css({
@@ -63,6 +67,7 @@
     }
 
     frappe.listview_settings["Laboratory Recipe"] = {
+        hide_name_filter: true,
         custom_filter_configs: [
             {
                 fieldname: "sampling_date",
@@ -87,6 +92,7 @@
         ],
         onload(listview) {
             order_columns(listview);
+            hide_unused_top_filters(listview);
             apply_current_month_filter(listview);
         },
         refresh(listview) {
