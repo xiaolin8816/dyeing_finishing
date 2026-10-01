@@ -1,219 +1,221 @@
 {
-  "actions": [],
-  "allow_bulk_edit": 1,
-  "allow_rename": 0,
-  "autoname": "field:color_no",
-  "creation": "2026-09-29 12:00:00.000000",
-  "doctype": "DocType",
-  "engine": "InnoDB",
-  "field_order": [
-    "color_no",
-    "color_column_2",
-    "color_name",
-    "color_column_3",
-    "status",
-    "customer_product_section",
-    "customer_name",
-    "customer_product_column_2",
-    "customer_code",
-    "customer_product_column_3",
-    "product_name",
-    "grey_fabric_section",
-    "grey_fabric",
-    "grey_fabric_column_2",
-    "grey_fabric_code",
-    "grey_fabric_column_3",
-    "grey_fabric_name",
-    "lab_section",
-    "lab_record",
-    "lab_column_2",
-    "sampler",
-    "lab_column_3",
-    "remark"
-  ],
-  "fields": [
-    {
-      "fieldname": "color_no",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "in_standard_filter": 1,
-      "label": "色号",
-      "reqd": 1,
-      "unique": 1
-    },
-    {
-      "fieldname": "color_column_2",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "color_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "in_standard_filter": 1,
-      "label": "颜色",
-      "reqd": 1
-    },
-    {
-      "fieldname": "color_column_3",
-      "fieldtype": "Column Break"
-    },
-    {
-      "default": "启用",
-      "fieldname": "status",
-      "fieldtype": "Select",
-      "in_list_view": 1,
-      "label": "状态",
-      "options": "启用\n停用",
-      "reqd": 1
-    },
-    {
-      "fieldname": "customer_product_section",
-      "fieldtype": "Section Break",
-      "label": "客户与产品"
-    },
-    {
-      "fieldname": "customer_name",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "客户名称",
-      "options": "Customer",
-      "reqd": 1
-    },
-    {
-      "fieldname": "customer_product_column_2",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "customer_code",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "客户编码",
-      "read_only": 1
-    },
-    {
-      "fieldname": "customer_product_column_3",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "product_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "成品名称",
-      "reqd": 1
-    },
-    {
-      "fieldname": "grey_fabric_section",
-      "fieldtype": "Section Break",
-      "label": "胚布资料"
-    },
-    {
-      "fieldname": "grey_fabric",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "胚布",
-      "options": "Grey Fabric Master"
-    },
-    {
-      "fieldname": "grey_fabric_column_2",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fetch_from": "grey_fabric.item_code",
-      "fieldname": "grey_fabric_code",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "胚布编码",
-      "read_only": 1
-    },
-    {
-      "fieldname": "grey_fabric_column_3",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fetch_from": "grey_fabric.fabric_name",
-      "fieldname": "grey_fabric_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "胚布名称",
-      "read_only": 1
-    },
-    {
-      "fieldname": "lab_section",
-      "fieldtype": "Section Break",
-      "label": "化验资料"
-    },
-    {
-      "fieldname": "lab_record",
-      "fieldtype": "Data",
-      "label": "化验档案"
-    },
-    {
-      "fieldname": "lab_column_2",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "sampler",
-      "fieldtype": "Link",
-      "label": "打样员",
-      "options": "Employee"
-    },
-    {
-      "fieldname": "lab_column_3",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "remark",
-      "fieldtype": "Small Text",
-      "label": "备注"
-    }
-  ],
-  "grid_page_length": 50,
-  "index_web_pages_for_search": 1,
-  "links": [],
-  "modified": "2026-09-29 14:15:00.000000",
-  "modified_by": "Administrator",
-  "module": "dyeing_finishing",
-  "name": "Color Master",
-  "naming_rule": "By fieldname",
-  "owner": "Administrator",
-  "permissions": [
-    {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-    },
-    {
-      "create": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "Stock Manager",
-      "share": 1,
-      "write": 1
-    },
-    {
-      "create": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "Stock User",
-      "share": 1,
-      "write": 1
-    }
-  ],
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": [],
-  "title_field": "color_no"
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 0,
+ "autoname": "field:color_no",
+ "creation": "2026-09-29 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "color_no",
+  "color_column_2",
+  "color_name",
+  "color_column_3",
+  "status",
+  "customer_product_section",
+  "customer_name",
+  "customer_product_column_2",
+  "customer_code",
+  "customer_product_column_3",
+  "product_name",
+  "grey_fabric_section",
+  "grey_fabric",
+  "grey_fabric_column_2",
+  "grey_fabric_code",
+  "grey_fabric_column_3",
+  "grey_fabric_name",
+  "lab_section",
+  "lab_record",
+  "lab_column_2",
+  "sampler",
+  "lab_column_3",
+  "remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "color_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "色号",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "color_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "color_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "颜色",
+   "reqd": 1
+  },
+  {
+   "fieldname": "color_column_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "启用",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "状态",
+   "options": "启用\n停用",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_product_section",
+   "fieldtype": "Section Break",
+   "label": "客户与产品"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "客户名称",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_product_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "客户编码",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_product_column_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "product_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "成品名称",
+   "reqd": 1
+  },
+  {
+   "fieldname": "grey_fabric_section",
+   "fieldtype": "Section Break",
+   "label": "胚布资料"
+  },
+  {
+   "fieldname": "grey_fabric",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "胚布",
+   "options": "Grey Fabric Master"
+  },
+  {
+   "fieldname": "grey_fabric_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "grey_fabric.item_code",
+   "fieldname": "grey_fabric_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "胚布编码",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grey_fabric_column_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "grey_fabric.fabric_name",
+   "fieldname": "grey_fabric_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "胚布名称",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lab_section",
+   "fieldtype": "Section Break",
+   "label": "化验资料"
+  },
+  {
+   "fieldname": "lab_record",
+   "fieldtype": "Link",
+   "label": "化验档案",
+   "options": "Laboratory Recipe",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lab_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sampler",
+   "fieldtype": "Link",
+   "label": "打样员",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "lab_column_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remark",
+   "fieldtype": "Small Text",
+   "label": "备注"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-29 14:15:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Color Master",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "color_no"
 }

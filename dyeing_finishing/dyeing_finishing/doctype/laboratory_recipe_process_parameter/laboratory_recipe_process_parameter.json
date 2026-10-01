@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-10-01 15:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sequence_no",
+  "operation",
+  "operation_name",
+  "temperature",
+  "holding_time",
+  "heating_rate",
+  "ph_value",
+  "bath_ratio",
+  "operation_instruction"
+ ],
+ "fields": [
+  {
+   "fieldname": "sequence_no",
+   "label": "顺序号",
+   "fieldtype": "Int",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "operation",
+   "label": "工序",
+   "fieldtype": "Link",
+   "options": "Production Operation",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "operation_name",
+   "label": "工序名称",
+   "fieldtype": "Data",
+   "fetch_from": "operation.production_operation_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "temperature",
+   "label": "温度（℃）",
+   "fieldtype": "Float",
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "holding_time",
+   "label": "保温时间（分钟）",
+   "fieldtype": "Float",
+   "precision": "2",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "heating_rate",
+   "label": "升温速度（℃/分钟）",
+   "fieldtype": "Float",
+   "precision": "2"
+  },
+  {
+   "fieldname": "ph_value",
+   "label": "pH 值",
+   "fieldtype": "Float",
+   "precision": "2"
+  },
+  {
+   "fieldname": "bath_ratio",
+   "label": "浴比",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "operation_instruction",
+   "label": "操作说明",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-01 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Laboratory Recipe Process Parameter",
+ "owner": "Administrator",
+ "permissions": []
+}

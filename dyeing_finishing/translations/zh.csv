@@ -12521,3 +12521,6 @@ Packaging Requirement Code,包装编码
 Packaging Requirement Name,包装名称
 Grey Fabric Issue,胚布出库单
 Grey Fabric Issue Item,胚布出库明细
+Laboratory Recipe,化验室配方档案
+Laboratory Recipe Item,化验室配方明细
+Laboratory Recipe Process Parameter,化验室配方工艺参数
