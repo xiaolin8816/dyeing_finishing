@@ -180,7 +180,8 @@
    "label": "胚布档案",
    "fieldtype": "Link",
    "options": "Grey Fabric Master",
-   "read_only": 1
+   "read_only": 1,
+   "hidden": 1
   },
   {
    "fieldname": "grey_fabric_code",
