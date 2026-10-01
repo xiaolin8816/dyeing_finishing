@@ -14,8 +14,8 @@ def execute(filters=None):
         {"label": _("出库匹数"), "fieldname": "issue_roll_count", "fieldtype": "Float", "precision": 2, "width": 110},
         {"label": _("出库数量"), "fieldname": "issue_qty", "fieldtype": "Float", "precision": 2, "width": 110},
         {"label": _("单位"), "fieldname": "stock_uom", "fieldtype": "Data", "width": 75},
-        {"label": _("货位编号"), "fieldname": "location", "fieldtype": "Data", "width": 180},
         {"label": _("仓库"), "fieldname": "warehouse", "fieldtype": "Data", "width": 150},
+        {"label": _("货位编号"), "fieldname": "location", "fieldtype": "Data", "width": 180},
         {"label": _("入库日期"), "fieldname": "receipt_date", "fieldtype": "Date", "width": 100},
         {"label": _("颜色"), "fieldname": "color", "fieldtype": "Data", "width": 100},
     ]
