@@ -7,7 +7,6 @@ def execute(filters=None):
         {"label": _("客户"), "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 170},
         {"label": _("批次"), "fieldname": "batch_no", "fieldtype": "Link", "options": "Batch", "width": 145},
         {"label": _("胚布名称"), "fieldname": "item_name", "fieldtype": "Data", "width": 180},
-        {"label": _("颜色"), "fieldname": "color", "fieldtype": "Data", "width": 100},
         {"label": _("库存匹数"), "fieldname": "stock_roll_count", "fieldtype": "Float", "precision": 2, "width": 110},
         {"label": _("库存数量"), "fieldname": "stock_qty", "fieldtype": "Float", "precision": 2, "width": 110},
         {"label": _("入库匹数"), "fieldname": "receipt_roll_count", "fieldtype": "Float", "precision": 2, "width": 110},
@@ -18,6 +17,7 @@ def execute(filters=None):
         {"label": _("货位编号"), "fieldname": "location", "fieldtype": "Link", "options": "Warehouse", "width": 180},
         {"label": _("仓库"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 150},
         {"label": _("入库日期"), "fieldname": "receipt_date", "fieldtype": "Date", "width": 100},
+        {"label": _("颜色"), "fieldname": "color", "fieldtype": "Data", "width": 100},
     ]
     data = frappe.db.sql("""
         SELECT sle.item_code, item.item_name,
