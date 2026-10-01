@@ -7,7 +7,7 @@ from frappe.utils import flt, getdate, nowdate
 
 from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query
 
-TARGET_WAREHOUSE = "进行中 - 沅泰"
+TARGET_WAREHOUSE = "生产中转仓 - 沅泰"
 
 
 class GreyFabricIssue(Document):
