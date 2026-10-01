@@ -114,7 +114,7 @@ class GreyFabricIssue(Document):
         for row in self.items:
             if not flt(row.issue_qty):
                 continue
-            stock_items.append({"item_code":row.item_code,"qty":flt(row.issue_qty),"uom":frappe.db.get_value("Item",row.item_code,"stock_uom"),"s_warehouse":row.location,"t_warehouse":TARGET_WAREHOUSE,"batch_no":row.batch_no,"allow_zero_valuation_rate":1})
+            stock_items.append({"item_code":row.item_code,"qty":flt(row.issue_qty),"uom":frappe.db.get_value("Item",row.item_code,"stock_uom"),"s_warehouse":row.location,"t_warehouse":TARGET_WAREHOUSE,"batch_no":row.batch_no,"use_serial_batch_fields":1,"allow_zero_valuation_rate":1})
         if not stock_items:
             frappe.throw(_("没有可生成库存转移的出库数量"))
         entry = frappe.get_doc({"doctype":"Stock Entry","stock_entry_type":"Material Transfer","purpose":"Material Transfer","company":company,"posting_date":self.outbound_date,"to_warehouse":TARGET_WAREHOUSE,"remarks":_("胚布出库单：{0}；生产流转卡：{1}").format(self.name,self.flow_card),"items":stock_items})
