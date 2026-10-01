@@ -18,6 +18,7 @@ frappe.ui.form.on("Laboratory Recipe", {
   frappe.db.get_doc("Color Master", frm.doc.color_no).then(color => {
    frm.set_value("color", color.color_name || "");
    frm.set_value("customer", color.customer_name || "");
+   frm.set_value("customer_name", color.customer_name || "");
    frm.set_value("finished_product_name", color.product_name || "");
    frm.set_value("grey_fabric_batch", color.grey_fabric_batch || "");
    if (!color.grey_fabric_batch) {

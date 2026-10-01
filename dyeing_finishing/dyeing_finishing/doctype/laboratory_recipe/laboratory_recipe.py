@@ -33,7 +33,7 @@ class LaboratoryRecipe(Document):
             frappe.throw(_("只能选择状态为启用的色号"))
         self.color = color_master.color_name
         self.customer = color_master.customer_name
-        self.customer_name = frappe.db.get_value("Customer", self.customer, "customer_name") or self.customer
+        self.customer_name = self.customer
         self.finished_product_name = color_master.product_name
         if not self.grey_fabric_batch:
             self.grey_fabric_batch = color_master.grey_fabric_batch

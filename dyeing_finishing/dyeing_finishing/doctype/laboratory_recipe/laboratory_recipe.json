@@ -143,14 +143,16 @@
    "fieldtype": "Link",
    "options": "Customer",
    "read_only": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "hidden": 1
   },
   {
    "fieldname": "customer_name",
    "label": "客户名称",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "read_only": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "options": "Customer"
   },
   {
    "fieldname": "customer_column_2",
