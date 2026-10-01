@@ -23,7 +23,14 @@ def execute(filters=None):
             COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) AS batch_no,
             MAX(receipt.customer) AS customer, MAX(receipt_item.color) AS color,
             MAX(receipt_item.width) AS width, MAX(receipt_item.gsm) AS gsm,
-            '胚布仓库 - 沅泰' AS warehouse, sle.warehouse AS location,
+            CASE
+                WHEN stock_warehouse.parent_warehouse = '胚布货位 - 沅泰' THEN '胚布仓库 - 沅泰'
+                ELSE sle.warehouse
+            END AS warehouse,
+            CASE
+                WHEN stock_warehouse.parent_warehouse = '胚布货位 - 沅泰' THEN sle.warehouse
+                ELSE NULL
+            END AS location,
             CASE
                 WHEN sle.warehouse = '生产中转仓 - 沅泰' THEN GREATEST(COALESCE(MAX(transfer_rolls.roll_delta), 0), 0)
                 ELSE GREATEST(
@@ -36,6 +43,7 @@ def execute(filters=None):
             MAX(receipt.receipt_date) AS receipt_date
         FROM `tabStock Ledger Entry` sle
         INNER JOIN `tabItem` item ON item.name = sle.item_code
+        LEFT JOIN `tabWarehouse` stock_warehouse ON stock_warehouse.name = sle.warehouse
         LEFT JOIN `tabSerial and Batch Entry` bundle_entry ON bundle_entry.parent = sle.serial_and_batch_bundle
         LEFT JOIN `tabCustomer Grey Fabric Receipt Item` receipt_item
             ON receipt_item.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
