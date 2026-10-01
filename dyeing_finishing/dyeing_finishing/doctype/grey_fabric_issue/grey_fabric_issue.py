@@ -14,18 +14,15 @@ class GreyFabricIssue(Document):
     def before_insert(self):
         self.document_number = self.name
         self.outbound_date = self.outbound_date or getdate(nowdate())
-        self._set_document_status()
 
     def validate(self):
         self.document_number = self.name
         self.outbound_date = self.outbound_date or getdate(nowdate())
-        self._set_document_status()
         self._set_flow_card_details()
         self._validate_items()
         self._set_totals()
 
     def before_submit(self):
-        self._set_document_status("已提交")
         self._validate_items()
         self._set_totals()
 
@@ -37,10 +34,6 @@ class GreyFabricIssue(Document):
             entry = frappe.get_doc("Stock Entry", self.stock_entry)
             if entry.docstatus == 1:
                 entry.cancel()
-        self.db_set("document_status", "已取消", update_modified=False)
-
-    def _set_document_status(self, value=None):
-        self.document_status = value or ("已提交" if self.docstatus == 1 else "保存")
 
     def _set_flow_card_details(self):
         if not self.flow_card:
