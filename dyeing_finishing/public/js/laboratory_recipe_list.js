@@ -40,13 +40,16 @@
             return;
         }
 
+        const sampling_date = listview.page.fields_dict.sampling_date;
+        if (!sampling_date) {
+            return;
+        }
+
         listview.__laboratory_recipe_default_filter_applied = true;
-        listview.filter_area.add(
-            listview.doctype,
-            "sampling_date",
-            "between",
-            [frappe.datetime.month_start(), frappe.datetime.month_end()]
-        );
+        sampling_date.set_value([
+            frappe.datetime.month_start(),
+            frappe.datetime.month_end(),
+        ]);
     }
 
     function apply_recipe_version_width(listview) {
@@ -60,6 +63,14 @@
     }
 
     frappe.listview_settings["Laboratory Recipe"] = {
+        custom_filter_configs: [
+            {
+                fieldname: "sampling_date",
+                label: "打样日期",
+                fieldtype: "DateRange",
+                condition: "between",
+            },
+        ],
         onload(listview) {
             order_columns(listview);
             apply_current_month_filter(listview);
