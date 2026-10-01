@@ -17,6 +17,7 @@ class LaboratoryRecipe(Document):
         self.recipe_version = self.recipe_version or "V1"
         self._set_color_details()
         self._set_grey_fabric_details()
+        self._validate_process_parameter_template()
         if self.recipe_status == "已确认":
             self.confirmation_date = self.confirmation_date or getdate(nowdate())
             frappe.db.set_value("Color Master", self.color_no, "lab_record", self.name, update_modified=False)
@@ -42,3 +43,14 @@ class LaboratoryRecipe(Document):
         fabric = frappe.get_doc("Grey Fabric Master", self.grey_fabric)
         self.grey_fabric_code = fabric.item_code
         self.grey_fabric_name = fabric.fabric_name
+
+    def _validate_process_parameter_template(self):
+        if not self.process_parameter_template:
+            return
+        template = frappe.get_doc("Process Parameter Template", self.process_parameter_template)
+        if template.status != "启用":
+            frappe.throw(_("只能选择状态为启用的工艺参数模板"))
+        if not self.process_type:
+            self.process_type = template.process_type
+        elif self.process_type != template.process_type:
+            frappe.throw(_("加工类型必须与工艺参数模板的加工类型一致"))
