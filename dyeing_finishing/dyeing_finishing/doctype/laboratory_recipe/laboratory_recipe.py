@@ -64,3 +64,37 @@ class LaboratoryRecipe(Document):
         template = frappe.get_doc("Process Parameter Template", self.process_parameter_template)
         if template.status != "启用":
             frappe.throw(_("只能选择状态为启用的工艺参数模板"))
+
+
+def _get_recipe_for_confirmation(name):
+    recipe = frappe.get_doc("Laboratory Recipe", name)
+    if not frappe.has_permission("Laboratory Recipe", "write", recipe):
+        frappe.throw(_("无权确认化验室配方"))
+    return recipe
+
+
+@frappe.whitelist()
+def confirm_recipe(name):
+    recipe = _get_recipe_for_confirmation(name)
+    if recipe.recipe_status == "停用":
+        frappe.throw(_("停用的配方不能确认"))
+
+    recipe.recipe_status = "已确认"
+    recipe.confirmation_date = getdate(nowdate())
+    recipe.save()
+    return recipe.name
+
+
+@frappe.whitelist()
+def cancel_recipe_confirmation(name):
+    recipe = _get_recipe_for_confirmation(name)
+    if recipe.recipe_status != "已确认":
+        frappe.throw(_("只有已确认的配方才能取消确认"))
+
+    recipe.recipe_status = "草稿"
+    recipe.confirmation_date = None
+    recipe.save()
+
+    if frappe.db.get_value("Color Master", recipe.color_no, "lab_record") == recipe.name:
+        frappe.db.set_value("Color Master", recipe.color_no, "lab_record", None, update_modified=False)
+    return recipe.name

@@ -13,6 +13,35 @@ frappe.ui.form.on("Laboratory Recipe", {
    }
   }));
  },
+ refresh(frm) {
+  if (frm.is_new()) return;
+
+  if (frm.doc.recipe_status === "已确认") {
+   frm.add_custom_button("取消确认", () => {
+    frappe.confirm("取消确认后，配方将恢复为草稿。是否继续？", () => {
+     frappe.call({
+      method: "dyeing_finishing.dyeing_finishing.doctype.laboratory_recipe.laboratory_recipe.cancel_recipe_confirmation",
+      args: {name: frm.doc.name},
+      freeze: true,
+      freeze_message: "正在取消确认…",
+      callback: () => frm.reload_doc()
+     });
+    });
+   }, "操作");
+  } else if (frm.doc.recipe_status !== "停用") {
+   frm.add_custom_button("确认配方", () => {
+    frappe.confirm("确认后将作为该色号的当前化验配方。是否继续？", () => {
+     frappe.call({
+      method: "dyeing_finishing.dyeing_finishing.doctype.laboratory_recipe.laboratory_recipe.confirm_recipe",
+      args: {name: frm.doc.name},
+      freeze: true,
+      freeze_message: "正在确认配方…",
+      callback: () => frm.reload_doc()
+     });
+    });
+   }, "操作");
+  }
+ },
  color_no(frm) {
   if (!frm.doc.color_no) return;
   frappe.db.get_doc("Color Master", frm.doc.color_no).then(color => {
