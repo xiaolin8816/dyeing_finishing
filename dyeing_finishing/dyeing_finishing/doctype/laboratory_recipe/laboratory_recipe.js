@@ -2,6 +2,12 @@ frappe.ui.form.on("Laboratory Recipe", {
  setup(frm) {
   frm.set_query("color_no", () => ({filters:{status:"启用"}}));
   frm.set_query("process_parameter_template", () => ({filters:{status:"启用"}}));
+  frm.set_query("item_code", "recipe_items", () => ({
+   filters: {
+    item_group: ["in", ["染料", "助剂"]],
+    disabled: 0
+   }
+  }));
  },
  color_no(frm) {
   if (!frm.doc.color_no) return;
