@@ -1,3 +1,27 @@
+function lock_confirmed_recipe(frm) {
+ if (!frm._recipe_field_read_only) {
+  frm._recipe_field_read_only = {};
+  frm.fields.forEach(field => {
+   frm._recipe_field_read_only[field.df.fieldname] = field.df.read_only;
+  });
+ }
+ frm.fields.forEach(field => {
+  frm.set_df_property(field.df.fieldname, "read_only", 1);
+ });
+ frm.disable_save();
+}
+
+function unlock_recipe(frm) {
+ if (frm._recipe_field_read_only) {
+  frm.fields.forEach(field => {
+   const readOnly = frm._recipe_field_read_only[field.df.fieldname];
+   frm.set_df_property(field.df.fieldname, "read_only", readOnly || 0);
+  });
+  delete frm._recipe_field_read_only;
+ }
+ frm.enable_save();
+}
+
 frappe.ui.form.on("Laboratory Recipe", {
  setup(frm) {
   frm.set_query("color_no", () => ({filters:{status:"启用"}}));
@@ -28,8 +52,12 @@ frappe.ui.form.on("Laboratory Recipe", {
      });
     });
    }, "操作");
-   frm.disable_form();
-  } else if (frm.doc.recipe_status !== "停用") {
+   lock_confirmed_recipe(frm);
+  } else {
+   unlock_recipe(frm);
+  }
+
+  if (frm.doc.recipe_status !== "已确认" && frm.doc.recipe_status !== "停用") {
    frm.add_custom_button("确认配方", () => {
     frappe.confirm("确认后将作为该色号的当前化验配方。是否继续？", () => {
      frappe.call({
