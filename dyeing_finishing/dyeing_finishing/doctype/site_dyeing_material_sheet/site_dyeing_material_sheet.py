@@ -92,7 +92,7 @@ class SiteDyeingMaterialSheet(Document):
   else:
    self.recipe_snapshot_source=self.recipe_snapshot_source or recipe.name
  def _copy_recipe(self,recipe):
-  manual_items=[{field: row.get(field) for field in MANUAL_ITEM_FIELDS} for row in self.items if row.source==MANUAL_SOURCE]
+  manual_items=[{field: row.get(field) for field in MANUAL_ITEM_FIELDS} for row in self.items if row.source==MANUAL_SOURCE and row.item_code]
   self.set("items",[])
   for s in recipe.get("recipe_items") or []: self.append("items",{"source":RECIPE_SOURCE,"item_code":s.item_code,"item_name":s.item_name,"material_category":s.material_category,"uom":s.uom,"dosage_basis":s.dosage_basis,"formula_qty":s.formula_qty,"site_ratio":s.formula_qty,"temporary_qty":0,"issue_status":"未领料","remark":s.remark})
   for row in manual_items: self.append("items",row)
