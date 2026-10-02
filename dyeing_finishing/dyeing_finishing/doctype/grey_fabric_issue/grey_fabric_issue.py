@@ -39,6 +39,14 @@ class GreyFabricIssue(Document):
             entry = frappe.get_doc("Stock Entry", stock_entry)
             if entry.docstatus == 1:
                 entry.cancel()
+            # 已取消库存凭证仅保留在库存审计中，不再保留已恢复草稿的胚布出库单链接，允许该草稿删除。
+            quote = chr(96)
+            frappe.db.sql(
+                f"UPDATE {quote}tabStock Entry Detail{quote} "
+                "SET custom_grey_fabric_issue = NULL "
+                "WHERE parent = %s AND parenttype = 'Stock Entry'",
+                stock_entry,
+            )
 
         # 取消库存转移后，原单直接恢复为草稿，用户可在同一张单据修改后再次提交。
         self.db_set({"docstatus": 0}, update_modified=False)
