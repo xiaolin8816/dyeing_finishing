@@ -5,6 +5,8 @@ WORKSPACE = "印染整理"
 CARD_LABEL = "染料管理"
 LINK_LABEL = "染料入库单"
 REPORT_NAME = "Dye Material Receipt Register"
+STOCK_LINK_LABEL = "染料库存"
+STOCK_REPORT_NAME = "Dye Material Stock"
 
 
 def execute():
@@ -48,7 +50,7 @@ def execute():
         card = workspace.append("links", {"type": "Card Break", "label": CARD_LABEL})
     card.link_type = "Report"
     card.is_query_report = 1
-    card.link_count = 1
+    card.link_count = 2
 
     link = next(
         (row for row in workspace.links or [] if row.type == "Link" and row.label == LINK_LABEL),
@@ -59,5 +61,15 @@ def execute():
     link.link_type = "Report"
     link.link_to = REPORT_NAME
     link.is_query_report = 1
+
+    stock_link = next(
+        (row for row in workspace.links or [] if row.type == "Link" and row.label == STOCK_LINK_LABEL),
+        None,
+    )
+    if not stock_link:
+        stock_link = workspace.append("links", {"type": "Link", "label": STOCK_LINK_LABEL})
+    stock_link.link_type = "Report"
+    stock_link.link_to = STOCK_REPORT_NAME
+    stock_link.is_query_report = 1
 
     workspace.save(ignore_permissions=True)

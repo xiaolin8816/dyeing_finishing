@@ -231,7 +231,7 @@
    "hidden": 0,
    "is_query_report": 1,
    "label": "染料管理",
-   "link_count": 1,
+   "link_count": 2,
    "link_type": "Report",
    "onboard": 0,
    "type": "Card Break"
@@ -243,6 +243,17 @@
    "label": "染料入库单",
    "link_count": 0,
    "link_to": "Dye Material Receipt Register",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "染料库存",
+   "link_count": 0,
+   "link_to": "Dye Material Stock",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
