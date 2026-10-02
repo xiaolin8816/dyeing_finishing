@@ -12,11 +12,13 @@
   "document_section",
   "material_sheet_no",
   "planned_dyeing_date",
+  "material_sheet_type",
   "customer_name",
   "document_column_2",
   "material_sheet_status",
   "color_no",
   "grey_fabric_issue_qty",
+  "dyeing_sequence",
   "document_column_3",
   "production_flow_card",
   "color",
@@ -50,6 +52,11 @@
   "recipe_snapshot_source",
   "relation_tab",
   "relation_section",
+  "dyeing_trace_section",
+  "original_material_sheet",
+  "previous_material_sheet",
+  "dyeing_trace_column",
+  "rework_reason",
   "material_request",
   "stock_entry",
   "remarks_tab",
@@ -353,6 +360,52 @@
    "fieldname": "remarks",
    "label": "备注",
    "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "material_sheet_type",
+   "label": "料单类型",
+   "fieldtype": "Select",
+   "options": "首次染色\n追加染色\n返修染色",
+   "default": "首次染色",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "dyeing_sequence",
+   "label": "染色次数",
+   "fieldtype": "Int",
+   "default": "1",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "dyeing_trace_section",
+   "label": "染色料单追溯",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "original_material_sheet",
+   "label": "原始料单",
+   "fieldtype": "Link",
+   "options": "Site Dyeing Material Sheet",
+   "read_only": 1
+  },
+  {
+   "fieldname": "previous_material_sheet",
+   "label": "上一张料单",
+   "fieldtype": "Link",
+   "options": "Site Dyeing Material Sheet",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dyeing_trace_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rework_reason",
+   "label": "返修原因",
+   "fieldtype": "Small Text",
+   "read_only": 1
   }
  ],
  "autoname": "RL.YY.MM.DD.###",

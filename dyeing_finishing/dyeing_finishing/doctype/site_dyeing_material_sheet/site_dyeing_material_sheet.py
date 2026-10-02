@@ -80,3 +80,34 @@ def get_site_dyeing_material_sheet_flow_card_details(flow_card):
   x=(frappe.get_doc("Grey Fabric Issue",issue).items or [None])[0]
   if x: r.update({"grey_fabric_batch":x.batch_no,"grey_fabric_name":x.grey_fabric_name,"grey_fabric_issue_qty":x.issue_qty,"grey_fabric_uom":frappe.db.get_value("Item",x.item_code,"stock_uom") or ""})
  return r
+
+
+@frappe.whitelist()
+def create_followup_material_sheet(source_name, sheet_type, rework_reason=None):
+ if sheet_type not in ("追加染色", "返修染色"):
+  frappe.throw(_("料单类型只能为追加染色或返修染色"))
+ source=frappe.get_doc("Site Dyeing Material Sheet",source_name)
+ source.check_permission("read")
+ if source.docstatus==2 or source.material_sheet_status=="已取消":
+  frappe.throw(_("不能从已取消的现场染色料单创建后续料单"))
+ if sheet_type=="返修染色" and source.material_sheet_status!="已完成":
+  frappe.throw(_("返修染色料单只能从已完成的现场染色料单创建"))
+ if sheet_type=="返修染色" and not (rework_reason or "").strip():
+  frappe.throw(_("请填写返修原因"))
+ original=source.original_material_sheet or source.name
+ if not source.dyeing_sequence: source.db_set("dyeing_sequence",1,update_modified=False)
+ if not source.material_sheet_type: source.db_set("material_sheet_type","首次染色",update_modified=False)
+ next_sequence=frappe.db.count("Site Dyeing Material Sheet",{"production_flow_card":source.production_flow_card,"docstatus":["!=",2]})+1
+ target=frappe.copy_doc(source)
+ target.material_sheet_no=""
+ target.material_sheet_status="保存"
+ target.material_sheet_type=sheet_type
+ target.dyeing_sequence=next_sequence
+ target.original_material_sheet=original
+ target.previous_material_sheet=source.name
+ target.rework_reason=(rework_reason or "").strip() if sheet_type=="返修染色" else ""
+ target.planned_dyeing_date=getdate(nowdate())
+ target.material_request=""
+ target.stock_entry=""
+ target.insert()
+ return {"name":target.name,"material_sheet_no":target.material_sheet_no}
