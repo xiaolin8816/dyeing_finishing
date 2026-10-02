@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
-from frappe.utils import flt
+from frappe.utils import flt, now_datetime
 
 
 class ProductionFlowCard(Document):
@@ -266,3 +266,40 @@ def set_production_flow_card_list_column_widths(widths):
     frappe.db.set_global(_LIST_COLUMN_WIDTHS_KEY, frappe.as_json(cleaned_widths))
     return cleaned_widths
 
+
+
+def record_production_progress(flow_card, operation, progress_status, source_doctype, source_document,
+                               batch_no="", quantity=0, uom="", dyeing_machine="",
+                               material_sheet_type="", dyeing_sequence=0, description=""):
+    if not flow_card:
+        return
+    card = frappe.get_doc("Production Flow Card", flow_card)
+    if card.docstatus == 2:
+        return
+    progress = frappe.get_doc({
+        "doctype": "Production Flow Card Progress",
+        "parent": card.name,
+        "parenttype": "Production Flow Card",
+        "parentfield": "progress_records",
+        "docstatus": card.docstatus,
+        "progress_time": now_datetime(),
+        "operation": operation,
+        "progress_status": progress_status,
+        "source_doctype": source_doctype,
+        "source_document": source_document,
+        "batch_no": batch_no,
+        "quantity": flt(quantity),
+        "uom": uom,
+        "dyeing_machine": dyeing_machine,
+        "material_sheet_type": material_sheet_type,
+        "dyeing_sequence": dyeing_sequence,
+        "operator": frappe.session.user,
+        "description": description,
+    })
+    progress.insert(ignore_permissions=True)
+    frappe.db.set_value("Production Flow Card", card.name, {
+        "current_progress_status": progress_status,
+        "latest_progress_time": progress.progress_time,
+        "latest_source_doctype": source_doctype,
+        "latest_source_document": source_document,
+    }, update_modified=False)

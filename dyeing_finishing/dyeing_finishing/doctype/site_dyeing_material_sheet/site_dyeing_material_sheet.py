@@ -3,6 +3,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import flt, getdate, nowdate
+from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import record_production_progress
 
 ALLOWED_ITEM_GROUPS = ("染料", "助剂")
 MANUAL_SOURCE = "手动新增"
@@ -52,6 +53,13 @@ class SiteDyeingMaterialSheet(Document):
   if not self.items or not any(row.item_code for row in self.items):
    frappe.throw(_("现场料单明细不能为空，不能提交"))
   self.material_sheet_status="待领料"
+ def on_submit(self):
+  record_production_progress(
+   self.production_flow_card, "染色", "待领料", "Site Dyeing Material Sheet", self.name,
+   batch_no=self.grey_fabric_batch, quantity=self.grey_fabric_issue_qty, uom=self.grey_fabric_uom,
+   dyeing_machine=self.dyeing_machine, material_sheet_type=self.material_sheet_type,
+   dyeing_sequence=self.dyeing_sequence, description="现场染色料单已提交",
+  )
  def on_cancel(self):
   has_issued_qty=any(flt(row.issued_qty)>0 for row in self.items)
   if has_issued_qty or self.material_sheet_status in ("部分领料","已领料","已完成"):
@@ -65,6 +73,12 @@ class SiteDyeingMaterialSheet(Document):
   self.docstatus=0
   for row in self.items: row.docstatus=0
   for row in self.process_parameters: row.docstatus=0
+  record_production_progress(
+   self.production_flow_card, "染色", "染色料单已撤销", "Site Dyeing Material Sheet", self.name,
+   batch_no=self.grey_fabric_batch, quantity=self.grey_fabric_issue_qty, uom=self.grey_fabric_uom,
+   dyeing_machine=self.dyeing_machine, material_sheet_type=self.material_sheet_type,
+   dyeing_sequence=self.dyeing_sequence, description="未发生领料，料单已恢复草稿",
+  )
   self.add_comment("Edit",_("未发生领料，料单已恢复为草稿，可修改后重新提交。"))
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))

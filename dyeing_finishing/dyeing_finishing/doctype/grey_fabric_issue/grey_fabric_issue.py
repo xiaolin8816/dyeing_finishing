@@ -5,7 +5,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, getdate, nowdate
 
-from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query
+from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, record_production_progress
 
 TARGET_WAREHOUSE = "生产中转仓 - 沅泰"
 
@@ -28,6 +28,7 @@ class GreyFabricIssue(Document):
 
     def on_submit(self):
         self._create_stock_entry()
+        self._record_progress("胚布已出库")
 
     def on_cancel(self):
         if self.stock_entry:
@@ -47,7 +48,17 @@ class GreyFabricIssue(Document):
         self.docstatus = 0
         for row in self.items:
             row.docstatus = 0
+        self._record_progress("胚布出库已撤销")
         self.add_comment("Edit", _("已取消关联库存凭证，单据及明细已恢复为草稿，可修改后再次提交。"))
+
+    def _record_progress(self, status):
+        for row in self.items:
+            record_production_progress(
+                self.flow_card, "胚布出库", status, "Grey Fabric Issue", self.name,
+                batch_no=row.batch_no, quantity=row.issue_qty,
+                uom=frappe.db.get_value("Item", row.item_code, "stock_uom") or "",
+                description="胚布出库单" if status == "胚布已出库" else "胚布出库单已撤销",
+            )
 
     def _set_flow_card_details(self):
         if not self.flow_card:

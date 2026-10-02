@@ -1,0 +1,126 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-10-02 12:30:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "module": "dyeing_finishing",
+ "name": "Production Flow Card Progress",
+ "owner": "Administrator",
+ "field_order": [
+  "progress_time",
+  "operation",
+  "progress_status",
+  "source_doctype",
+  "source_document",
+  "batch_no",
+  "quantity",
+  "uom",
+  "dyeing_machine",
+  "material_sheet_type",
+  "dyeing_sequence",
+  "operator",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "progress_time",
+   "label": "进度时间",
+   "fieldtype": "Datetime",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "operation",
+   "label": "工序",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "progress_status",
+   "label": "进度状态",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "source_doctype",
+   "label": "来源单据类型",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "source_document",
+   "label": "来源单据",
+   "fieldtype": "Dynamic Link",
+   "options": "source_doctype",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "batch_no",
+   "label": "批次",
+   "fieldtype": "Link",
+   "options": "Batch",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "数量",
+   "fieldtype": "Float",
+   "precision": "3",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "uom",
+   "label": "单位",
+   "fieldtype": "Link",
+   "options": "UOM",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "dyeing_machine",
+   "label": "染色机台",
+   "fieldtype": "Link",
+   "options": "Dyeing Machine",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "material_sheet_type",
+   "label": "料单类型",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "dyeing_sequence",
+   "label": "染色次数",
+   "fieldtype": "Int",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "operator",
+   "label": "操作人",
+   "fieldtype": "Link",
+   "options": "User",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "description",
+   "label": "说明",
+   "fieldtype": "Small Text",
+   "read_only": 1
+  }
+ ],
+ "permissions": []
+}
