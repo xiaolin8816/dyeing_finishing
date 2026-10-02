@@ -20,7 +20,9 @@ class SiteDyeingMaterialSheet(Document):
   self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._validate_followup_items(); self._set_recipe(); self._validate_manual_items(); self._calculate()
  def _initialize_followup(self):
   source=frappe.get_doc("Site Dyeing Material Sheet",self.previous_material_sheet)
-  if source.docstatus==2 or source.material_sheet_status=="已取消":
+  if source.docstatus!=1:
+   frappe.throw(_("只能从已提交的现场染色料单创建追加或返修料单"))
+  if source.material_sheet_status=="已取消":
    frappe.throw(_("不能从已取消的现场染色料单创建后续料单"))
   if self.material_sheet_type=="返修染色" and source.material_sheet_status!="已完成":
    frappe.throw(_("返修染色料单只能从已完成的现场染色料单创建"))
@@ -133,7 +135,9 @@ def get_followup_material_sheet_defaults(source_name, sheet_type, rework_reason=
   frappe.throw(_("料单类型只能为追加染色或返修染色"))
  source=frappe.get_doc("Site Dyeing Material Sheet",source_name)
  source.check_permission("read")
- if source.docstatus==2 or source.material_sheet_status=="已取消":
+ if source.docstatus!=1:
+  frappe.throw(_("只能从已提交的现场染色料单创建追加或返修料单"))
+ if source.material_sheet_status=="已取消":
   frappe.throw(_("不能从已取消的现场染色料单创建后续料单"))
  if sheet_type=="返修染色" and source.material_sheet_status!="已完成":
   frappe.throw(_("返修染色料单只能从已完成的现场染色料单创建"))
