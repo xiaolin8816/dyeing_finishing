@@ -53,14 +53,6 @@
   "packaging_requirements",
   "operations_section",
   "operations",
-  "production_progress_tab",
-  "production_progress_section",
-  "current_progress_status",
-  "latest_progress_time",
-  "progress_column_2",
-  "latest_source_doctype",
-  "latest_source_document",
-  "progress_records",
   "order_data_tab",
   "order_source_section",
   "customer_order_no",
@@ -76,6 +68,15 @@
   "order_remarks",
   "remarks_column_2",
   "production_remarks",
+  "production_progress_tab",
+  "production_progress_section",
+  "current_progress_status",
+  "latest_progress_time",
+  "progress_column_2",
+  "latest_source_doctype",
+  "latest_source_document",
+  "process_progress_records_section",
+  "progress_records",
   "relation_tab",
   "relation_section",
   "related_sales_order",
@@ -338,52 +339,6 @@
    "idx": 36
   },
   {
-   "fieldname": "production_progress_tab",
-   "label": "生产进度",
-   "fieldtype": "Tab Break"
-  },
-  {
-   "fieldname": "production_progress_section",
-   "label": "当前生产进度",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "current_progress_status",
-   "label": "当前进度状态",
-   "fieldtype": "Data",
-   "read_only": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "latest_progress_time",
-   "label": "最新进度时间",
-   "fieldtype": "Datetime",
-   "read_only": 1
-  },
-  {
-   "fieldname": "progress_column_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "latest_source_doctype",
-   "fieldtype": "Data",
-   "read_only": 1,
-   "hidden": 1
-  },
-  {
-   "fieldname": "latest_source_document",
-   "label": "最新来源单据",
-   "fieldtype": "Data",
-   "read_only": 1
-  },
-  {
-   "fieldname": "progress_records",
-   "label": "生产进度记录",
-   "fieldtype": "Table",
-   "options": "Production Flow Card Progress",
-   "read_only": 1
-  },
-  {
    "fieldname": "order_data_tab",
    "fieldtype": "Tab Break",
    "label": "订单资料",
@@ -479,6 +434,59 @@
    "label": "生产备注",
    "fieldtype": "Small Text",
    "idx": 51
+  },
+  {
+   "fieldname": "production_progress_tab",
+   "label": "生产进度",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "production_progress_section",
+   "label": "当前生产进度",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "current_progress_status",
+   "label": "当前进度状态",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "latest_progress_time",
+   "label": "最新进度时间",
+   "fieldtype": "Datetime",
+   "read_only": 1
+  },
+  {
+   "fieldname": "progress_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "latest_source_doctype",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "latest_source_document",
+   "label": "最新来源单据",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "process_progress_records_section",
+   "label": "工序进度表",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "progress_records",
+   "label": "",
+   "fieldtype": "Table",
+   "options": "Production Flow Card Progress",
+   "read_only": 1,
+   "cannot_add_rows": 1,
+   "cannot_delete_rows": 1
   },
   {
    "fieldname": "relation_tab",

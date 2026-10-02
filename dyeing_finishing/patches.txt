@@ -9,3 +9,4 @@ dyeing_finishing.patches.v1_0.backfill_grey_fabric_issue_roll_counts
 dyeing_finishing.patches.v1_0.remove_process_parameter_sequence_no
 
 dyeing_finishing.patches.v1_0.fix_production_flow_card_progress_tab_order
+dyeing_finishing.patches.v1_0.fix_production_flow_card_progress_layout
