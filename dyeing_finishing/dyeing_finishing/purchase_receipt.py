@@ -1,5 +1,7 @@
 import frappe
 from frappe import _
+from frappe.model.naming import make_autoname
+from frappe.utils import getdate, nowdate
 
 DYEING_RECEIPT_TYPE = "染料/助剂入库"
 DYEING_MATERIAL_GROUPS = ("染料", "助剂")
@@ -24,6 +26,14 @@ def _get_dyeing_material_category(item_code):
         {"groups": DYEING_MATERIAL_GROUPS, "item_group": item_group},
     )
     return category[0][0] if category else ""
+
+
+def autoname(doc, method=None):
+    if doc.get("custom_dyeing_receipt_type") != DYEING_RECEIPT_TYPE:
+        return
+
+    receipt_date = getdate(doc.get("posting_date") or nowdate())
+    doc.name = make_autoname(f"PR{receipt_date:%y%m%d}.####")
 
 
 def validate(doc, method=None):

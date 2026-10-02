@@ -289,6 +289,7 @@ doc_events = {
         "validate": "dyeing_finishing.dyeing_finishing.sales_order.validate",
     },
     "Purchase Receipt": {
+        "autoname": "dyeing_finishing.dyeing_finishing.purchase_receipt.autoname",
         "validate": "dyeing_finishing.dyeing_finishing.purchase_receipt.validate",
     },
 }
