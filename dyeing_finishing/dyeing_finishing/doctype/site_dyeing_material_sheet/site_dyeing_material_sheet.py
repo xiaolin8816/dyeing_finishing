@@ -48,11 +48,18 @@ class SiteDyeingMaterialSheet(Document):
    r.actual_qty=actual
 
 def _latest_issue(flow_card): return frappe.db.get_value("Grey Fabric Issue",{"flow_card":flow_card,"docstatus":1},"name",order_by="outbound_date desc, modified desc")
+
+def _get_default_confirmed_recipe(color_no):
+ current = frappe.db.get_value("Color Master", color_no, "lab_record")
+ if current and frappe.db.get_value("Laboratory Recipe", current, ["recipe_status", "color_no"], as_dict=True) == {"recipe_status": "已确认", "color_no": color_no}:
+  return current
+ return frappe.db.get_value("Laboratory Recipe", {"color_no": color_no, "recipe_status": "已确认"}, "name", order_by="confirmation_date desc, modified desc")
+
 @frappe.whitelist()
 def get_site_dyeing_material_sheet_flow_card_details(flow_card):
  card=frappe.get_doc("Production Flow Card",flow_card)
  if card.docstatus==2: frappe.throw(_("不能引用已取消的生产流转卡"))
- issue=_latest_issue(flow_card); r={"sales_order":card.sales_order,"customer":card.customer,"customer_name":frappe.db.get_value("Customer",card.customer,"customer_name") or card.customer,"color_no":card.color_no,"color":card.color,"finished_product_name":card.finished_product_name,"production_qty":card.production_qty,"grey_fabric_issue":issue or "","grey_fabric_batch":"","grey_fabric_name":"","grey_fabric_issue_qty":0,"grey_fabric_uom":""}
+ issue=_latest_issue(flow_card); r={"sales_order":card.sales_order,"customer":card.customer,"customer_name":frappe.db.get_value("Customer",card.customer,"customer_name") or card.customer,"color_no":card.color_no,"color":card.color,"finished_product_name":card.finished_product_name,"production_qty":card.production_qty,"grey_fabric_issue":issue or "","grey_fabric_batch":"","grey_fabric_name":"","grey_fabric_issue_qty":0,"grey_fabric_uom":"","laboratory_recipe":_get_default_confirmed_recipe(card.color_no) or ""}
  if issue:
   x=(frappe.get_doc("Grey Fabric Issue",issue).items or [None])[0]
   if x: r.update({"grey_fabric_batch":x.batch_no,"grey_fabric_name":x.grey_fabric_name,"grey_fabric_issue_qty":x.issue_qty,"grey_fabric_uom":frappe.db.get_value("Item",x.item_code,"stock_uom") or ""})
