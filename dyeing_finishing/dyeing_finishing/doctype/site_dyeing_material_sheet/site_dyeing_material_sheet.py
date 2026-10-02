@@ -31,7 +31,7 @@ class SiteDyeingMaterialSheet(Document):
   recipe=frappe.get_doc("Laboratory Recipe",self.laboratory_recipe)
   if recipe.recipe_status!="已确认" or recipe.color_no!=self.color_no: frappe.throw(_("只能选择当前色号已确认的化验室配方"))
   self.recipe_version=recipe.recipe_version; self.bath_ratio=self.bath_ratio or recipe.bath_ratio
-  if self.recipe_snapshot_source!=recipe.name: self._copy_recipe(recipe)
+  if self.recipe_snapshot_source!=recipe.name or not self.items or (recipe.process_parameters and not self.process_parameters): self._copy_recipe(recipe)
  def _copy_recipe(self,recipe):
   self.set("items",[])
   for s in recipe.get("recipe_items") or []: self.append("items",{"item_code":s.item_code,"item_name":s.item_name,"material_category":s.material_category,"uom":s.uom,"dosage_basis":s.dosage_basis,"formula_qty":s.formula_qty,"site_ratio":s.formula_qty,"temporary_qty":0,"issue_status":"未领料","remark":s.remark})
