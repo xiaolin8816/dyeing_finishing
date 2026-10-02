@@ -373,8 +373,7 @@
   {
    "fieldname": "latest_source_document",
    "label": "最新来源单据",
-   "fieldtype": "Dynamic Link",
-   "options": "latest_source_doctype",
+   "fieldtype": "Data",
    "read_only": 1
   },
   {
