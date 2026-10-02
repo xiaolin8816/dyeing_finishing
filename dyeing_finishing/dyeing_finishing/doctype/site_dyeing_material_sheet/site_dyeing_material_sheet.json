@@ -42,10 +42,10 @@
   "bath_volume",
   "formula_column_3",
   "recipe_snapshot_source",
-  "material_tab",
+  "material_tabs_section",
+  "material_tab_controls",
   "material_items_section",
   "items",
-  "process_tab",
   "process_parameters_section",
   "process_parameters",
   "relation_tab",
@@ -276,35 +276,36 @@
    "hidden": 1
   },
   {
-   "fieldname": "material_tab",
-   "label": "现场料单明细",
-   "fieldtype": "Tab Break"
+   "fieldname": "material_tabs_section",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "material_tab_controls",
+   "fieldtype": "HTML"
   },
   {
    "fieldname": "material_items_section",
-   "label": "现场染色料明细",
-   "fieldtype": "Section Break"
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
   },
   {
    "fieldname": "items",
-   "label": "现场染色料明细",
+   "label": "",
    "fieldtype": "Table",
    "options": "Site Dyeing Material Sheet Item",
    "reqd": 1
   },
   {
-   "fieldname": "process_tab",
-   "label": "工艺参数",
-   "fieldtype": "Tab Break"
-  },
-  {
    "fieldname": "process_parameters_section",
-   "label": "工艺参数",
-   "fieldtype": "Section Break"
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
   },
   {
    "fieldname": "process_parameters",
-   "label": "工艺参数",
+   "label": "",
    "fieldtype": "Table",
    "options": "Site Dyeing Material Sheet Process Parameter"
   },
