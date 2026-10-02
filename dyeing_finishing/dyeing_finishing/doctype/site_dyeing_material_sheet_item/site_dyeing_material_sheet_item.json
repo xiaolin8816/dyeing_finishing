@@ -11,15 +11,14 @@
   "item_code",
   "item_name",
   "material_category",
-  "uom",
-  "dosage_basis",
   "formula_qty",
   "site_ratio",
   "temporary_qty",
   "actual_qty",
+  "dosage_basis",
   "issued_qty",
-  "issue_status",
-  "remark"
+  "uom",
+  "issue_status"
  ],
  "fields": [
   {
@@ -113,7 +112,8 @@
   {
    "fieldname": "remark",
    "label": "备注",
-   "fieldtype": "Small Text"
+   "fieldtype": "Small Text",
+   "hidden": 1
   }
  ],
  "editable_grid": 1,
