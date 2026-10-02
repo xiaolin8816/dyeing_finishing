@@ -31,13 +31,17 @@ class GreyFabricIssue(Document):
         self._record_progress("胚布已出库")
 
     def on_cancel(self):
-        if self.stock_entry:
-            entry = frappe.get_doc("Stock Entry", self.stock_entry)
+        stock_entry = self.stock_entry
+        # 先清除胚布出库单对库存凭证的反向关联，再取消库存凭证，避免 ERPNext 的关联检查形成循环阻塞。
+        if stock_entry:
+            self.db_set("stock_entry", None, update_modified=False)
+            self.stock_entry = None
+            entry = frappe.get_doc("Stock Entry", stock_entry)
             if entry.docstatus == 1:
                 entry.cancel()
 
         # 取消库存转移后，原单直接恢复为草稿，用户可在同一张单据修改后再次提交。
-        self.db_set({"stock_entry": None, "docstatus": 0}, update_modified=False)
+        self.db_set({"docstatus": 0}, update_modified=False)
         frappe.db.sql(
             """UPDATE `tabGrey Fabric Issue Item`
             SET docstatus = 0
