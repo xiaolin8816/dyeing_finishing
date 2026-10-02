@@ -10,6 +10,14 @@ function toggleDyeingReceiptType(frm) {
     frm.toggle_display("custom_dyeing_receipt_type", isDyeingReceipt(frm));
 }
 
+function setDyeingReceiptTitle(frm) {
+    if (!isDyeingReceipt(frm)) return;
+    const title = frm.is_new() ? __("新建染料入库") : __("染料入库");
+    frm.page.set_title(title);
+    frm.page.set_title_sub(frm.is_new() ? "" : frm.doc.name);
+    frappe.utils.set_title(frm.is_new() ? title : `${title} - ${frm.doc.name}`);
+}
+
 function setDyeingReceiptRowDefaults(frm, row) {
     if (!isDyeingReceipt(frm)) return;
     if (!row.warehouse) {
@@ -34,10 +42,12 @@ frappe.ui.form.on("Purchase Receipt", {
             frm.set_value("custom_dyeing_receipt_type", DYEING_RECEIPT_TYPE);
         }
         toggleDyeingReceiptType(frm);
+        setDyeingReceiptTitle(frm);
     },
     custom_dyeing_receipt_type(frm) {
         setDyeingReceiptQuery(frm);
         toggleDyeingReceiptType(frm);
+        setDyeingReceiptTitle(frm);
         if (!isDyeingReceipt(frm)) return;
         (frm.doc.items || []).forEach((row) => setDyeingReceiptRowDefaults(frm, row));
         frm.refresh_field("items");
