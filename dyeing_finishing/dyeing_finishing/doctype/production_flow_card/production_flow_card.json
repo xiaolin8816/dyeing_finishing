@@ -236,7 +236,7 @@
   },
   {
    "fieldname": "production_qty",
-   "label": "生产数量",
+   "label": "流转卡数量",
    "fieldtype": "Float",
    "precision": "2",
    "default": "0",

@@ -18,6 +18,7 @@ class ProductionFlowCard(Document):
     def validate(self):
         self.flow_card_no = self.flow_card_no or self.name
         self.barcode = self.barcode or self.flow_card_no
+        self._set_flow_card_qty()
         self._refresh_grey_fabric_stock()
         self._set_operation_summary()
         self._set_document_status()
@@ -30,6 +31,14 @@ class ProductionFlowCard(Document):
 
     def _set_document_status(self, value=None):
         self.document_status = value or ("已审核" if self.docstatus == 1 else "保存")
+
+    def _set_flow_card_qty(self):
+        if not self.sales_order_item:
+            return
+        order_qty = frappe.db.get_value("Sales Order Item", self.sales_order_item, "qty")
+        if order_qty is not None:
+            self.order_qty = flt(order_qty)
+            self.production_qty = flt(order_qty)
 
     def _set_operation_summary(self):
         operations = sorted(self.get("operations") or [], key=lambda row: row.sequence_no or 0)
@@ -166,6 +175,7 @@ def get_sales_order_item_details(sales_order, sales_order_item):
         "finished_uom": item.uom or "",
         "finished_specification": item.get("custom_finished_specification") or "",
         "order_qty": item.qty or 0,
+        "production_qty": item.qty or 0,
         "order_remarks": order.get("terms") or "",
         "process_requirements": [
             {"process_requirement": row.process_requirement, "process_requirement_name": row.process_requirement_name}
