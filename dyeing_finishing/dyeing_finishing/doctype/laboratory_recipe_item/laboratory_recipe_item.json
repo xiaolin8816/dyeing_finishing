@@ -54,7 +54,8 @@
    "fieldtype": "Select",
    "options": "g/L\n%owf\ng/kg\nkg",
    "reqd": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "default": "g/kg"
   },
   {
    "fieldname": "formula_qty",
