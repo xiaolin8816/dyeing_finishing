@@ -67,6 +67,17 @@
    "type": "Link"
   },
   {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "染色机台",
+   "link_count": 0,
+   "link_to": "Dyeing Machine",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
    "hidden": 0,
    "is_query_report": 0,
    "label": "配方管理",
@@ -93,6 +104,17 @@
    "label": "化验室配方档案",
    "link_count": 0,
    "link_to": "Laboratory Recipe",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "现场染色料单",
+   "link_count": 0,
+   "link_to": "Site Dyeing Material Sheet",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -206,7 +228,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-01 20:30:00.000000",
+ "modified": "2026-10-02 10:30:00.000000",
  "modified_by": "Administrator",
  "module": "dyeing_finishing",
  "name": "印染整理",

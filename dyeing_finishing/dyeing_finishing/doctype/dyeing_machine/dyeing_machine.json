@@ -1,0 +1,81 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-02 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "module": "dyeing_finishing",
+ "name": "Dyeing Machine",
+ "owner": "Administrator",
+ "field_order": [
+  "machine_code",
+  "machine_name",
+  "status",
+  "capacity",
+  "capacity_uom",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "machine_code",
+   "label": "机台编号",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "in_list_view": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "machine_name",
+   "label": "机台名称",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "状态",
+   "fieldtype": "Select",
+   "options": "启用\n停用",
+   "default": "启用",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "capacity",
+   "label": "额定容量",
+   "fieldtype": "Float",
+   "precision": "3"
+  },
+  {
+   "fieldname": "capacity_uom",
+   "label": "容量单位",
+   "fieldtype": "Link",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "remarks",
+   "label": "备注",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "autoname": "field:machine_code",
+ "naming_rule": "By fieldname",
+ "title_field": "machine_name",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ]
+}

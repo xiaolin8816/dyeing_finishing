@@ -1,0 +1,63 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-10-02 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "module": "dyeing_finishing",
+ "name": "Site Dyeing Material Sheet Process Parameter",
+ "owner": "Administrator",
+ "field_order": [
+  "process_stage",
+  "parameter_name",
+  "unit",
+  "parameter_value",
+  "site_parameter_value",
+  "instruction"
+ ],
+ "fields": [
+  {
+   "fieldname": "process_stage",
+   "label": "工艺阶段",
+   "fieldtype": "Select",
+   "options": "前处理\n染色\n后处理\n定型整理",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "parameter_name",
+   "label": "参数名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "unit",
+   "label": "单位",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "parameter_value",
+   "label": "参数值",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "site_parameter_value",
+   "label": "现场参数值",
+   "fieldtype": "Data",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "instruction",
+   "label": "操作说明",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "editable_grid": 1,
+ "istable": 1,
+ "permissions": []
+}

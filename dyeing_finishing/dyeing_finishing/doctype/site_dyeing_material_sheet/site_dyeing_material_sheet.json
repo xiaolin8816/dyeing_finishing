@@ -1,0 +1,372 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-02 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "module": "dyeing_finishing",
+ "name": "Site Dyeing Material Sheet",
+ "owner": "Administrator",
+ "field_order": [
+  "details_tab",
+  "document_section",
+  "material_sheet_no",
+  "material_sheet_status",
+  "document_column_2",
+  "production_flow_card",
+  "sales_order",
+  "document_column_3",
+  "customer",
+  "customer_name",
+  "color_no",
+  "document_column_4",
+  "color",
+  "finished_product_name",
+  "production_qty",
+  "fabric_section",
+  "grey_fabric_issue",
+  "grey_fabric_batch",
+  "grey_fabric_name",
+  "fabric_column_2",
+  "grey_fabric_issue_qty",
+  "grey_fabric_uom",
+  "production_section",
+  "dyeing_machine",
+  "planned_dyeing_date",
+  "production_column_2",
+  "formula_section",
+  "laboratory_recipe",
+  "recipe_version",
+  "formula_column_2",
+  "bath_ratio",
+  "bath_volume",
+  "formula_column_3",
+  "recipe_snapshot_source",
+  "material_tab",
+  "material_items_section",
+  "items",
+  "process_tab",
+  "process_parameters_section",
+  "process_parameters",
+  "relation_tab",
+  "relation_section",
+  "material_request",
+  "stock_entry",
+  "remarks_tab",
+  "remarks_section",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "label": "详细信息",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "document_section",
+   "label": "单据信息",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "material_sheet_no",
+   "label": "染色料单号",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "material_sheet_status",
+   "label": "单据状态",
+   "fieldtype": "Select",
+   "options": "保存\n待领料\n部分领料\n已领料\n已完成\n已取消",
+   "default": "保存",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "document_column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "production_flow_card",
+   "label": "生产流转卡",
+   "fieldtype": "Link",
+   "options": "Production Flow Card",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "label": "销售订单",
+   "fieldtype": "Link",
+   "options": "Sales Order",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "document_column_3",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer",
+   "label": "客户",
+   "fieldtype": "Link",
+   "options": "Customer",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "customer_name",
+   "label": "客户名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "color_no",
+   "label": "色号",
+   "fieldtype": "Link",
+   "options": "Color Master",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "document_column_4",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "color",
+   "label": "颜色",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "finished_product_name",
+   "label": "成品名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "production_qty",
+   "label": "流转卡生产数量",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "3"
+  },
+  {
+   "fieldname": "fabric_section",
+   "label": "胚布资料",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "grey_fabric_issue",
+   "label": "胚布出库单",
+   "fieldtype": "Link",
+   "options": "Grey Fabric Issue",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "grey_fabric_batch",
+   "label": "胚布批次",
+   "fieldtype": "Link",
+   "options": "Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grey_fabric_name",
+   "label": "胚布名称",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fabric_column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grey_fabric_issue_qty",
+   "label": "胚布出库数量",
+   "fieldtype": "Float",
+   "precision": "3",
+   "reqd": 1
+  },
+  {
+   "fieldname": "grey_fabric_uom",
+   "label": "计量单位",
+   "fieldtype": "Link",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_section",
+   "label": "生产安排",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "dyeing_machine",
+   "label": "染色机台",
+   "fieldtype": "Link",
+   "options": "Dyeing Machine",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "planned_dyeing_date",
+   "label": "计划染色日期",
+   "fieldtype": "Date",
+   "default": "Today"
+  },
+  {
+   "fieldname": "production_column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "formula_section",
+   "label": "配方与计算",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "laboratory_recipe",
+   "label": "化验室配方",
+   "fieldtype": "Link",
+   "options": "Laboratory Recipe",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "recipe_version",
+   "label": "配方版本",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "formula_column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bath_ratio",
+   "label": "浴比",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "bath_volume",
+   "label": "浴液体积",
+   "fieldtype": "Float",
+   "precision": "3"
+  },
+  {
+   "fieldname": "formula_column_3",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "recipe_snapshot_source",
+   "label": "配方快照来源",
+   "fieldtype": "Link",
+   "options": "Laboratory Recipe",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "material_tab",
+   "label": "现场料单明细",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "material_items_section",
+   "label": "现场染色料明细",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "label": "现场染色料明细",
+   "fieldtype": "Table",
+   "options": "Site Dyeing Material Sheet Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "process_tab",
+   "label": "工艺参数",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "process_parameters_section",
+   "label": "工艺参数",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "process_parameters",
+   "label": "工艺参数",
+   "fieldtype": "Table",
+   "options": "Site Dyeing Material Sheet Process Parameter"
+  },
+  {
+   "fieldname": "relation_tab",
+   "label": "追溯",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "relation_section",
+   "label": "关联记录",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "material_request",
+   "label": "领料申请",
+   "fieldtype": "Link",
+   "options": "Material Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "label": "库存凭证",
+   "fieldtype": "Link",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks_tab",
+   "label": "备注",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "remarks_section",
+   "label": "备注",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "label": "备注",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "autoname": "RL.YY.MM.DD.###",
+ "editable_grid": 1,
+ "track_changes": 1,
+ "title_field": "material_sheet_no",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ]
+}
