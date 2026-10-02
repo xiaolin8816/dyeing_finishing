@@ -356,44 +356,12 @@
   },
   {
     "doctype": "Custom Field",
-    "name": "Item-custom_dyeing_color_tone",
-    "dt": "Item",
-    "fieldname": "custom_dyeing_color_tone",
-    "label": "色相",
-    "fieldtype": "Data",
-    "insert_after": "custom_dyeing_packing_specification",
-    "module": "dyeing_finishing",
-    "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
-  },
-  {
-    "doctype": "Custom Field",
-    "name": "Item-custom_dyeing_material_column",
-    "dt": "Item",
-    "fieldname": "custom_dyeing_material_column",
-    "label": "",
-    "fieldtype": "Column Break",
-    "insert_after": "custom_dyeing_color_tone",
-    "module": "dyeing_finishing"
-  },
-  {
-    "doctype": "Custom Field",
-    "name": "Item-custom_dyeing_standard_concentration",
-    "dt": "Item",
-    "fieldname": "custom_dyeing_standard_concentration",
-    "label": "标准浓度",
-    "fieldtype": "Data",
-    "insert_after": "custom_dyeing_material_column",
-    "module": "dyeing_finishing",
-    "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
-  },
-  {
-    "doctype": "Custom Field",
     "name": "Item-custom_dyeing_brand",
     "dt": "Item",
     "fieldname": "custom_dyeing_brand",
     "label": "品牌",
     "fieldtype": "Data",
-    "insert_after": "custom_dyeing_standard_concentration",
+    "insert_after": "custom_dyeing_packing_specification",
     "module": "dyeing_finishing",
     "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
   },
