@@ -38,9 +38,6 @@ frappe.ui.form.on("Purchase Receipt", {
     },
     refresh(frm) {
         setDyeingReceiptQuery(frm);
-        if (frm.is_new() && frappe.route_options?.custom_dyeing_receipt_type === DYEING_RECEIPT_TYPE) {
-            frm.set_value("custom_dyeing_receipt_type", DYEING_RECEIPT_TYPE);
-        }
         toggleDyeingReceiptType(frm);
         setDyeingReceiptTitle(frm);
     },
