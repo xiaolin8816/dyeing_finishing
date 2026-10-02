@@ -5,7 +5,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, getdate, nowdate
 
-from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, record_production_progress
+from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, record_production_progress, remove_production_progress
 
 TARGET_WAREHOUSE = "生产中转仓 - 沅泰"
 
@@ -62,6 +62,9 @@ class GreyFabricIssue(Document):
             row.docstatus = 0
         self._record_progress("胚布出库已撤销")
         self.add_comment("Edit", _("已取消关联库存凭证，单据及明细已恢复为草稿，可修改后再次提交。"))
+
+    def on_trash(self):
+        remove_production_progress("Grey Fabric Issue", self.name)
 
     def _record_progress(self, status):
         for row in self.items:

@@ -3,7 +3,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import flt, getdate, nowdate
-from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import record_production_progress
+from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import record_production_progress, remove_production_progress
 
 ALLOWED_ITEM_GROUPS = ("染料", "助剂")
 MANUAL_SOURCE = "手动新增"
@@ -80,6 +80,8 @@ class SiteDyeingMaterialSheet(Document):
    dyeing_sequence=self.dyeing_sequence, description="未发生领料，料单已恢复草稿",
   )
   self.add_comment("Edit",_("未发生领料，料单已恢复为草稿，可修改后重新提交。"))
+ def on_trash(self):
+  remove_production_progress("Site Dyeing Material Sheet", self.name)
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)

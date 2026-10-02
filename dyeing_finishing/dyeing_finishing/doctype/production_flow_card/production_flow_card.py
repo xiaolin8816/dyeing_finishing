@@ -303,3 +303,34 @@ def record_production_progress(flow_card, operation, progress_status, source_doc
         "latest_source_doctype": source_doctype,
         "latest_source_document": source_document,
     }, update_modified=False)
+
+
+def remove_production_progress(source_doctype, source_document):
+    records = frappe.get_all(
+        "Production Flow Card Progress",
+        filters={"source_doctype": source_doctype, "source_document": source_document},
+        fields=["parent"],
+    )
+    flow_cards = {record.parent for record in records if record.parent}
+    if not flow_cards:
+        return
+
+    frappe.db.delete(
+        "Production Flow Card Progress",
+        {"source_doctype": source_doctype, "source_document": source_document},
+    )
+    for flow_card in flow_cards:
+        latest = frappe.get_all(
+            "Production Flow Card Progress",
+            filters={"parent": flow_card},
+            fields=["progress_status", "progress_time", "source_doctype", "source_document"],
+            order_by="progress_time desc, creation desc",
+            limit=1,
+        )
+        values = {
+            "current_progress_status": latest[0].progress_status if latest else "",
+            "latest_progress_time": latest[0].progress_time if latest else None,
+            "latest_source_doctype": latest[0].source_doctype if latest else "",
+            "latest_source_document": latest[0].source_document if latest else "",
+        }
+        frappe.db.set_value("Production Flow Card", flow_card, values, update_modified=False)
