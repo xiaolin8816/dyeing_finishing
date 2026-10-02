@@ -33,13 +33,14 @@ class SiteDyeingMaterialSheet(Document):
   self.grey_fabric_issue_qty=source.grey_fabric_issue_qty
   self.dyeing_machine=self.dyeing_machine or source.dyeing_machine
   self.dyeing_sequence=frappe.db.count("Site Dyeing Material Sheet",{"production_flow_card":source.production_flow_card,"docstatus":["!=",2]})+1
-  self.laboratory_recipe=_get_default_confirmed_recipe(source.color_no) or ""
-  self.recipe_snapshot_source=""
-  self.recipe_version=""
-  self.bath_ratio=""
-  self.bath_volume=0
-  self.set("items",[])
-  self.set("process_parameters",[])
+  if not self.laboratory_recipe:
+   self.laboratory_recipe=_get_default_confirmed_recipe(source.color_no) or ""
+  if not self.items:
+   self.recipe_snapshot_source=""
+   self.recipe_version=""
+   self.bath_ratio=""
+   self.bath_volume=0
+   self.set("process_parameters",[])
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)
