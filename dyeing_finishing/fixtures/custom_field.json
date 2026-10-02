@@ -367,22 +367,12 @@
   },
   {
     "doctype": "Custom Field",
-    "name": "Purchase Receipt-custom_dyeing_receipt_section",
-    "dt": "Purchase Receipt",
-    "fieldname": "custom_dyeing_receipt_section",
-    "label": "染整入库资料",
-    "fieldtype": "Section Break",
-    "insert_after": "supplier_delivery_note",
-    "module": "dyeing_finishing"
-  },
-  {
-    "doctype": "Custom Field",
     "name": "Purchase Receipt-custom_dyeing_receipt_type",
     "dt": "Purchase Receipt",
     "fieldname": "custom_dyeing_receipt_type",
     "label": "业务类别",
     "fieldtype": "Select",
-    "insert_after": "custom_dyeing_receipt_section",
+    "insert_after": "return_against",
     "module": "dyeing_finishing",
     "options": "\n染料/助剂入库",
     "in_list_view": 1

@@ -14,3 +14,4 @@ dyeing_finishing.patches.v1_0.fix_production_flow_card_progress_layout
 dyeing_finishing.patches.v1_0.add_dye_management_workspace
 dyeing_finishing.patches.v1_0.remove_unused_dyeing_item_fields
 dyeing_finishing.patches.v1_0.fix_dye_management_workspace_card
+dyeing_finishing.patches.v1_0.move_dyeing_receipt_type_to_details
