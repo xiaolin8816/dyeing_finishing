@@ -28,7 +28,44 @@ class ProductionFlowCard(Document):
         self._set_document_status("已审核")
 
     def on_cancel(self):
-        self.db_set("document_status", "未审核", update_modified=False)
+        downstream_documents = _get_submitted_downstream_documents(self.name)
+        if downstream_documents:
+            names = "、".join(name for _, name in downstream_documents)
+            frappe.throw(_("生产流转卡已关联已提交的下游单据 {0}，请先处理下游单据后再取消").format(names))
+
+        # 未产生实际下游业务时，取消即恢复草稿，允许在原流转卡修正后重新提交。
+        self.db_set(
+            {
+                "docstatus": 0,
+                "document_status": "保存",
+                "production_status": "进行中",
+                "closure_date": None,
+                "closure_reason": "",
+                "closure_remarks": "",
+                "closed_by": "",
+            },
+            update_modified=False,
+        )
+        quote = chr(96)
+        for table in (
+            "tabProduction Flow Card Grey Fabric Issue",
+            "tabProduction Flow Card Process Requirement",
+            "tabProduction Flow Card Packaging Requirement",
+            "tabProduction Flow Card Operation",
+            "tabProduction Flow Card Progress",
+        ):
+            frappe.db.sql(
+                f"UPDATE {quote}{table}{quote} SET docstatus = 0 "
+                "WHERE parent = %s AND parenttype = 'Production Flow Card'",
+                self.name,
+            )
+        self.docstatus = 0
+        self.document_status = "保存"
+        self.production_status = "进行中"
+        for table_field in ("grey_fabric_issues", "process_requirements", "packaging_requirements", "operations", "progress_records"):
+            for row in self.get(table_field) or []:
+                row.docstatus = 0
+        self.add_comment("Edit", _("未关联已提交下游单据，流转卡已恢复为草稿，可修改后重新提交。"))
 
     def _set_document_status(self, value=None):
         self.document_status = value or ("已审核" if self.docstatus == 1 else "保存")
@@ -73,8 +110,21 @@ class ProductionFlowCard(Document):
 def ensure_flow_card_open(card):
     if card.docstatus == 2:
         frappe.throw(_("不能引用已取消的生产流转卡"))
+    if card.docstatus != 1:
+        frappe.throw(_("生产流转卡 {0} 尚未提交，不能新增后续业务单据").format(card.name))
     if (card.production_status or "进行中") == "已关闭":
         frappe.throw(_("生产流转卡 {0} 已关闭，不能新增后续业务单据。如需继续生产，请先重新开启生产。").format(card.name))
+
+
+def _get_submitted_downstream_documents(flow_card):
+    documents = []
+    for doctype in ("Grey Fabric Issue", "Site Dyeing Material Sheet"):
+        documents.extend((doctype, row.name) for row in frappe.get_all(
+            doctype,
+            filters={"flow_card" if doctype == "Grey Fabric Issue" else "production_flow_card": flow_card, "docstatus": 1},
+            fields=["name"],
+        ))
+    return documents
 
 
 def _get_active_material_sheets(flow_card):

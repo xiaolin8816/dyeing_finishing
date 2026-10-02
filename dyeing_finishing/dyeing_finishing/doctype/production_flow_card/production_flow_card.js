@@ -223,6 +223,10 @@ function setup_production_close_actions(frm) {
 frappe.ui.form.on("Production Flow Card", {
     setup(frm) { set_flow_card_queries(frm); },
     refresh(frm) { set_flow_card_queries(frm); keep_empty_read_only_fields_visible(frm); setup_requirement_tabs(frm); setup_production_close_actions(frm); },
+    after_cancel(frm) {
+        frappe.show_alert({ message: "流转卡已恢复为保存状态，可直接修改后重新提交", indicator: "green" });
+        frm.reload_doc();
+    },
     sales_order(frm) { clear_flow_card_order_data(frm); set_flow_card_queries(frm); },
     sales_order_item(frm) { load_sales_order_item_details(frm); },
 });
