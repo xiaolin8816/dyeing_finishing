@@ -11,6 +11,7 @@
   "details_tab",
   "document_section",
   "material_sheet_no",
+  "planned_dyeing_date",
   "customer_name",
   "production_qty",
   "document_column_2",
@@ -38,7 +39,6 @@
   "grey_fabric_name",
   "fabric_column_3",
   "dyeing_machine",
-  "planned_dyeing_date",
   "formula_tab",
   "formula_section",
   "laboratory_recipe",
@@ -256,9 +256,10 @@
   },
   {
    "fieldname": "planned_dyeing_date",
-   "label": "计划染色日期",
+   "label": "单据日期",
    "fieldtype": "Date",
-   "default": "Today"
+   "default": "Today",
+   "read_only": 1
   },
   {
    "fieldname": "formula_tab",
