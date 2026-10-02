@@ -23,13 +23,13 @@
   "color",
   "finished_product_name",
   "production_qty",
+  "grey_fabric_issue_qty",
+  "grey_fabric_uom",
   "fabric_section",
   "grey_fabric_issue",
   "grey_fabric_batch",
-  "grey_fabric_name",
   "fabric_column_2",
-  "grey_fabric_issue_qty",
-  "grey_fabric_uom",
+  "grey_fabric_name",
   "fabric_column_3",
   "dyeing_machine",
   "planned_dyeing_date",
@@ -159,8 +159,22 @@
    "precision": "3"
   },
   {
+   "fieldname": "grey_fabric_issue_qty",
+   "label": "胚布出库数量",
+   "fieldtype": "Float",
+   "precision": "3",
+   "reqd": 1
+  },
+  {
+   "fieldname": "grey_fabric_uom",
+   "label": "计量单位",
+   "fieldtype": "Link",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
    "fieldname": "fabric_section",
-   "label": "胚布资料与生产安排",
+   "label": "胚布资料与染色机台",
    "fieldtype": "Section Break"
   },
   {
@@ -179,28 +193,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "grey_fabric_name",
-   "label": "胚布名称",
-   "fieldtype": "Data",
-   "read_only": 1
-  },
-  {
    "fieldname": "fabric_column_2",
    "label": "",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "grey_fabric_issue_qty",
-   "label": "胚布出库数量",
-   "fieldtype": "Float",
-   "precision": "3",
-   "reqd": 1
-  },
-  {
-   "fieldname": "grey_fabric_uom",
-   "label": "计量单位",
-   "fieldtype": "Link",
-   "options": "UOM",
+   "fieldname": "grey_fabric_name",
+   "label": "胚布名称",
+   "fieldtype": "Data",
    "read_only": 1
   },
   {
