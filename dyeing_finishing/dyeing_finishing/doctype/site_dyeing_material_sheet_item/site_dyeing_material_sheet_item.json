@@ -58,7 +58,8 @@
    "fieldtype": "Select",
    "options": "g/L\n%owf\ng/kg\nkg",
    "read_only": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "default": "g/kg"
   },
   {
    "fieldname": "source",
