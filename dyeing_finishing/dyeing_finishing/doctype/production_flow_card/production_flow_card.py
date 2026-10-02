@@ -21,6 +21,7 @@ class ProductionFlowCard(Document):
         self._set_flow_card_qty()
         self._refresh_grey_fabric_stock()
         self._set_operation_summary()
+        self._set_production_status()
         self._set_document_status()
 
     def before_submit(self):
@@ -31,6 +32,10 @@ class ProductionFlowCard(Document):
 
     def _set_document_status(self, value=None):
         self.document_status = value or ("已审核" if self.docstatus == 1 else "保存")
+
+    def _set_production_status(self):
+        self.production_status = self.production_status or "进行中"
+
 
     def _set_flow_card_qty(self):
         if not self.sales_order_item:
@@ -63,6 +68,98 @@ class ProductionFlowCard(Document):
                 frappe.throw(_("批次 {0} 的计划领用匹数不能大于库存匹数").format(row.batch_no))
             if flt(row.planned_qty) > flt(row.stock_qty):
                 frappe.throw(_("批次 {0} 的计划领用数量不能大于库存数量").format(row.batch_no))
+
+
+def ensure_flow_card_open(card):
+    if card.docstatus == 2:
+        frappe.throw(_("不能引用已取消的生产流转卡"))
+    if (card.production_status or "进行中") == "已关闭":
+        frappe.throw(_("生产流转卡 {0} 已关闭，不能新增后续业务单据。如需继续生产，请先重新开启生产。").format(card.name))
+
+
+def _get_active_material_sheets(flow_card):
+    return frappe.get_all(
+        "Site Dyeing Material Sheet",
+        filters={"production_flow_card": flow_card, "docstatus": 1},
+        fields=["name", "material_sheet_status"],
+        order_by="modified desc",
+    )
+
+
+@frappe.whitelist()
+def close_production_flow_card(flow_card, closure_reason, closure_remarks=None):
+    card = frappe.get_doc("Production Flow Card", flow_card)
+    card.check_permission("write")
+    if card.docstatus != 1:
+        frappe.throw(_("只有已提交的生产流转卡才能关闭生产"))
+    if (card.production_status or "进行中") == "已关闭":
+        frappe.throw(_("生产流转卡已经关闭"))
+    valid_reasons = {"客户取消", "质量异常", "胚布不足", "计划调整", "其他"}
+    if closure_reason not in valid_reasons:
+        frappe.throw(_("请选择关闭原因"))
+    active_sheets = _get_active_material_sheets(card.name)
+    if active_sheets:
+        names = "、".join(row.name for row in active_sheets)
+        frappe.throw(_("仍有已提交的现场染色料单 {0}，请先完成、退料或取消后再关闭生产").format(names))
+
+    closed_at = now_datetime()
+    frappe.db.set_value(
+        "Production Flow Card",
+        card.name,
+        {
+            "production_status": "已关闭",
+            "closure_date": closed_at,
+            "closure_reason": closure_reason,
+            "closure_remarks": (closure_remarks or "").strip(),
+            "closed_by": frappe.session.user,
+        },
+        update_modified=False,
+    )
+    record_production_progress(
+        card.name,
+        "生产关闭",
+        "生产已关闭",
+        "Production Flow Card",
+        card.name,
+        description="关闭原因：{0}{1}".format(closure_reason, "；" + (closure_remarks or "").strip() if (closure_remarks or "").strip() else ""),
+    )
+    frappe.get_doc("Production Flow Card", card.name).add_comment(
+        "Info", _("已关闭生产。原因：{0}").format(closure_reason)
+    )
+    return {"production_status": "已关闭", "closure_date": closed_at}
+
+
+@frappe.whitelist()
+def reopen_production_flow_card(flow_card):
+    card = frappe.get_doc("Production Flow Card", flow_card)
+    card.check_permission("write")
+    if card.docstatus != 1:
+        frappe.throw(_("只有已提交的生产流转卡才能重新开启生产"))
+    if (card.production_status or "进行中") != "已关闭":
+        frappe.throw(_("当前生产流转卡未处于已关闭状态"))
+
+    frappe.db.set_value(
+        "Production Flow Card",
+        card.name,
+        {
+            "production_status": "进行中",
+            "closure_date": None,
+            "closure_reason": "",
+            "closure_remarks": "",
+            "closed_by": "",
+        },
+        update_modified=False,
+    )
+    record_production_progress(
+        card.name,
+        "生产关闭",
+        "生产已重新开启",
+        "Production Flow Card",
+        card.name,
+        description="生产已重新开启",
+    )
+    frappe.get_doc("Production Flow Card", card.name).add_comment("Info", _("已重新开启生产"))
+    return {"production_status": "进行中"}
 
 
 def _batch_stock_query(customer=None, order_type=None, batch_no=None, location=None):

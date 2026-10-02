@@ -1,6 +1,6 @@
 frappe.ui.form.on("Grey Fabric Issue", {
  setup(frm) {
-  frm.set_query("flow_card", () => ({filters:{docstatus:["!=",2]}}));
+  frm.set_query("flow_card", () => ({filters:{docstatus:["!=",2],production_status:["!=","已关闭"]}}));
   frm.set_query("batch_no", "items", (doc, cdt, cdn) => {const row=locals[cdt][cdn];return {query:"dyeing_finishing.dyeing_finishing.doctype.grey_fabric_issue.grey_fabric_issue.get_available_grey_fabric_batches",filters:{flow_card:frm.doc.flow_card,source_row:row.flow_card_grey_fabric_issue,exclude_batches:(frm.doc.items||[]).filter(item=>item.source_type==="自动带出"&&item.batch_no).map(item=>item.batch_no)}};});
  },
  refresh(frm) {frm.ignore_doctypes_on_cancel_all=["Stock Entry","Serial and Batch Bundle"];setDraftItemEditing(frm);loadPlanRows(frm);if (frm.is_new() || frm.doc.docstatus===0) frm.add_custom_button("新增补充批次",()=>addSupplement(frm),"胚布出库");},

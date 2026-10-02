@@ -5,7 +5,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, getdate, nowdate
 
-from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, record_production_progress, remove_production_progress
+from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, ensure_flow_card_open, record_production_progress, remove_production_progress
 
 TARGET_WAREHOUSE = "生产中转仓 - 沅泰"
 
@@ -79,8 +79,7 @@ class GreyFabricIssue(Document):
         if not self.flow_card:
             frappe.throw(_("请选择生产流转卡"))
         card = frappe.get_doc("Production Flow Card", self.flow_card)
-        if card.docstatus == 2:
-            frappe.throw(_("不能引用已取消的生产流转卡"))
+        ensure_flow_card_open(card)
         self.sales_order = card.sales_order
         self.customer = card.customer
         self.customer_name = frappe.db.get_value("Customer", card.customer, "customer_name") or card.customer
@@ -208,8 +207,7 @@ def set_row_details(row, plan, detail, flow_card, exclude_name=None):
 
 def get_flow_card_details(flow_card):
     card = frappe.get_doc("Production Flow Card", flow_card)
-    if card.docstatus == 2:
-        frappe.throw(_("不能引用已取消的生产流转卡"))
+    ensure_flow_card_open(card)
     result = {"sales_order":card.sales_order,"customer":card.customer,"customer_name":frappe.db.get_value("Customer",card.customer,"customer_name") or card.customer,"color_no":card.color_no,"color":card.color,"finished_product_name":card.finished_product_name,"finished_specification":card.finished_specification,"items":[],"plan_rows":[]}
     for plan in card.get("grey_fabric_issues") or []:
         result["plan_rows"].append({"name":plan.name,"grey_fabric_name":plan.grey_fabric_name,"color":plan.color,"planned_roll_count":plan.planned_roll_count,"planned_qty":plan.planned_qty,"warehouse":plan.warehouse,"location":plan.location})

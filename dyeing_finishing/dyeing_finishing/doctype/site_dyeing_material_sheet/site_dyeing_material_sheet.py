@@ -3,7 +3,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import flt, getdate, nowdate
-from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import record_production_progress, remove_production_progress
+from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import ensure_flow_card_open, record_production_progress, remove_production_progress
 
 ALLOWED_ITEM_GROUPS = ("染料", "助剂")
 MANUAL_SOURCE = "手动新增"
@@ -23,6 +23,7 @@ class SiteDyeingMaterialSheet(Document):
   source=frappe.get_doc("Site Dyeing Material Sheet",self.previous_material_sheet)
   if source.docstatus!=1:
    frappe.throw(_("只能从已提交的现场染色料单创建追加或返修料单"))
+  ensure_flow_card_open(frappe.get_doc("Production Flow Card", source.production_flow_card))
   if source.material_sheet_status=="已取消":
    frappe.throw(_("不能从已取消的现场染色料单创建后续料单"))
   if self.material_sheet_type=="返修染色" and source.material_sheet_status!="已完成":
@@ -85,7 +86,7 @@ class SiteDyeingMaterialSheet(Document):
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)
-  if card.docstatus==2: frappe.throw(_("不能引用已取消的生产流转卡"))
+  ensure_flow_card_open(card)
   self.sales_order=card.sales_order; self.customer=card.customer; self.customer_name=frappe.db.get_value("Customer",card.customer,"customer_name") or card.customer; self.color_no=card.color_no; self.color=card.color; self.finished_product_name=card.finished_product_name; self.production_qty=card.production_qty
  def _set_issue(self):
   self.grey_fabric_issue=self.grey_fabric_issue or _latest_issue(self.production_flow_card)
@@ -144,7 +145,7 @@ def _get_default_confirmed_recipe(color_no):
 @frappe.whitelist()
 def get_site_dyeing_material_sheet_flow_card_details(flow_card):
  card=frappe.get_doc("Production Flow Card",flow_card)
- if card.docstatus==2: frappe.throw(_("不能引用已取消的生产流转卡"))
+ ensure_flow_card_open(card)
  issue=_latest_issue(flow_card); r={"sales_order":card.sales_order,"customer":card.customer,"customer_name":frappe.db.get_value("Customer",card.customer,"customer_name") or card.customer,"color_no":card.color_no,"color":card.color,"finished_product_name":card.finished_product_name,"production_qty":card.production_qty,"grey_fabric_issue":issue or "","grey_fabric_batch":"","grey_fabric_name":"","grey_fabric_issue_qty":0,"grey_fabric_uom":"","laboratory_recipe":_get_default_confirmed_recipe(card.color_no) or ""}
  if issue:
   x=(frappe.get_doc("Grey Fabric Issue",issue).items or [None])[0]
@@ -163,6 +164,7 @@ def get_followup_material_sheet_defaults(source_name, sheet_type, rework_reason=
   frappe.throw(_("只能从已提交的现场染色料单创建追加或返修料单"))
  if source.material_sheet_status=="已取消":
   frappe.throw(_("不能从已取消的现场染色料单创建后续料单"))
+ ensure_flow_card_open(frappe.get_doc("Production Flow Card", source.production_flow_card))
  if sheet_type=="返修染色" and source.material_sheet_status!="已完成":
   frappe.throw(_("返修染色料单只能从已完成的现场染色料单创建"))
  if sheet_type=="返修染色" and not (rework_reason or "").strip():

@@ -188,9 +188,41 @@ function set_flow_card_queries(frm) {
     }));
 }
 
+function setup_production_close_actions(frm) {
+    if (frm.doc.docstatus !== 1) return;
+    if ((frm.doc.production_status || "进行中") === "已关闭") {
+        frm.add_custom_button("重新开启生产", () => {
+            frappe.confirm("重新开启后可以继续新增胚布出库和染色料单。确定继续吗？", () => {
+                frappe.call({
+                    method: get_flow_card_method("reopen_production_flow_card"),
+                    args: { flow_card: frm.doc.name },
+                    freeze: true,
+                    freeze_message: "正在重新开启生产…",
+                    callback() { frm.reload_doc(); },
+                });
+            });
+        }, "生产操作");
+        return;
+    }
+    frm.add_custom_button("关闭生产", () => {
+        frappe.prompt([
+            { fieldname: "closure_reason", label: "关闭原因", fieldtype: "Select", options: "客户取消\n质量异常\n胚布不足\n计划调整\n其他", reqd: 1 },
+            { fieldname: "closure_remarks", label: "关闭说明", fieldtype: "Small Text" },
+        ], (values) => {
+            frappe.call({
+                method: get_flow_card_method("close_production_flow_card"),
+                args: { flow_card: frm.doc.name, closure_reason: values.closure_reason, closure_remarks: values.closure_remarks },
+                freeze: true,
+                freeze_message: "正在关闭生产…",
+                callback() { frm.reload_doc(); },
+            });
+        }, "关闭生产", "确认关闭");
+    }, "生产操作");
+}
+
 frappe.ui.form.on("Production Flow Card", {
     setup(frm) { set_flow_card_queries(frm); },
-    refresh(frm) { set_flow_card_queries(frm); keep_empty_read_only_fields_visible(frm); setup_requirement_tabs(frm); },
+    refresh(frm) { set_flow_card_queries(frm); keep_empty_read_only_fields_visible(frm); setup_requirement_tabs(frm); setup_production_close_actions(frm); },
     sales_order(frm) { clear_flow_card_order_data(frm); set_flow_card_queries(frm); },
     sales_order_item(frm) { load_sales_order_item_details(frm); },
 });

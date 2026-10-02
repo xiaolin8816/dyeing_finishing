@@ -21,6 +21,7 @@
   "document_info_section",
   "flow_card_no",
   "document_status",
+  "production_status",
   "document_column_2",
   "sales_order",
   "customer",
@@ -30,6 +31,12 @@
   "document_column_4",
   "sales_order_item",
   "barcode",
+  "closure_info_section",
+  "closure_date",
+  "closure_reason",
+  "closure_column_2",
+  "closed_by",
+  "closure_remarks",
   "finished_product_section",
   "finished_product_name",
   "finished_width",
@@ -516,6 +523,52 @@
    "fetch_from": "sales_order_item",
    "read_only": 1,
    "idx": 55
+  },
+  {
+   "fieldname": "production_status",
+   "label": "生产状态",
+   "fieldtype": "Select",
+   "options": "进行中\n已关闭\n已完成",
+   "default": "进行中",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "closure_info_section",
+   "label": "关闭资料",
+   "fieldtype": "Section Break",
+   "collapsible": 1,
+   "depends_on": "eval:doc.production_status == '已关闭'"
+  },
+  {
+   "fieldname": "closure_date",
+   "label": "关闭时间",
+   "fieldtype": "Datetime",
+   "read_only": 1
+  },
+  {
+   "fieldname": "closure_reason",
+   "label": "关闭原因",
+   "fieldtype": "Select",
+   "options": "客户取消\n质量异常\n胚布不足\n计划调整\n其他",
+   "read_only": 1
+  },
+  {
+   "fieldname": "closure_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "closed_by",
+   "label": "关闭人",
+   "fieldtype": "Link",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "closure_remarks",
+   "label": "关闭说明",
+   "fieldtype": "Small Text",
+   "read_only": 1
   }
  ],
  "permissions": [
