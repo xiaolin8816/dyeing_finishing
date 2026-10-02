@@ -17,7 +17,7 @@ class SiteDyeingMaterialSheet(Document):
  def before_insert(self):
   self.material_sheet_no=self.name; self.material_sheet_status=self.material_sheet_status or "保存"; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate())
  def validate(self):
-  self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._set_recipe(); self._validate_manual_items(); self._calculate()
+  self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._validate_followup_items(); self._set_recipe(); self._validate_manual_items(); self._calculate()
  def _initialize_followup(self):
   source=frappe.get_doc("Site Dyeing Material Sheet",self.previous_material_sheet)
   if source.docstatus==2 or source.material_sheet_status=="已取消":
@@ -41,6 +41,11 @@ class SiteDyeingMaterialSheet(Document):
    self.bath_ratio=""
    self.bath_volume=0
    self.set("process_parameters",[])
+ def _validate_followup_items(self):
+  if self.material_sheet_type not in ("追加染色", "返修染色"):
+   return
+  if not self.items or not any(row.item_code for row in self.items):
+   frappe.throw(_("追加或返修染色料单必须保留至少一条现场料单明细，不能保存空明细料单"))
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)
