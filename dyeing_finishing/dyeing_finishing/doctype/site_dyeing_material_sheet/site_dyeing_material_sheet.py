@@ -46,6 +46,16 @@ class SiteDyeingMaterialSheet(Document):
    return
   if not self.items or not any(row.item_code for row in self.items):
    frappe.throw(_("追加或返修染色料单必须保留至少一条现场料单明细，不能保存空明细料单"))
+ def before_submit(self):
+  if not self.items or not any(row.item_code for row in self.items):
+   frappe.throw(_("现场料单明细不能为空，不能提交"))
+  self.material_sheet_status="待领料"
+ def on_cancel(self):
+  has_issued_qty=any(flt(row.issued_qty)>0 for row in self.items)
+  if has_issued_qty or self.material_sheet_status in ("部分领料","已领料","已完成"):
+   frappe.throw(_("料单已经发生领料或已完成，不能取消。请使用追加、返修或退料流程处理"))
+  self.db_set("material_sheet_status","已取消",update_modified=False)
+  self.material_sheet_status="已取消"
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)
