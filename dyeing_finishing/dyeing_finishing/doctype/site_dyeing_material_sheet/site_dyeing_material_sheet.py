@@ -56,8 +56,16 @@ class SiteDyeingMaterialSheet(Document):
   has_issued_qty=any(flt(row.issued_qty)>0 for row in self.items)
   if has_issued_qty or self.material_sheet_status in ("部分领料","已领料","已完成"):
    frappe.throw(_("料单已经发生领料或已完成，不能取消。请使用追加、返修或退料流程处理"))
-  self.db_set("material_sheet_status","已取消",update_modified=False)
-  self.material_sheet_status="已取消"
+  # 未领料的料单取消后恢复草稿，允许在原单修正并重新提交，无需建立修订单。
+  self.db_set({"material_sheet_status":"保存","docstatus":0},update_modified=False)
+  quote=chr(96)
+  for table in ("tabSite Dyeing Material Sheet Item","tabSite Dyeing Material Sheet Process Parameter"):
+   frappe.db.sql(f"UPDATE {quote}{table}{quote} SET docstatus=0 WHERE parent=%s AND parenttype='Site Dyeing Material Sheet'",self.name)
+  self.material_sheet_status="保存"
+  self.docstatus=0
+  for row in self.items: row.docstatus=0
+  for row in self.process_parameters: row.docstatus=0
+  self.add_comment("Edit",_("未发生领料，料单已恢复为草稿，可修改后重新提交。"))
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)
