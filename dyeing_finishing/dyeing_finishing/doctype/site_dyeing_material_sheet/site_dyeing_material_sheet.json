@@ -33,6 +33,13 @@
   "fabric_column_3",
   "dyeing_machine",
   "planned_dyeing_date",
+  "material_tabs_section",
+  "material_tab_controls",
+  "material_items_section",
+  "items",
+  "process_parameters_section",
+  "process_parameters",
+  "formula_tab",
   "formula_section",
   "laboratory_recipe",
   "recipe_version",
@@ -41,12 +48,6 @@
   "bath_volume",
   "formula_column_3",
   "recipe_snapshot_source",
-  "material_tabs_section",
-  "material_tab_controls",
-  "material_items_section",
-  "items",
-  "process_parameters_section",
-  "process_parameters",
   "relation_tab",
   "relation_section",
   "material_request",
@@ -220,6 +221,45 @@
    "default": "Today"
   },
   {
+   "fieldname": "material_tabs_section",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "material_tab_controls",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "material_items_section",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "items",
+   "label": "",
+   "fieldtype": "Table",
+   "options": "Site Dyeing Material Sheet Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "process_parameters_section",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "process_parameters",
+   "label": "",
+   "fieldtype": "Table",
+   "options": "Site Dyeing Material Sheet Process Parameter"
+  },
+  {
+   "fieldname": "formula_tab",
+   "label": "配方与计算",
+   "fieldtype": "Tab Break"
+  },
+  {
    "fieldname": "formula_section",
    "label": "配方与计算",
    "fieldtype": "Section Break"
@@ -267,40 +307,6 @@
    "options": "Laboratory Recipe",
    "read_only": 1,
    "hidden": 1
-  },
-  {
-   "fieldname": "material_tabs_section",
-   "fieldtype": "Section Break",
-   "hide_label": 1
-  },
-  {
-   "fieldname": "material_tab_controls",
-   "fieldtype": "HTML"
-  },
-  {
-   "fieldname": "material_items_section",
-   "label": "",
-   "fieldtype": "Section Break",
-   "hide_label": 1
-  },
-  {
-   "fieldname": "items",
-   "label": "",
-   "fieldtype": "Table",
-   "options": "Site Dyeing Material Sheet Item",
-   "reqd": 1
-  },
-  {
-   "fieldname": "process_parameters_section",
-   "label": "",
-   "fieldtype": "Section Break",
-   "hide_label": 1
-  },
-  {
-   "fieldname": "process_parameters",
-   "label": "",
-   "fieldtype": "Table",
-   "options": "Site Dyeing Material Sheet Process Parameter"
   },
   {
    "fieldname": "relation_tab",
