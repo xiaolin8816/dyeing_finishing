@@ -78,10 +78,11 @@
   "production_progress_tab",
   "production_progress_section",
   "current_progress_status",
-  "latest_progress_time",
   "progress_column_2",
-  "latest_source_doctype",
+  "latest_progress_time",
+  "progress_column_3",
   "latest_source_document",
+  "latest_source_doctype",
   "process_progress_records_section",
   "progress_records",
   "relation_tab",
@@ -569,6 +570,10 @@
    "label": "关闭说明",
    "fieldtype": "Small Text",
    "read_only": 1
+  },
+  {
+   "fieldname": "progress_column_3",
+   "fieldtype": "Column Break"
   }
  ],
  "permissions": [
