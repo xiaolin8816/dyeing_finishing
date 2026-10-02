@@ -270,6 +270,7 @@ doctype_list_js = {
     "Sales Order": "public/js/sales_order_list.js",
     "Production Flow Card": "public/js/production_flow_card_list.js",
     "Laboratory Recipe": "public/js/laboratory_recipe_list.js",
+    "Purchase Receipt": "public/js/purchase_receipt_list.js",
 }
 
 # 销售订单印染扩展字段与显示名称
