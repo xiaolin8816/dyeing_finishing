@@ -11,7 +11,6 @@
   "item_code",
   "item_name",
   "material_category",
-  "source",
   "formula_qty",
   "site_ratio",
   "temporary_qty",
@@ -19,7 +18,8 @@
   "dosage_basis",
   "issued_qty",
   "uom",
-  "issue_status"
+  "issue_status",
+  "source"
  ],
  "fields": [
   {
@@ -66,7 +66,8 @@
    "fieldtype": "Select",
    "options": "配方带出\n手动新增",
    "read_only": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "default": "手动新增"
   },
   {
    "fieldname": "formula_qty",
