@@ -229,21 +229,21 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "染料管理",
    "link_count": 1,
-   "link_type": "DocType",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Card Break"
   },
   {
    "dependencies": "",
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "染料入库单",
    "link_count": 0,
-   "link_to": "dye-material-receipt",
-   "link_type": "Page",
+   "link_to": "Dye Material Receipt Register",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   }

@@ -4,6 +4,7 @@ import frappe
 WORKSPACE = "印染整理"
 CARD_LABEL = "染料管理"
 LINK_LABEL = "染料入库单"
+REPORT_NAME = "Dye Material Receipt Register"
 
 
 def execute():
@@ -39,23 +40,24 @@ def execute():
         [row for row in (workspace.shortcuts or []) if row.label != LINK_LABEL],
     )
 
-    has_card = any(row.type == "Card Break" and row.label == CARD_LABEL for row in workspace.links or [])
-    if not has_card:
-        workspace.append("links", {"type": "Card Break", "label": CARD_LABEL})
-
-    has_link = any(
-        row.type == "Link" and row.label == LINK_LABEL and row.link_to == "dye-material-receipt"
-        for row in workspace.links or []
+    card = next(
+        (row for row in workspace.links or [] if row.type == "Card Break" and row.label == CARD_LABEL),
+        None,
     )
-    if not has_link:
-        workspace.append(
-            "links",
-            {
-                "type": "Link",
-                "link_type": "Page",
-                "link_to": "dye-material-receipt",
-                "label": LINK_LABEL,
-            },
-        )
+    if not card:
+        card = workspace.append("links", {"type": "Card Break", "label": CARD_LABEL})
+    card.link_type = "Report"
+    card.is_query_report = 1
+    card.link_count = 1
+
+    link = next(
+        (row for row in workspace.links or [] if row.type == "Link" and row.label == LINK_LABEL),
+        None,
+    )
+    if not link:
+        link = workspace.append("links", {"type": "Link", "label": LINK_LABEL})
+    link.link_type = "Report"
+    link.link_to = REPORT_NAME
+    link.is_query_report = 1
 
     workspace.save(ignore_permissions=True)
