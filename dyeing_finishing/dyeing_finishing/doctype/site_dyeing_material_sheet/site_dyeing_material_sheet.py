@@ -4,12 +4,17 @@ from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import flt, getdate, nowdate
 
+ALLOWED_ITEM_GROUPS = ("染料", "助剂")
+MANUAL_SOURCE = "手动新增"
+RECIPE_SOURCE = "配方带出"
+MANUAL_ITEM_FIELDS = ("item_code", "item_name", "material_category", "uom", "dosage_basis", "formula_qty", "site_ratio", "temporary_qty", "actual_qty", "issued_qty", "issue_status", "remark", "source")
+
 class SiteDyeingMaterialSheet(Document):
  def autoname(self): self.name = make_autoname("RL.YY.MM.DD.###")
  def before_insert(self):
   self.material_sheet_no=self.name; self.material_sheet_status=self.material_sheet_status or "保存"; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate())
  def validate(self):
-  self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._set_recipe(); self._calculate()
+  self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._set_recipe(); self._validate_manual_items(); self._calculate()
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)
@@ -33,12 +38,23 @@ class SiteDyeingMaterialSheet(Document):
   self.recipe_version=recipe.recipe_version; self.bath_ratio=self.bath_ratio or recipe.bath_ratio
   if self.recipe_snapshot_source!=recipe.name or not self.items or (recipe.process_parameters and not self.process_parameters): self._copy_recipe(recipe)
  def _copy_recipe(self,recipe):
+  manual_items=[{field: row.get(field) for field in MANUAL_ITEM_FIELDS} for row in self.items if row.source==MANUAL_SOURCE]
   self.set("items",[])
-  for s in recipe.get("recipe_items") or []: self.append("items",{"item_code":s.item_code,"item_name":s.item_name,"material_category":s.material_category,"uom":s.uom,"dosage_basis":s.dosage_basis,"formula_qty":s.formula_qty,"site_ratio":s.formula_qty,"temporary_qty":0,"issue_status":"未领料","remark":s.remark})
+  for s in recipe.get("recipe_items") or []: self.append("items",{"source":RECIPE_SOURCE,"item_code":s.item_code,"item_name":s.item_name,"material_category":s.material_category,"uom":s.uom,"dosage_basis":s.dosage_basis,"formula_qty":s.formula_qty,"site_ratio":s.formula_qty,"temporary_qty":0,"issue_status":"未领料","remark":s.remark})
+  for row in manual_items: self.append("items",row)
   self.set("process_parameters",[])
   for s in recipe.get("process_parameters") or []:
    value=s.parameter_value or s.default_value; self.append("process_parameters",{"process_stage":s.process_stage,"parameter_name":s.parameter_name,"unit":s.unit,"parameter_value":value,"site_parameter_value":value,"instruction":s.instruction})
   self.recipe_snapshot_source=recipe.name
+ def _validate_manual_items(self):
+  for row in self.items:
+   row.source=row.source or RECIPE_SOURCE
+   if row.source not in (RECIPE_SOURCE,MANUAL_SOURCE): frappe.throw(_("第 {0} 行来源无效").format(row.idx))
+   if row.source!=MANUAL_SOURCE: continue
+   item=frappe.db.get_value("Item",row.item_code,["item_name","item_group","stock_uom","disabled"],as_dict=True)
+   if not item or item.disabled or item.item_group not in ALLOWED_ITEM_GROUPS:
+    frappe.throw(_("第 {0} 行手动新增物料只能选择启用的染料或助剂").format(row.idx))
+   row.item_name=item.item_name; row.material_category=item.item_group; row.uom=item.stock_uom; row.dosage_basis=row.dosage_basis or "g/kg"; row.formula_qty=flt(row.formula_qty)
  def _calculate(self):
   base,bath=flt(self.grey_fabric_issue_qty),flt(self.bath_volume)
   for r in self.items:
