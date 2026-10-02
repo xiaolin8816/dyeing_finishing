@@ -5,7 +5,8 @@ import frappe
 
 
 def execute():
-    module_path = Path(frappe.get_module_path("dyeing_finishing.dyeing_finishing"))
+    import dyeing_finishing.dyeing_finishing as dyeing_finishing_module
+    module_path = Path(dyeing_finishing_module.__file__).parent
     doctype_json = module_path / "doctype" / "production_flow_card" / "production_flow_card.json"
     with doctype_json.open(encoding="utf-8") as source:
         field_order = json.load(source)["field_order"]
