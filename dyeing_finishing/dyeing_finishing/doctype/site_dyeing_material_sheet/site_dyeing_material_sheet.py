@@ -11,10 +11,35 @@ MANUAL_ITEM_FIELDS = ("item_code", "item_name", "material_category", "uom", "dos
 
 class SiteDyeingMaterialSheet(Document):
  def autoname(self): self.name = make_autoname("RL.YY.MM.DD.###")
+ def before_validate(self):
+  if self.is_new() and self.material_sheet_type in ("追加染色", "返修染色") and self.previous_material_sheet:
+   self._initialize_followup()
  def before_insert(self):
   self.material_sheet_no=self.name; self.material_sheet_status=self.material_sheet_status or "保存"; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate())
  def validate(self):
   self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._set_recipe(); self._validate_manual_items(); self._calculate()
+ def _initialize_followup(self):
+  source=frappe.get_doc("Site Dyeing Material Sheet",self.previous_material_sheet)
+  if source.docstatus==2 or source.material_sheet_status=="已取消":
+   frappe.throw(_("不能从已取消的现场染色料单创建后续料单"))
+  if self.material_sheet_type=="返修染色" and source.material_sheet_status!="已完成":
+   frappe.throw(_("返修染色料单只能从已完成的现场染色料单创建"))
+  if self.material_sheet_type=="返修染色" and not (self.rework_reason or "").strip():
+   frappe.throw(_("请填写返修原因"))
+  self.original_material_sheet=source.original_material_sheet or source.name
+  self.production_flow_card=source.production_flow_card
+  self.grey_fabric_issue=source.grey_fabric_issue
+  self.grey_fabric_batch=source.grey_fabric_batch
+  self.grey_fabric_issue_qty=source.grey_fabric_issue_qty
+  self.dyeing_machine=self.dyeing_machine or source.dyeing_machine
+  self.dyeing_sequence=frappe.db.count("Site Dyeing Material Sheet",{"production_flow_card":source.production_flow_card,"docstatus":["!=",2]})+1
+  self.laboratory_recipe=_get_default_confirmed_recipe(source.color_no) or ""
+  self.recipe_snapshot_source=""
+  self.recipe_version=""
+  self.bath_ratio=""
+  self.bath_volume=0
+  self.set("items",[])
+  self.set("process_parameters",[])
  def _set_card(self):
   if not self.production_flow_card: frappe.throw(_("请选择生产流转卡"))
   card=frappe.get_doc("Production Flow Card",self.production_flow_card)
@@ -82,8 +107,9 @@ def get_site_dyeing_material_sheet_flow_card_details(flow_card):
  return r
 
 
+
 @frappe.whitelist()
-def create_followup_material_sheet(source_name, sheet_type, rework_reason=None):
+def get_followup_material_sheet_defaults(source_name, sheet_type, rework_reason=None):
  if sheet_type not in ("追加染色", "返修染色"):
   frappe.throw(_("料单类型只能为追加染色或返修染色"))
  source=frappe.get_doc("Site Dyeing Material Sheet",source_name)
@@ -94,20 +120,28 @@ def create_followup_material_sheet(source_name, sheet_type, rework_reason=None):
   frappe.throw(_("返修染色料单只能从已完成的现场染色料单创建"))
  if sheet_type=="返修染色" and not (rework_reason or "").strip():
   frappe.throw(_("请填写返修原因"))
- original=source.original_material_sheet or source.name
- if not source.dyeing_sequence: source.db_set("dyeing_sequence",1,update_modified=False)
- if not source.material_sheet_type: source.db_set("material_sheet_type","首次染色",update_modified=False)
- next_sequence=frappe.db.count("Site Dyeing Material Sheet",{"production_flow_card":source.production_flow_card,"docstatus":["!=",2]})+1
- target=frappe.copy_doc(source)
- target.material_sheet_no=""
- target.material_sheet_status="保存"
- target.material_sheet_type=sheet_type
- target.dyeing_sequence=next_sequence
- target.original_material_sheet=original
- target.previous_material_sheet=source.name
- target.rework_reason=(rework_reason or "").strip() if sheet_type=="返修染色" else ""
- target.planned_dyeing_date=getdate(nowdate())
- target.material_request=""
- target.stock_entry=""
- target.insert()
- return {"name":target.name,"material_sheet_no":target.material_sheet_no}
+ return {
+  "material_sheet_type":sheet_type,
+  "original_material_sheet":source.original_material_sheet or source.name,
+  "previous_material_sheet":source.name,
+  "rework_reason":(rework_reason or "").strip() if sheet_type=="返修染色" else "",
+  "production_flow_card":source.production_flow_card,
+  "sales_order":source.sales_order,
+  "customer":source.customer,
+  "customer_name":source.customer_name,
+  "color_no":source.color_no,
+  "color":source.color,
+  "finished_product_name":source.finished_product_name,
+  "production_qty":source.production_qty,
+  "grey_fabric_issue":source.grey_fabric_issue,
+  "grey_fabric_batch":source.grey_fabric_batch,
+  "grey_fabric_name":source.grey_fabric_name,
+  "grey_fabric_issue_qty":source.grey_fabric_issue_qty,
+  "grey_fabric_uom":source.grey_fabric_uom,
+  "dyeing_machine":source.dyeing_machine,
+  "laboratory_recipe":_get_default_confirmed_recipe(source.color_no) or "",
+  "recipe_snapshot_source":"",
+  "recipe_version":"",
+  "bath_ratio":"",
+  "bath_volume":0
+ }
