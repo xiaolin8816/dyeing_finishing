@@ -18,6 +18,15 @@ function setDyeingReceiptTitle(frm) {
     frappe.utils.set_title(frm.is_new() ? title : `${title} - ${frm.doc.name}`);
 }
 
+function setDyeingReceiptWarehouseDefaults(frm) {
+    if (!isDyeingReceipt(frm)) return;
+    if (frm.doc.docstatus) return;
+    if (!frm.doc.set_warehouse) {
+        frm.set_value("set_warehouse", DYEING_WAREHOUSE);
+    }
+    (frm.doc.items || []).forEach((row) => setDyeingReceiptRowDefaults(frm, row));
+}
+
 function setDyeingReceiptRowDefaults(frm, row) {
     if (!isDyeingReceipt(frm)) return;
     if (!row.warehouse) {
@@ -40,13 +49,14 @@ frappe.ui.form.on("Purchase Receipt", {
         setDyeingReceiptQuery(frm);
         toggleDyeingReceiptType(frm);
         setDyeingReceiptTitle(frm);
+        setDyeingReceiptWarehouseDefaults(frm);
     },
     custom_dyeing_receipt_type(frm) {
         setDyeingReceiptQuery(frm);
         toggleDyeingReceiptType(frm);
         setDyeingReceiptTitle(frm);
+        setDyeingReceiptWarehouseDefaults(frm);
         if (!isDyeingReceipt(frm)) return;
-        (frm.doc.items || []).forEach((row) => setDyeingReceiptRowDefaults(frm, row));
         frm.refresh_field("items");
     },
     items_add(frm, cdt, cdn) {

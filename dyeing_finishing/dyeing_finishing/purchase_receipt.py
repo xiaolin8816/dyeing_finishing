@@ -29,6 +29,7 @@ def _get_dyeing_material_category(item_code):
 def validate(doc, method=None):
     if doc.get("custom_dyeing_receipt_type") != DYEING_RECEIPT_TYPE:
         return
+    doc.set_warehouse = doc.set_warehouse or DYEING_WAREHOUSE
     for row in doc.get("items") or []:
         category = _get_dyeing_material_category(row.item_code)
         if not category:
