@@ -270,6 +270,7 @@ doctype_list_js = {
     "Sales Order": "public/js/sales_order_list.js",
     "Production Flow Card": "public/js/production_flow_card_list.js",
     "Laboratory Recipe": "public/js/laboratory_recipe_list.js",
+    "Purchase Receipt": "public/js/purchase_receipt_list.js",
 }
 
 # 销售订单印染扩展字段与显示名称
@@ -281,10 +282,14 @@ fixtures = [
 # 销售订单客户订单号同步
 doctype_js = {
     "Sales Order": "public/js/sales_order.js",
+    "Purchase Receipt": "public/js/purchase_receipt.js",
 }
 doc_events = {
     "Sales Order": {
         "validate": "dyeing_finishing.dyeing_finishing.sales_order.validate",
+    },
+    "Purchase Receipt": {
+        "validate": "dyeing_finishing.dyeing_finishing.purchase_receipt.validate",
     },
 }
 

@@ -331,5 +331,167 @@
     "insert_after": "custom_grey_fabric_issue",
     "read_only": 1,
     "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Item-custom_dyeing_material_section",
+    "dt": "Item",
+    "fieldname": "custom_dyeing_material_section",
+    "label": "染整资料",
+    "fieldtype": "Section Break",
+    "insert_after": "stock_uom",
+    "module": "dyeing_finishing",
+    "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Item-custom_dyeing_packing_specification",
+    "dt": "Item",
+    "fieldname": "custom_dyeing_packing_specification",
+    "label": "包装规格",
+    "fieldtype": "Data",
+    "insert_after": "custom_dyeing_material_section",
+    "module": "dyeing_finishing",
+    "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Item-custom_dyeing_color_tone",
+    "dt": "Item",
+    "fieldname": "custom_dyeing_color_tone",
+    "label": "色相",
+    "fieldtype": "Data",
+    "insert_after": "custom_dyeing_packing_specification",
+    "module": "dyeing_finishing",
+    "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Item-custom_dyeing_material_column",
+    "dt": "Item",
+    "fieldname": "custom_dyeing_material_column",
+    "label": "",
+    "fieldtype": "Column Break",
+    "insert_after": "custom_dyeing_color_tone",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Item-custom_dyeing_standard_concentration",
+    "dt": "Item",
+    "fieldname": "custom_dyeing_standard_concentration",
+    "label": "标准浓度",
+    "fieldtype": "Data",
+    "insert_after": "custom_dyeing_material_column",
+    "module": "dyeing_finishing",
+    "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Item-custom_dyeing_brand",
+    "dt": "Item",
+    "fieldname": "custom_dyeing_brand",
+    "label": "品牌",
+    "fieldtype": "Data",
+    "insert_after": "custom_dyeing_standard_concentration",
+    "module": "dyeing_finishing",
+    "depends_on": "eval:in_list(['染料', '助剂'], doc.item_group)"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt-custom_dyeing_receipt_section",
+    "dt": "Purchase Receipt",
+    "fieldname": "custom_dyeing_receipt_section",
+    "label": "染整入库资料",
+    "fieldtype": "Section Break",
+    "insert_after": "supplier_delivery_note",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt-custom_dyeing_receipt_type",
+    "dt": "Purchase Receipt",
+    "fieldname": "custom_dyeing_receipt_type",
+    "label": "业务类别",
+    "fieldtype": "Select",
+    "insert_after": "custom_dyeing_receipt_section",
+    "module": "dyeing_finishing",
+    "options": "\n染料/助剂入库",
+    "in_list_view": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt Item-custom_dyeing_receipt_section",
+    "dt": "Purchase Receipt Item",
+    "fieldname": "custom_dyeing_receipt_section",
+    "label": "染整入库资料",
+    "fieldtype": "Section Break",
+    "insert_after": "warehouse",
+    "module": "dyeing_finishing",
+    "depends_on": "eval:parent.custom_dyeing_receipt_type == '染料/助剂入库'"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt Item-custom_dyeing_material_category",
+    "dt": "Purchase Receipt Item",
+    "fieldname": "custom_dyeing_material_category",
+    "label": "染料/助剂类别",
+    "fieldtype": "Data",
+    "insert_after": "custom_dyeing_receipt_section",
+    "module": "dyeing_finishing",
+    "read_only": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt Item-custom_dyeing_packing_specification",
+    "dt": "Purchase Receipt Item",
+    "fieldname": "custom_dyeing_packing_specification",
+    "label": "包装规格",
+    "fieldtype": "Data",
+    "insert_after": "custom_dyeing_material_category",
+    "module": "dyeing_finishing",
+    "read_only": 1,
+    "fetch_from": "item_code.custom_dyeing_packing_specification"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt Item-custom_dyeing_receipt_column",
+    "dt": "Purchase Receipt Item",
+    "fieldname": "custom_dyeing_receipt_column",
+    "label": "",
+    "fieldtype": "Column Break",
+    "insert_after": "custom_dyeing_packing_specification",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt Item-custom_package_uom",
+    "dt": "Purchase Receipt Item",
+    "fieldname": "custom_package_uom",
+    "label": "包装单位",
+    "fieldtype": "Link",
+    "insert_after": "custom_dyeing_receipt_column",
+    "module": "dyeing_finishing",
+    "options": "UOM"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt Item-custom_package_count",
+    "dt": "Purchase Receipt Item",
+    "fieldname": "custom_package_count",
+    "label": "入库桶数/包数",
+    "fieldtype": "Float",
+    "insert_after": "custom_package_uom",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Purchase Receipt Item-custom_supplier_batch_no",
+    "dt": "Purchase Receipt Item",
+    "fieldname": "custom_supplier_batch_no",
+    "label": "供应商批号",
+    "fieldtype": "Data",
+    "insert_after": "custom_package_count",
+    "module": "dyeing_finishing"
   }
 ]
