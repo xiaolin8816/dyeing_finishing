@@ -6,6 +6,7 @@
     const SET_GLOBAL_LAYOUT_METHOD = "dyeing_finishing.dyeing_finishing.list_layout.set_global_list_layout";
     const MIN_WIDTH = 20;
     const MAX_WIDTH = 600;
+    const SUPPORTED_DOCTYPES = new Set(["Production Flow Card", "Dye Material Other Issue"]);
 
     const fieldname_of = (column) => column.type === "Status" ? "__status" : column.df?.fieldname;
     const column_label = (column) => column.type === "Status" ? "状态" : (column.df?.label || column.df?.fieldname);
@@ -145,18 +146,39 @@
         dialog.show(); render_rows(dialog, columns, state);
     }
 
-    window.dyeing_finishing_list_layout = { register({ doctype }) {
+    function setup_list_layout(doctype) {
+        const existing = frappe.listview_settings[doctype] || {};
         frappe.listview_settings[doctype] = {
+            ...existing,
             onload(listview) {
+                if (existing.onload) existing.onload(listview);
                 frappe.call({ method: GET_LAYOUT_METHOD, args: { doctype } }).then((response) => {
                     const result = response.message || {};
                     listview.__dyeing_finishing_list_layout = result.layout || { widths: {}, order: [], hidden: [], sticky: [] };
                     listview.__dyeing_finishing_can_set_global_layout = result.can_set_global;
                     apply_layout(listview);
                 });
-                listview.page.add_menu_item("列设置", () => show_layout_dialog(listview, doctype, listview.__dyeing_finishing_can_set_global_layout));
             },
-            refresh(listview) { window.setTimeout(() => apply_layout(listview), 0); },
+            refresh(listview) {
+                if (existing.refresh) existing.refresh(listview);
+                window.setTimeout(() => apply_layout(listview), 0);
+            },
         };
-    } };
+    }
+
+    SUPPORTED_DOCTYPES.forEach(setup_list_layout);
+
+    const ListView = frappe.views?.ListView;
+    if (ListView && !ListView.prototype.__dyeing_finishing_list_layout_override) {
+        const original_get_view_settings = ListView.prototype.get_view_settings;
+        ListView.prototype.get_view_settings = function() {
+            if (!SUPPORTED_DOCTYPES.has(this.doctype)) return original_get_view_settings.call(this);
+            return {
+                label: __("List Settings", null, "Button in list view menu"),
+                action: () => show_layout_dialog(this, this.doctype, true),
+                standard: true,
+            };
+        };
+        ListView.prototype.__dyeing_finishing_list_layout_override = true;
+    }
 })();

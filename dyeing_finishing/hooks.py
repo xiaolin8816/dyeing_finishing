@@ -272,8 +272,6 @@ app_include_js = [
 doctype_list_js = {
     "Item": "public/js/item_list.js",
     "Sales Order": "public/js/sales_order_list.js",
-    "Production Flow Card": "public/js/production_flow_card_list.js",
-    "Dye Material Other Issue": "public/js/dye_material_other_issue_list.js",
     "Laboratory Recipe": "public/js/laboratory_recipe_list.js",
     "Purchase Receipt": "public/js/purchase_receipt_list.js",
 }
