@@ -89,7 +89,6 @@
    "label": "领用部门",
    "fieldtype": "Link",
    "options": "Department",
-   "reqd": 1,
    "in_list_view": 1
   },
   {
@@ -97,7 +96,6 @@
    "label": "领用人",
    "fieldtype": "Link",
    "options": "Employee",
-   "reqd": 1,
    "in_list_view": 1
   },
   {
