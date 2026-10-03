@@ -30,12 +30,14 @@
   "document_row_3_column_2",
   "laboratory_recipe",
   "document_row_3_column_3",
-  "stock_entry",
   "document_row_3_column_4",
-  "other_purpose_description",
   "document_row_4",
-  "total_issue_qty_g",
+  "stock_entry",
   "document_row_4_column_2",
+  "other_purpose_description",
+  "document_row_4_column_3",
+  "total_issue_qty_g",
+  "document_row_4_column_4",
   "total_issue_qty_kg",
   "items_section",
   "items"
@@ -242,6 +244,18 @@
    "fieldname": "document_row_4_column_2",
    "label": "",
    "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_4_column_3",
+   "label": "",
+   "fieldtype": "Column Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_4_column_4",
+   "label": "",
+   "fieldtype": "Column Break",
    "hide_label": 1
   }
  ],
