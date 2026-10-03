@@ -196,5 +196,10 @@ def get_preview_document_code(issue_date=None):
     """Return the next document code for display only; it does not reserve a series number."""
     date = getdate(issue_date or nowdate())
     series_key = f"CL{date.strftime('%y%m%d')}"
-    current = frappe.db.get_value("Series", series_key, "current") or 0
+    row = frappe.db.sql(
+        "SELECT `current` FROM `tabSeries` WHERE name = %s",
+        series_key,
+        as_dict=True,
+    )
+    current = row[0].current if row else 0
     return f"{series_key}{int(current) + 1:03d}"
