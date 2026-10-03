@@ -1,0 +1,292 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-03 13:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "module": "dyeing_finishing",
+ "name": "Dye Material Other Issue",
+ "owner": "Administrator",
+ "field_order": [
+  "details_tab",
+  "document_section",
+  "document_code",
+  "document_column_2",
+  "issue_date",
+  "document_column_3",
+  "document_status",
+  "document_column_4",
+  "issue_purpose",
+  "document_row_2",
+  "department",
+  "document_row_2_column_2",
+  "recipient",
+  "document_row_2_column_3",
+  "source_warehouse",
+  "document_row_2_column_4",
+  "production_flow_card",
+  "document_row_3",
+  "material_sheet",
+  "document_row_3_column_2",
+  "laboratory_recipe",
+  "document_row_3_column_3",
+  "stock_entry",
+  "document_row_3_column_4",
+  "other_purpose_description",
+  "document_row_4",
+  "total_issue_qty_g",
+  "document_row_4_column_2",
+  "total_issue_qty_kg",
+  "items_section",
+  "items"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "label": "详细信息",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "document_section",
+   "label": "单据信息",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "document_code",
+   "label": "单据编码",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "issue_date",
+   "label": "出库日期",
+   "fieldtype": "Date",
+   "default": "Today",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "document_status",
+   "label": "单据状态",
+   "fieldtype": "Select",
+   "options": "保存\n已提交\n已取消",
+   "default": "保存",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "issue_purpose",
+   "label": "出库用途",
+   "fieldtype": "Select",
+   "options": "打样领用\n质检试验\n设备调试\n损耗报废\n其他",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "department",
+   "label": "领用部门",
+   "fieldtype": "Link",
+   "options": "Department",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "recipient",
+   "label": "领用人",
+   "fieldtype": "Link",
+   "options": "Employee",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "label": "出库仓库",
+   "fieldtype": "Link",
+   "options": "Warehouse",
+   "default": "染料仓库 - 沅泰",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "production_flow_card",
+   "label": "生产流转卡",
+   "fieldtype": "Link",
+   "options": "Production Flow Card",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "material_sheet",
+   "label": "现场染色料单",
+   "fieldtype": "Link",
+   "options": "Site Dyeing Material Sheet"
+  },
+  {
+   "fieldname": "laboratory_recipe",
+   "label": "化验室配方",
+   "fieldtype": "Link",
+   "options": "Laboratory Recipe"
+  },
+  {
+   "fieldname": "stock_entry",
+   "label": "关联库存凭证",
+   "fieldtype": "Link",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "other_purpose_description",
+   "label": "其他用途说明",
+   "fieldtype": "Small Text",
+   "mandatory_depends_on": "eval:doc.issue_purpose==\"其他\""
+  },
+  {
+   "fieldname": "total_issue_qty_g",
+   "label": "本次出库克数",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "3"
+  },
+  {
+   "fieldname": "total_issue_qty_kg",
+   "label": "本次出库公斤数",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "6"
+  },
+  {
+   "fieldname": "items_section",
+   "label": "出库明细",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "label": "",
+   "fieldtype": "Table",
+   "options": "Dye Material Other Issue Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_column_2",
+   "label": "",
+   "fieldtype": "Column Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_column_3",
+   "label": "",
+   "fieldtype": "Column Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_column_4",
+   "label": "",
+   "fieldtype": "Column Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_2",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_2_column_2",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_2_column_3",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_2_column_4",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_3",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_3_column_2",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_3_column_3",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_3_column_4",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_4",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  },
+  {
+   "fieldname": "document_row_4_column_2",
+   "label": "",
+   "fieldtype": "Section Break",
+   "hide_label": 1
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock User",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "submit": 1,
+   "report": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ],
+ "is_submittable": 1
+}

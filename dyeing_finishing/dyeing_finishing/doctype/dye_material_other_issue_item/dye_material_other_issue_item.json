@@ -1,0 +1,78 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-10-03 13:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "module": "dyeing_finishing",
+ "name": "Dye Material Other Issue Item",
+ "owner": "Administrator",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "material_category",
+  "stock_qty_kg",
+  "issue_qty_g",
+  "issue_qty_kg",
+  "stock_uom"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "label": "物料编码",
+   "fieldtype": "Link",
+   "options": "Item",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item_name",
+   "label": "物料名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "material_category",
+   "label": "类别",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "stock_qty_kg",
+   "label": "库存数量(kg)",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "3",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "issue_qty_g",
+   "label": "出库数量(g)",
+   "fieldtype": "Float",
+   "reqd": 1,
+   "precision": "3",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "issue_qty_kg",
+   "label": "出库数量(kg)",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "6",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "stock_uom",
+   "label": "库存单位",
+   "fieldtype": "Link",
+   "options": "UOM",
+   "read_only": 1,
+   "in_list_view": 1
+  }
+ ],
+ "permissions": [],
+ "istable": 1,
+ "editable_grid": 1
+}

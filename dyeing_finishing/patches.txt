@@ -19,3 +19,4 @@ dyeing_finishing.patches.v1_0.fix_dye_material_receipt_report_link
 dyeing_finishing.patches.v1_0.add_dye_material_stock_workspace_link
 
 dyeing_finishing.patches.v1_0.add_site_dyeing_material_issue_workspace
+dyeing_finishing.patches.v1_0.add_dye_material_other_issue_workspace
