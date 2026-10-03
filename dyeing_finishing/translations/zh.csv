@@ -49,7 +49,7 @@ Parent Project,父项目
 BEAM Settings,BEAM 设置
 Transit,在途
 Data Sources,数据来源
-Enable Handling Units,启用处理单元
+Enable Handling Units,启用搬运单元
 Enable Scanning of Serial Numbers,启用序列号扫描功能
 Barcode Font Size,条形码字体大小
 Purchase Invoice has been submitted successfully,采购发票已成功提交
@@ -12533,3 +12533,6 @@ Dye Material Receipt Register,染料入库记录
 Dye Material Stock,染料库存
 Site Dyeing Material Issue,现场染色领料单
 Site Dyeing Material Issue Item,现场染色领料明细
+
+Handling Unit,搬运单元
+Handling Unit Name,搬运单元编号

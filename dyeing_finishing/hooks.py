@@ -28,7 +28,10 @@ app_logo_url = "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg"
 
 # include js, css files in header of desk.html
 app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
-app_include_js = "/assets/dyeing_finishing/js/report_layout.js"
+app_include_js = [
+    "/assets/dyeing_finishing/js/report_layout.js",
+    "/assets/dyeing_finishing/js/stock_ledger_handling_unit.js",
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
