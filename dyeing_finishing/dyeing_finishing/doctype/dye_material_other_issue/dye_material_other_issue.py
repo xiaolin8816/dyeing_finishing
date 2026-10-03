@@ -55,6 +55,15 @@ class DyeMaterialOtherIssue(Document):
             entry = frappe.get_doc("Stock Entry", self.stock_entry)
             if entry.docstatus == 1:
                 entry.cancel()
+            # The cancelled stock entry is retained for audit, but must no longer
+            # block cancellation of this source document through a reverse Link field.
+            frappe.db.set_value(
+                "Stock Entry Detail",
+                {"parent": entry.name},
+                "custom_dye_material_other_issue",
+                None,
+                update_modified=False,
+            )
         self.db_set("stock_entry", None, update_modified=False)
         self.stock_entry = None
         if self.production_flow_card:
