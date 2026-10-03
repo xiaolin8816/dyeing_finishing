@@ -12,11 +12,16 @@
     const workspace_route = (name) => `/app/${frappe.router.slug(name)}`;
     function current_target() { const route = frappe.get_route() || []; return String(route[0] || "").toLowerCase() === "query-report" ? (frappe.query_report?.name || route[1]) : (frappe.router.doctype_layout || route[1]); }
     function config() { const target = normalized(current_target()); return Object.entries(ROUTES).find(([key]) => normalized(key) === target)?.[1]; }
-    function append($breadcrumbs, href, label, disabled = false) { const item = $(`<li><a href="${href || ""}">${frappe.utils.escape_html(label)}</a></li>`); if (disabled) item.addClass("disabled"); $breadcrumbs.append(item); }
+    function append($breadcrumbs, href, label, disabled = false, raw = false) {
+        const text = raw ? label : frappe.utils.escape_html(label);
+        const item = $("<li><a href=\"" + (href || "") + "\">" + text + "</a></li>");
+        if (disabled) item.addClass("disabled");
+        $breadcrumbs.append(item);
+    }
     function render() {
         const item = config(); if (!item) return;
         const route = frappe.get_route() || []; const view = String(route[0] || "").toLowerCase(); const $breadcrumbs = $(".navbar-breadcrumbs"); if (!$breadcrumbs.length) return;
-        $breadcrumbs.empty(); append($breadcrumbs, "/desk", frappe.utils.icon("home")); append($breadcrumbs, workspace_route(ROOT_WORKSPACE), ROOT_WORKSPACE); append($breadcrumbs, workspace_route(item[0]), item[0]);
+        $breadcrumbs.empty(); append($breadcrumbs, "/desk", frappe.utils.icon("home"), false, true); append($breadcrumbs, workspace_route(ROOT_WORKSPACE), ROOT_WORKSPACE); append($breadcrumbs, workspace_route(item[0]), item[0]);
         if (view === "form") { append($breadcrumbs, `/desk/${frappe.router.slug(current_target())}`, item[1]); append($breadcrumbs, "", route.slice(2).join("/"), true); } else { append($breadcrumbs, "", item[1], true); }
     }
     function schedule() { window.setTimeout(render, 80); window.setTimeout(render, 350); }
