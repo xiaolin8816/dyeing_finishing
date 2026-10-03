@@ -24,6 +24,7 @@ class DyeMaterialReturn(Document):
     def validate(self):
         self.return_date = self.return_date or getdate(nowdate())
         self.source_warehouse = self.source_warehouse or DYE_WAREHOUSE
+        self._set_purchase_receipt_details()
         self._set_item_details()
         self._set_totals()
         self._set_item_names()
@@ -49,25 +50,47 @@ class DyeMaterialReturn(Document):
             self.db_set(field, None, update_modified=False)
             self.set(field, None)
 
+    def _set_purchase_receipt_details(self):
+        receipt = frappe.get_doc("Purchase Receipt", self.original_purchase_receipt)
+        if receipt.docstatus != 1:
+            frappe.throw(_("原染料入库单必须已提交"))
+        self.supplier = receipt.supplier
+        receipt_items = {row.name: row for row in receipt.items}
+        for row in self.items:
+            if not row.purchase_receipt_item:
+                frappe.throw(_("退货明细必须从原染料入库单带出"))
+            source = receipt_items.get(row.purchase_receipt_item)
+            if not source:
+                frappe.throw(_("原入库明细不属于所选染料入库单"))
+            item = frappe.db.get_value("Item", source.item_code, ["item_group", "stock_uom"], as_dict=True)
+            if not item or not _get_material_category(item.item_group):
+                frappe.throw(_("原染料入库单中只能选择染料或助剂明细"))
+            row.item_code = source.item_code
+            row.item_name = source.item_name
+            row.material_category = _get_material_category(item.item_group)
+            row.batch_no = source.batch_no
+            row.stock_uom = source.stock_uom or item.stock_uom
+            row.original_receipt_qty_kg = flt(source.stock_qty or source.qty)
+            row.returned_qty_kg = get_returned_qty(row.purchase_receipt_item, exclude_name=self.name)
+            row.available_return_qty_kg = max(row.original_receipt_qty_kg - row.returned_qty_kg, 0)
+
     def _set_item_details(self):
         if not frappe.db.exists("Warehouse", self.source_warehouse):
             frappe.throw(_("未找到退货仓库：{0}").format(self.source_warehouse))
         totals_by_item = {}
         item_batch_keys = set()
         for row in self.items:
-            key = (row.item_code, row.batch_no or "")
+            key = (row.purchase_receipt_item, row.batch_no or "")
             if key in item_batch_keys:
-                frappe.throw(_("物料与批次不能重复添加"))
+                frappe.throw(_("同一原入库明细不能重复添加"))
             item_batch_keys.add(key)
-            details = get_dye_material_item_details(row.item_code, self.source_warehouse)
-            row.item_name = details["item_name"]
-            row.material_category = details["material_category"]
-            row.stock_uom = details["stock_uom"]
-            row.stock_qty_kg = details["stock_qty_kg"]
+            row.stock_qty_kg = flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": self.source_warehouse}, "actual_qty") or 0)
             row.return_qty_g = flt(row.return_qty_g)
-            if row.return_qty_g <= 0:
-                frappe.throw(_("物料 {0} 的退货数量必须大于 0").format(row.item_name or row.item_code))
+            if row.return_qty_g < 0:
+                frappe.throw(_("物料 {0} 的退货数量不能小于 0").format(row.item_name or row.item_code))
             row.return_qty_kg = flt(row.return_qty_g / 1000, 6)
+            if row.return_qty_kg > flt(row.available_return_qty_kg):
+                frappe.throw(_("物料 {0} 的本次退货不能超过可退货数量 {1} kg").format(row.item_name or row.item_code, row.available_return_qty_kg))
             totals_by_item[row.item_code] = totals_by_item.get(row.item_code, 0) + row.return_qty_kg
         if self.source_type == "染料仓库存":
             for item_code, qty in totals_by_item.items():
@@ -158,3 +181,49 @@ def get_dye_material_return_items(doctype, txt, searchfield, start, page_len, fi
         """,
         {"groups": DYE_MATERIAL_GROUPS, "txt": f"%{txt}%", "start": start, "page_len": page_len},
     )
+
+def get_returned_qty(purchase_receipt_item, exclude_name=None):
+    conditions = ["item.purchase_receipt_item = %(purchase_receipt_item)s", "parent.docstatus = 1"]
+    values = {"purchase_receipt_item": purchase_receipt_item}
+    if exclude_name:
+        conditions.append("parent.name != %(exclude_name)s")
+        values["exclude_name"] = exclude_name
+    quote = chr(96)
+    query = (
+        "SELECT COALESCE(SUM(item.return_qty_kg), 0) AS total FROM "
+        + quote + "tabDye Material Return Item" + quote + " item "
+        + "INNER JOIN " + quote + "tabDye Material Return" + quote + " parent ON parent.name = item.parent WHERE "
+        + " AND ".join(conditions)
+    )
+    return flt(frappe.db.sql(query, values, as_dict=True)[0].total)
+
+@frappe.whitelist()
+def get_purchase_receipt_return_details(purchase_receipt):
+    receipt = frappe.get_doc("Purchase Receipt", purchase_receipt)
+    receipt.check_permission("read")
+    if receipt.docstatus != 1:
+        frappe.throw(_("原染料入库单必须已提交"))
+    data = {"supplier": receipt.supplier, "items": []}
+    for source in receipt.items:
+        item = frappe.db.get_value("Item", source.item_code, ["item_group", "stock_uom"], as_dict=True)
+        if not item or not _get_material_category(item.item_group):
+            continue
+        original_qty = flt(source.stock_qty or source.qty)
+        returned_qty = get_returned_qty(source.name)
+        available_qty = max(original_qty - returned_qty, 0)
+        if available_qty <= 0:
+            continue
+        data["items"].append({
+            "purchase_receipt_item": source.name,
+            "item_code": source.item_code,
+            "item_name": source.item_name,
+            "material_category": _get_material_category(item.item_group),
+            "batch_no": source.batch_no,
+            "stock_uom": source.stock_uom or item.stock_uom,
+            "original_receipt_qty_kg": original_qty,
+            "returned_qty_kg": returned_qty,
+            "available_return_qty_kg": available_qty,
+            "return_qty_g": 0,
+            "return_qty_kg": 0,
+        })
+    return data

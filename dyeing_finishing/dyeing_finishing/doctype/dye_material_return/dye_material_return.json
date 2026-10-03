@@ -8,31 +8,239 @@
  "name": "Dye Material Return",
  "owner": "Administrator",
  "is_submittable": 1,
- "field_order": ["details_tab", "document_section", "return_date", "column_2", "supplier", "column_3", "source_type", "column_4", "source_warehouse", "original_purchase_receipt", "column_5", "return_reason", "column_6", "material_receipt_entry", "column_7", "stock_entry", "column_8", "total_return_qty_g", "column_9", "total_return_qty_kg", "column_10", "item_names", "items_section", "items", "amended_from"],
+ "field_order": [
+  "details_tab",
+  "document_section",
+  "return_date",
+  "column_2",
+  "supplier",
+  "column_3",
+  "source_type",
+  "column_4",
+  "source_warehouse",
+  "original_purchase_receipt",
+  "column_5",
+  "return_reason",
+  "column_6",
+  "material_receipt_entry",
+  "column_7",
+  "stock_entry",
+  "column_8",
+  "total_return_qty_g",
+  "column_9",
+  "total_return_qty_kg",
+  "column_10",
+  "item_names",
+  "items_section",
+  "items",
+  "amended_from"
+ ],
  "fields": [
-  {"fieldname":"details_tab","label":"详细信息","fieldtype":"Tab Break"},
-  {"fieldname":"document_section","label":"单据信息","fieldtype":"Section Break"},
-  {"fieldname":"return_date","label":"退货日期","fieldtype":"Date","default":"Today","reqd":1,"in_list_view":1},
-  {"fieldname":"supplier","label":"供应商","fieldtype":"Link","options":"Supplier","reqd":1,"in_list_view":1},
-  {"fieldname":"source_type","label":"退货来源","fieldtype":"Select","options":"染料仓库存\n现场已领用","default":"染料仓库存","reqd":1},
-  {"fieldname":"source_warehouse","label":"退货仓库","fieldtype":"Link","options":"Warehouse","default":"染料仓库 - 沅泰","reqd":1,"in_list_view":1},
-  {"fieldname":"original_purchase_receipt","label":"原染料入库单","fieldtype":"Link","options":"Purchase Receipt"},
-  {"fieldname":"return_reason","label":"退货原因","fieldtype":"Select","options":"质量不合格\n数量错误\n包装破损\n临期\n其他","reqd":1,"in_list_view":1},
-  {"fieldname":"material_receipt_entry","label":"现场回转库存凭证","fieldtype":"Link","options":"Stock Entry","read_only":1},
-  {"fieldname":"stock_entry","label":"关联库存凭证","fieldtype":"Link","options":"Stock Entry","read_only":1},
-  {"fieldname":"total_return_qty_g","label":"本次退货克数","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1},
-  {"fieldname":"total_return_qty_kg","label":"本次退货公斤数","fieldtype":"Float","precision":"6","read_only":1,"in_list_view":1},
-  {"fieldname":"item_names","label":"物料名称","fieldtype":"Small Text","read_only":1,"in_list_view":1},
-  {"fieldname":"items_section","label":"退货明细","fieldtype":"Section Break"},
-  {"fieldname":"items","label":"","fieldtype":"Table","options":"Dye Material Return Item","reqd":1},
-  {"fieldname":"column_2","label":"","fieldtype":"Column Break"},{"fieldname":"column_3","label":"","fieldtype":"Column Break"},{"fieldname":"column_4","label":"","fieldtype":"Column Break"},
-  {"fieldname":"column_5","label":"","fieldtype":"Section Break"},{"fieldname":"column_6","label":"","fieldtype":"Column Break"},{"fieldname":"column_7","label":"","fieldtype":"Column Break"},{"fieldname":"column_8","label":"","fieldtype":"Column Break"},
-  {"fieldname":"column_9","label":"","fieldtype":"Section Break"},{"fieldname":"column_10","label":"","fieldtype":"Column Break"},
-  {"fieldname":"amended_from","label":"修订来源","fieldtype":"Link","options":"Dye Material Return","read_only":1,"no_copy":1,"hidden":1,"print_hide":1}
+  {
+   "fieldname": "details_tab",
+   "label": "详细信息",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "document_section",
+   "label": "单据信息",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "return_date",
+   "label": "退货日期",
+   "fieldtype": "Date",
+   "default": "Today",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "supplier",
+   "label": "供应商",
+   "fieldtype": "Link",
+   "options": "Supplier",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "source_type",
+   "label": "退货来源",
+   "fieldtype": "Select",
+   "options": "染料仓库存\n现场已领用",
+   "default": "染料仓库存",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "label": "退货仓库",
+   "fieldtype": "Link",
+   "options": "Warehouse",
+   "default": "染料仓库 - 沅泰",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "original_purchase_receipt",
+   "label": "原染料入库单",
+   "fieldtype": "Link",
+   "options": "Purchase Receipt",
+   "reqd": 1
+  },
+  {
+   "fieldname": "return_reason",
+   "label": "退货原因",
+   "fieldtype": "Select",
+   "options": "质量不合格\n数量错误\n包装破损\n临期\n其他",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "material_receipt_entry",
+   "label": "现场回转库存凭证",
+   "fieldtype": "Link",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "label": "关联库存凭证",
+   "fieldtype": "Link",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_return_qty_g",
+   "label": "本次退货克数",
+   "fieldtype": "Float",
+   "precision": "3",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "total_return_qty_kg",
+   "label": "本次退货公斤数",
+   "fieldtype": "Float",
+   "precision": "6",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item_names",
+   "label": "物料名称",
+   "fieldtype": "Small Text",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "items_section",
+   "label": "退货明细",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "label": "",
+   "fieldtype": "Table",
+   "options": "Dye Material Return Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_3",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_4",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_5",
+   "label": "",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_6",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_7",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_8",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_9",
+   "label": "",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_10",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "label": "修订来源",
+   "fieldtype": "Link",
+   "options": "Dye Material Return",
+   "read_only": 1,
+   "no_copy": 1,
+   "hidden": 1,
+   "print_hide": 1
+  }
  ],
  "permissions": [
-  {"role":"System Manager","read":1,"write":1,"create":1,"delete":1,"submit":1,"cancel":1,"amend":1,"report":1,"export":1,"print":1,"email":1,"share":1},
-  {"role":"Stock Manager","read":1,"write":1,"create":1,"delete":1,"submit":1,"cancel":1,"amend":1,"report":1,"export":1,"print":1,"email":1,"share":1},
-  {"role":"Stock User","read":1,"write":1,"create":1,"submit":1,"amend":1,"report":1,"print":1,"email":1,"share":1}
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock User",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "submit": 1,
+   "amend": 1,
+   "report": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
  ]
 }
