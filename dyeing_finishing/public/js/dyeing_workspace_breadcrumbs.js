@@ -48,7 +48,9 @@
         append($breadcrumbs, workspace_route(item[0]), item[0]);
         if (view === "form") {
             append($breadcrumbs, `/desk/${frappe.router.slug(route_target())}`, item[1]);
-            append($breadcrumbs, "", route.slice(2).join("/"), true);
+            const documentName = route.slice(2).join("/");
+            const displayName = documentName.startsWith("new-") ? `新建${item[1]}` : documentName;
+            append($breadcrumbs, "", displayName, true);
         } else {
             append($breadcrumbs, "", item[1], true);
         }

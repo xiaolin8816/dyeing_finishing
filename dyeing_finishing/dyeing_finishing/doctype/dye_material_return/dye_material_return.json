@@ -11,6 +11,7 @@
  "field_order": [
   "details_tab",
   "document_section",
+  "document_code",
   "return_date",
   "column_2",
   "supplier",
@@ -45,6 +46,13 @@
    "fieldname": "document_section",
    "label": "单据信息",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "document_code",
+   "label": "退货单号",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
   },
   {
    "fieldname": "return_date",

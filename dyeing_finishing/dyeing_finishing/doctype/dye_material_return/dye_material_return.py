@@ -15,14 +15,18 @@ DYE_WAREHOUSE = "染料仓库 - 沅泰"
 
 class DyeMaterialReturn(Document):
     def autoname(self):
-        self.name = make_autoname("CLTH.YY.MM.DD.###")
+        self.name = make_autoname("YY.MM.DD.####")
+        self.document_code = self.name
 
     def before_insert(self):
         self.return_date = self.return_date or getdate(nowdate())
+        self.document_code = self.name
         self.source_warehouse = self.source_warehouse or DYE_WAREHOUSE
 
     def validate(self):
         self.return_date = self.return_date or getdate(nowdate())
+        if not self.is_new():
+            self.document_code = self.name
         self.source_warehouse = self.source_warehouse or DYE_WAREHOUSE
         self._set_purchase_receipt_details()
         self._set_item_details()
@@ -227,3 +231,14 @@ def get_purchase_receipt_return_details(purchase_receipt):
             "return_qty_kg": 0,
         })
     return data
+
+
+@frappe.whitelist()
+def get_preview_document_code(return_date=None):
+    date = getdate(return_date or nowdate())
+    series_key = date.strftime("%y%m%d")
+    quote = chr(96)
+    query = "SELECT " + quote + "current" + quote + " FROM " + quote + "tabSeries" + quote + " WHERE name = %s"
+    row = frappe.db.sql(query, series_key, as_dict=True)
+    current = row[0].current if row else 0
+    return f"{series_key}{int(current) + 1:04d}"

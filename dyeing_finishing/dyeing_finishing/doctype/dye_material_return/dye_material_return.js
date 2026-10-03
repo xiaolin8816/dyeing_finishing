@@ -1,3 +1,14 @@
+function refresh_preview_document_code(frm) {
+    if (!frm.is_new() || frm.doc.document_code) return;
+    frappe.call({
+        method: "dyeing_finishing.dyeing_finishing.doctype.dye_material_return.dye_material_return.get_preview_document_code",
+        args: { return_date: frm.doc.return_date },
+        callback: ({ message }) => {
+            if (message && frm.is_new() && !frm.doc.document_code) frm.set_value("document_code", message);
+        }
+    });
+}
+
 function set_return_totals(frm) {
     let grams = 0;
     (frm.doc.items || []).forEach(row => { grams += flt(row.return_qty_g); });
@@ -36,6 +47,10 @@ frappe.ui.form.on("Dye Material Return", {
     setup(frm) {
         frm.set_df_property("items", "cannot_add_rows", 1);
         frm.set_df_property("items", "cannot_delete_rows", 1);
+    },
+    onload(frm) { refresh_preview_document_code(frm); },
+    return_date(frm) {
+        if (frm.is_new()) frm.set_value("document_code", "").then(() => refresh_preview_document_code(frm));
     },
     original_purchase_receipt(frm) { load_purchase_receipt_items(frm); },
     refresh(frm) { set_return_totals(frm); }
