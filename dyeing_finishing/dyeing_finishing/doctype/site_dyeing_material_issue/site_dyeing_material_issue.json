@@ -40,9 +40,7 @@
   "document_row_4_column_3",
   "total_issue_qty_kg",
   "items_section",
-  "items",
-  "remarks_section",
-  "remarks"
+  "items"
  ],
  "fields": [
   {
@@ -174,16 +172,6 @@
    "fieldtype": "Table",
    "options": "Site Dyeing Material Issue Item",
    "reqd": 1
-  },
-  {
-   "fieldname": "remarks_section",
-   "label": "备注",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "remarks",
-   "label": "出库备注",
-   "fieldtype": "Small Text"
   },
   {
    "fieldname": "document_column_2",
