@@ -392,39 +392,6 @@ def get_production_operations_for_selection(doctype, txt, searchfield, start, pa
         as_dict=as_dict,
     )
 
-_LIST_COLUMN_WIDTHS_KEY = "production_flow_card_list_column_widths"
-_LIST_COLUMN_WIDTHS_MIN = 20
-_LIST_COLUMN_WIDTHS_MAX = 600
-
-
-@frappe.whitelist()
-def get_production_flow_card_list_column_widths():
-    return frappe.parse_json(frappe.db.get_global(_LIST_COLUMN_WIDTHS_KEY) or "{}")
-
-
-@frappe.whitelist()
-def set_production_flow_card_list_column_widths(widths):
-    frappe.only_for("System Manager")
-    widths = frappe.parse_json(widths) or {}
-    allowed_fields = {
-        field.fieldname
-        for field in frappe.get_meta("Production Flow Card").fields
-        if field.fieldname
-    }
-    allowed_fields.update({"name", "__status"})
-    cleaned_widths = {}
-    for fieldname, width in widths.items():
-        width = flt(width)
-        if fieldname not in allowed_fields or not width:
-            continue
-        if not _LIST_COLUMN_WIDTHS_MIN <= width <= _LIST_COLUMN_WIDTHS_MAX:
-            frappe.throw(_("列宽应在 {0} 至 {1} 之间").format(_LIST_COLUMN_WIDTHS_MIN, _LIST_COLUMN_WIDTHS_MAX))
-        cleaned_widths[fieldname] = int(width)
-    frappe.db.set_global(_LIST_COLUMN_WIDTHS_KEY, frappe.as_json(cleaned_widths))
-    return cleaned_widths
-
-
-
 def record_production_progress(flow_card, operation, progress_status, source_doctype, source_document,
                                batch_no="", quantity=0, uom="", dyeing_machine="",
                                material_sheet_type="", dyeing_sequence=0, description=""):

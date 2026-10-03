@@ -143,38 +143,6 @@ class DyeMaterialOtherIssue(Document):
         self.stock_entry = entry.name
 
 
-_LIST_COLUMN_WIDTHS_KEY = "dye_material_other_issue_list_column_widths"
-_LIST_COLUMN_WIDTHS_MIN = 20
-_LIST_COLUMN_WIDTHS_MAX = 600
-
-
-@frappe.whitelist()
-def get_dye_material_other_issue_list_column_widths():
-    return frappe.parse_json(frappe.db.get_global(_LIST_COLUMN_WIDTHS_KEY) or "{}")
-
-
-@frappe.whitelist()
-def set_dye_material_other_issue_list_column_widths(widths):
-    frappe.only_for("System Manager")
-    widths = frappe.parse_json(widths) or {}
-    allowed_fields = {
-        field.fieldname
-        for field in frappe.get_meta("Dye Material Other Issue").fields
-        if field.fieldname
-    }
-    allowed_fields.update({"name", "__status"})
-    cleaned_widths = {}
-    for fieldname, width in widths.items():
-        width = flt(width)
-        if fieldname not in allowed_fields or not width:
-            continue
-        if not _LIST_COLUMN_WIDTHS_MIN <= width <= _LIST_COLUMN_WIDTHS_MAX:
-            frappe.throw(_("列宽应在 {0} 至 {1} 之间").format(_LIST_COLUMN_WIDTHS_MIN, _LIST_COLUMN_WIDTHS_MAX))
-        cleaned_widths[fieldname] = int(width)
-    frappe.db.set_global(_LIST_COLUMN_WIDTHS_KEY, frappe.as_json(cleaned_widths))
-    return cleaned_widths
-
-
 def clear_other_issue_link_before_stock_entry_cancel(doc, method=None):
     """Remove only the reverse link that would block automatic Stock Entry cancellation."""
     if not any(row.get("custom_dye_material_other_issue") for row in doc.items):

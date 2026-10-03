@@ -30,6 +30,7 @@ app_logo_url = "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg"
 app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
 app_include_js = [
     "/assets/dyeing_finishing/js/report_layout.js",
+    "/assets/dyeing_finishing/js/list_layout.js",
     "/assets/dyeing_finishing/js/stock_ledger_handling_unit.js",
 ]
 
