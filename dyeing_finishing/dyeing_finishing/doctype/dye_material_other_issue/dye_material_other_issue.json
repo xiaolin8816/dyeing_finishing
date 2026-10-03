@@ -30,7 +30,6 @@
   "document_row_3_column_2",
   "laboratory_recipe",
   "document_row_3_column_3",
-  "other_purpose_description",
   "document_row_3_column_4",
   "document_row_4",
   "stock_entry",
@@ -135,12 +134,6 @@
    "fieldtype": "Link",
    "options": "Stock Entry",
    "read_only": 1
-  },
-  {
-   "fieldname": "other_purpose_description",
-   "label": "其他用途说明",
-   "fieldtype": "Small Text",
-   "mandatory_depends_on": "eval:doc.issue_purpose==\"其他\""
   },
   {
    "fieldname": "total_issue_qty_g",
