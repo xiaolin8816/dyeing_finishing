@@ -81,7 +81,7 @@
    "label": "退货数量(kg)",
    "fieldtype": "Float",
    "read_only": 1,
-   "precision": "6",
+   "precision": "4",
    "in_list_view": 1
   },
   {

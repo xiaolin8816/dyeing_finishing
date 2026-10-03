@@ -128,7 +128,7 @@
    "fieldname": "total_return_qty_kg",
    "label": "本次退货公斤数",
    "fieldtype": "Float",
-   "precision": "6",
+   "precision": "4",
    "read_only": 1,
    "in_list_view": 1
   },

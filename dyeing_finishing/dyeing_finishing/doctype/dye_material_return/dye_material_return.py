@@ -89,7 +89,7 @@ class DyeMaterialReturn(Document):
             row.return_qty_g = flt(row.return_qty_g)
             if row.return_qty_g < 0:
                 frappe.throw(_("物料 {0} 的退货数量不能小于 0").format(row.item_name or row.item_code))
-            row.return_qty_kg = flt(row.return_qty_g / 1000, 6)
+            row.return_qty_kg = flt(row.return_qty_g / 1000, 4)
             totals_by_item[row.item_code] = totals_by_item.get(row.item_code, 0) + row.return_qty_kg
         if self.source_type == "染料仓库存":
             for item_code, qty in totals_by_item.items():
@@ -99,7 +99,7 @@ class DyeMaterialReturn(Document):
 
     def _set_totals(self):
         self.total_return_qty_g = sum(flt(row.return_qty_g) for row in self.items)
-        self.total_return_qty_kg = flt(self.total_return_qty_g / 1000, 6)
+        self.total_return_qty_kg = flt(self.total_return_qty_g / 1000, 4)
 
     def _set_item_names(self):
         names = []

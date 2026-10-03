@@ -13,7 +13,7 @@ function set_return_totals(frm) {
     let grams = 0;
     (frm.doc.items || []).forEach(row => { grams += flt(row.return_qty_g); });
     frm.set_value("total_return_qty_g", grams);
-    frm.set_value("total_return_qty_kg", flt(grams / 1000));
+    frm.set_value("total_return_qty_kg", flt(grams / 1000, 4));
 }
 
 function load_purchase_receipt_items(frm) {
@@ -59,7 +59,7 @@ frappe.ui.form.on("Dye Material Return", {
 frappe.ui.form.on("Dye Material Return Item", {
     return_qty_g(frm, cdt, cdn) {
         const row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, "return_qty_kg", flt(row.return_qty_g) / 1000);
+        frappe.model.set_value(cdt, cdn, "return_qty_kg", flt(flt(row.return_qty_g) / 1000, 4));
         set_return_totals(frm);
     },
     items_remove(frm) { set_return_totals(frm); }
