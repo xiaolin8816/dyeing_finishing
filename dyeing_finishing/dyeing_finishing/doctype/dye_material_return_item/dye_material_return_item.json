@@ -15,9 +15,6 @@
   "item_name",
   "material_category",
   "batch_no",
-  "original_receipt_qty_kg",
-  "returned_qty_kg",
-  "available_return_qty_kg",
   "stock_qty_kg",
   "return_qty_g",
   "return_qty_kg",
@@ -64,32 +61,8 @@
    "read_only": 1
   },
   {
-   "fieldname": "original_receipt_qty_kg",
-   "label": "原入库数量(kg)",
-   "fieldtype": "Float",
-   "read_only": 1,
-   "precision": "3",
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "returned_qty_kg",
-   "label": "已退货数量(kg)",
-   "fieldtype": "Float",
-   "read_only": 1,
-   "precision": "3",
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "available_return_qty_kg",
-   "label": "可退货数量(kg)",
-   "fieldtype": "Float",
-   "read_only": 1,
-   "precision": "3",
-   "in_list_view": 1
-  },
-  {
    "fieldname": "stock_qty_kg",
-   "label": "可退库存(kg)",
+   "label": "库存数量(kg)",
    "fieldtype": "Float",
    "read_only": 1,
    "precision": "3",

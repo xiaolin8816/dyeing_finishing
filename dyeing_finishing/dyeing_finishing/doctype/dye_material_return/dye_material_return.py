@@ -74,9 +74,6 @@ class DyeMaterialReturn(Document):
             row.material_category = _get_material_category(item.item_group)
             row.batch_no = source.batch_no
             row.stock_uom = source.stock_uom or item.stock_uom
-            row.original_receipt_qty_kg = flt(source.stock_qty or source.qty)
-            row.returned_qty_kg = get_returned_qty(row.purchase_receipt_item, exclude_name=self.name)
-            row.available_return_qty_kg = max(row.original_receipt_qty_kg - row.returned_qty_kg, 0)
 
     def _set_item_details(self):
         if not frappe.db.exists("Warehouse", self.source_warehouse):
@@ -93,8 +90,6 @@ class DyeMaterialReturn(Document):
             if row.return_qty_g < 0:
                 frappe.throw(_("物料 {0} 的退货数量不能小于 0").format(row.item_name or row.item_code))
             row.return_qty_kg = flt(row.return_qty_g / 1000, 6)
-            if row.return_qty_kg > flt(row.available_return_qty_kg):
-                frappe.throw(_("物料 {0} 的本次退货不能超过可退货数量 {1} kg").format(row.item_name or row.item_code, row.available_return_qty_kg))
             totals_by_item[row.item_code] = totals_by_item.get(row.item_code, 0) + row.return_qty_kg
         if self.source_type == "染料仓库存":
             for item_code, qty in totals_by_item.items():
@@ -186,20 +181,6 @@ def get_dye_material_return_items(doctype, txt, searchfield, start, page_len, fi
         {"groups": DYE_MATERIAL_GROUPS, "txt": f"%{txt}%", "start": start, "page_len": page_len},
     )
 
-def get_returned_qty(purchase_receipt_item, exclude_name=None):
-    conditions = ["item.purchase_receipt_item = %(purchase_receipt_item)s", "parent.docstatus = 1"]
-    values = {"purchase_receipt_item": purchase_receipt_item}
-    if exclude_name:
-        conditions.append("parent.name != %(exclude_name)s")
-        values["exclude_name"] = exclude_name
-    quote = chr(96)
-    query = (
-        "SELECT COALESCE(SUM(item.return_qty_kg), 0) AS total FROM "
-        + quote + "tabDye Material Return Item" + quote + " item "
-        + "INNER JOIN " + quote + "tabDye Material Return" + quote + " parent ON parent.name = item.parent WHERE "
-        + " AND ".join(conditions)
-    )
-    return flt(frappe.db.sql(query, values, as_dict=True)[0].total)
 
 @frappe.whitelist()
 def get_purchase_receipt_return_details(purchase_receipt):
@@ -212,11 +193,6 @@ def get_purchase_receipt_return_details(purchase_receipt):
         item = frappe.db.get_value("Item", source.item_code, ["item_group", "stock_uom"], as_dict=True)
         if not item or not _get_material_category(item.item_group):
             continue
-        original_qty = flt(source.stock_qty or source.qty)
-        returned_qty = get_returned_qty(source.name)
-        available_qty = max(original_qty - returned_qty, 0)
-        if available_qty <= 0:
-            continue
         data["items"].append({
             "purchase_receipt_item": source.name,
             "item_code": source.item_code,
@@ -224,9 +200,6 @@ def get_purchase_receipt_return_details(purchase_receipt):
             "material_category": _get_material_category(item.item_group),
             "batch_no": source.batch_no,
             "stock_uom": source.stock_uom or item.stock_uom,
-            "original_receipt_qty_kg": original_qty,
-            "returned_qty_kg": returned_qty,
-            "available_return_qty_kg": available_qty,
             "return_qty_g": 0,
             "return_qty_kg": 0,
         })
