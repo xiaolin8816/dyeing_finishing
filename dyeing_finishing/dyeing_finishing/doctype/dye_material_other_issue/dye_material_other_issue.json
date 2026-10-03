@@ -10,34 +10,29 @@
  "field_order": [
   "details_tab",
   "document_section",
-  "document_code",
-  "document_column_2",
   "issue_date",
-  "document_column_3",
-  "document_status",
-  "document_column_4",
+  "document_column_2",
   "issue_purpose",
+  "document_column_3",
+  "source_warehouse",
+  "document_column_4",
+  "production_flow_card",
   "document_row_2",
   "department",
   "document_row_2_column_2",
   "recipient",
   "document_row_2_column_3",
-  "source_warehouse",
-  "document_row_2_column_4",
-  "production_flow_card",
-  "document_row_3",
   "material_sheet",
-  "document_row_3_column_2",
+  "document_row_2_column_4",
   "laboratory_recipe",
-  "document_row_3_column_3",
-  "document_row_3_column_4",
-  "document_row_4",
+  "document_row_3",
   "stock_entry",
-  "document_row_4_column_2",
+  "document_row_3_column_2",
   "total_issue_qty_g",
-  "document_row_4_column_3",
+  "document_row_3_column_3",
   "total_issue_qty_kg",
-  "document_row_4_column_4",
+  "document_row_3_column_4",
+  "item_names",
   "items_section",
   "items"
  ],
@@ -53,27 +48,11 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "document_code",
-   "label": "单据编码",
-   "fieldtype": "Data",
-   "read_only": 1,
-   "in_list_view": 1
-  },
-  {
    "fieldname": "issue_date",
    "label": "出库日期",
    "fieldtype": "Date",
    "default": "Today",
    "reqd": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "document_status",
-   "label": "单据状态",
-   "fieldtype": "Select",
-   "options": "保存\n已提交\n已取消",
-   "default": "保存",
-   "read_only": 1,
    "in_list_view": 1
   },
   {
@@ -88,15 +67,13 @@
    "fieldname": "department",
    "label": "领用部门",
    "fieldtype": "Link",
-   "options": "Department",
-   "in_list_view": 1
+   "options": "Department"
   },
   {
    "fieldname": "recipient",
    "label": "领用人",
    "fieldtype": "Link",
-   "options": "Employee",
-   "in_list_view": 1
+   "options": "Employee"
   },
   {
    "fieldname": "source_warehouse",
@@ -138,14 +115,16 @@
    "label": "本次出库克数",
    "fieldtype": "Float",
    "read_only": 1,
-   "precision": "3"
+   "precision": "3",
+   "in_list_view": 1
   },
   {
    "fieldname": "total_issue_qty_kg",
    "label": "本次出库公斤数",
    "fieldtype": "Float",
    "read_only": 1,
-   "precision": "6"
+   "precision": "6",
+   "in_list_view": 1
   },
   {
    "fieldname": "items_section",
@@ -226,28 +205,11 @@
    "hide_label": 1
   },
   {
-   "fieldname": "document_row_4",
-   "label": "",
-   "fieldtype": "Section Break",
-   "hide_label": 1
-  },
-  {
-   "fieldname": "document_row_4_column_2",
-   "label": "",
-   "fieldtype": "Column Break",
-   "hide_label": 1
-  },
-  {
-   "fieldname": "document_row_4_column_3",
-   "label": "",
-   "fieldtype": "Column Break",
-   "hide_label": 1
-  },
-  {
-   "fieldname": "document_row_4_column_4",
-   "label": "",
-   "fieldtype": "Column Break",
-   "hide_label": 1
+   "fieldname": "item_names",
+   "label": "物料名称",
+   "fieldtype": "Small Text",
+   "read_only": 1,
+   "in_list_view": 1
   }
  ],
  "permissions": [

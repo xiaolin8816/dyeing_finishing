@@ -16,18 +16,15 @@ DYE_MATERIAL_GROUPS = ("染料", "助剂")
 class DyeMaterialOtherIssue(Document):
     def autoname(self):
         self.name = make_autoname("CLQT.YY.MM.DD.###")
-        self.document_code = self.name
 
     def before_insert(self):
-        self.document_code = self.name
         self.issue_date = self.issue_date or getdate(nowdate())
-        self.document_status = "保存"
 
     def validate(self):
-        self.document_code = self.name
         self.issue_date = self.issue_date or getdate(nowdate())
         self._set_item_details()
         self._set_totals()
+        self._set_item_names()
 
     def before_submit(self):
         if not self.items:
@@ -36,7 +33,6 @@ class DyeMaterialOtherIssue(Document):
             frappe.throw(_("请至少填写一行出库数量"))
         if self.production_flow_card:
             ensure_flow_card_open(frappe.get_doc("Production Flow Card", self.production_flow_card))
-        self.document_status = "已提交"
 
     def on_submit(self):
         self._create_stock_entry()
@@ -61,7 +57,6 @@ class DyeMaterialOtherIssue(Document):
                 entry.cancel()
         self.db_set("stock_entry", None, update_modified=False)
         self.stock_entry = None
-        self.db_set("document_status", "已取消", update_modified=False)
         if self.production_flow_card:
             record_production_progress(
                 self.production_flow_card,
@@ -102,6 +97,14 @@ class DyeMaterialOtherIssue(Document):
         self.total_issue_qty_g = sum(flt(row.issue_qty_g) for row in self.items)
         self.total_issue_qty_kg = flt(self.total_issue_qty_g / 1000, 6)
 
+    def _set_item_names(self):
+        names = []
+        for row in self.items:
+            name = (row.item_name or row.item_code or "").strip()
+            if name and name not in names:
+                names.append(name)
+        self.item_names = "、".join(names)
+
     def _create_stock_entry(self):
         if self.stock_entry:
             return
@@ -129,15 +132,6 @@ class DyeMaterialOtherIssue(Document):
         entry.submit()
         self.db_set("stock_entry", entry.name, update_modified=False)
         self.stock_entry = entry.name
-
-
-@frappe.whitelist()
-def get_preview_document_code(issue_date=None):
-    date = getdate(issue_date or nowdate())
-    series_key = f"CLQT{date.strftime('%y%m%d')}"
-    rows = frappe.db.sql("SELECT `current` FROM `tabSeries` WHERE name = %s", series_key, as_dict=True)
-    current = rows[0].current if rows else 0
-    return f"{series_key}{int(current) + 1:03d}"
 
 
 @frappe.whitelist()
