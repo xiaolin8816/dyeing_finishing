@@ -19,6 +19,7 @@
   "source_type",
   "column_4",
   "source_warehouse",
+  "return_item_source",
   "original_purchase_receipt",
   "column_5",
   "return_reason",
@@ -88,11 +89,20 @@
    "in_list_view": 1
   },
   {
+   "fieldname": "return_item_source",
+   "label": "退货明细来源",
+   "fieldtype": "Select",
+   "options": "原入库单带出\n手动选择库存",
+   "default": "原入库单带出",
+   "reqd": 1
+  },
+  {
    "fieldname": "original_purchase_receipt",
    "label": "原染料入库单",
    "fieldtype": "Link",
    "options": "Purchase Receipt",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.return_item_source=='原入库单带出'",
+   "depends_on": "eval:doc.return_item_source=='原入库单带出'"
   },
   {
    "fieldname": "return_reason",

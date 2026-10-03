@@ -28,6 +28,7 @@ class DyeMaterialReturn(Document):
         if not self.is_new():
             self.document_code = self.name
         self.source_warehouse = self.source_warehouse or DYE_WAREHOUSE
+        self.return_item_source = self.return_item_source or "原入库单带出"
         self._set_purchase_receipt_details()
         self._set_item_details()
         self._set_totals()
@@ -55,25 +56,43 @@ class DyeMaterialReturn(Document):
             self.set(field, None)
 
     def _set_purchase_receipt_details(self):
-        receipt = frappe.get_doc("Purchase Receipt", self.original_purchase_receipt)
-        if receipt.docstatus != 1:
-            frappe.throw(_("原染料入库单必须已提交"))
-        self.supplier = receipt.supplier
-        receipt_items = {row.name: row for row in receipt.items}
+        if self.return_item_source == "原入库单带出":
+            if not self.original_purchase_receipt:
+                frappe.throw(_("请选择原染料入库单"))
+            receipt = frappe.get_doc("Purchase Receipt", self.original_purchase_receipt)
+            if receipt.docstatus != 1:
+                frappe.throw(_("原染料入库单必须已提交"))
+            self.supplier = receipt.supplier
+            receipt_items = {row.name: row for row in receipt.items}
+            for row in self.items:
+                if not row.purchase_receipt_item:
+                    frappe.throw(_("退货明细必须从原染料入库单带出"))
+                source = receipt_items.get(row.purchase_receipt_item)
+                if not source:
+                    frappe.throw(_("原入库明细不属于所选染料入库单"))
+                item = frappe.db.get_value("Item", source.item_code, ["item_group", "stock_uom"], as_dict=True)
+                if not item or not _get_material_category(item.item_group):
+                    frappe.throw(_("原染料入库单中只能选择染料或助剂明细"))
+                row.item_code = source.item_code
+                row.item_name = source.item_name
+                row.material_category = _get_material_category(item.item_group)
+                row.batch_no = source.batch_no
+                row.stock_uom = source.stock_uom or item.stock_uom
+            return
+
+        if not self.supplier:
+            frappe.throw(_("手动选择库存退货时，请填写供应商"))
+        self.original_purchase_receipt = None
         for row in self.items:
-            if not row.purchase_receipt_item:
-                frappe.throw(_("退货明细必须从原染料入库单带出"))
-            source = receipt_items.get(row.purchase_receipt_item)
-            if not source:
-                frappe.throw(_("原入库明细不属于所选染料入库单"))
-            item = frappe.db.get_value("Item", source.item_code, ["item_group", "stock_uom"], as_dict=True)
+            if not row.item_code:
+                frappe.throw(_("请选择退货物料"))
+            item = frappe.db.get_value("Item", row.item_code, ["item_name", "item_group", "stock_uom"], as_dict=True)
             if not item or not _get_material_category(item.item_group):
-                frappe.throw(_("原染料入库单中只能选择染料或助剂明细"))
-            row.item_code = source.item_code
-            row.item_name = source.item_name
+                frappe.throw(_("只能选择染料或助剂物料"))
+            row.purchase_receipt_item = None
+            row.item_name = item.item_name
             row.material_category = _get_material_category(item.item_group)
-            row.batch_no = source.batch_no
-            row.stock_uom = source.stock_uom or item.stock_uom
+            row.stock_uom = item.stock_uom
 
     def _set_item_details(self):
         if not frappe.db.exists("Warehouse", self.source_warehouse):
@@ -81,9 +100,9 @@ class DyeMaterialReturn(Document):
         totals_by_item = {}
         item_batch_keys = set()
         for row in self.items:
-            key = (row.purchase_receipt_item, row.batch_no or "")
+            key = (row.purchase_receipt_item, row.batch_no or "") if self.return_item_source == "原入库单带出" else (row.item_code, row.batch_no or "")
             if key in item_batch_keys:
-                frappe.throw(_("同一原入库明细不能重复添加"))
+                frappe.throw(_("同一物料或原入库明细不能重复添加"))
             item_batch_keys.add(key)
             row.stock_qty_kg = flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": self.source_warehouse}, "actual_qty") or 0)
             row.return_qty_g = flt(row.return_qty_g)
@@ -173,13 +192,42 @@ def get_dye_material_return_items(doctype, txt, searchfield, start, page_len, fi
             ON material_group.name IN %(groups)s
             AND item_group.lft >= material_group.lft
             AND item_group.rgt <= material_group.rgt
+        INNER JOIN `tabBin` bin
+            ON bin.item_code = item.name
+            AND bin.warehouse = %(warehouse)s
+            AND bin.actual_qty > 0
         WHERE item.disabled = 0
           AND (item.name LIKE %(txt)s OR item.item_name LIKE %(txt)s)
         ORDER BY item.name
         LIMIT %(start)s, %(page_len)s
         """,
-        {"groups": DYE_MATERIAL_GROUPS, "txt": f"%{txt}%", "start": start, "page_len": page_len},
+        {
+            "groups": DYE_MATERIAL_GROUPS,
+            "warehouse": (filters or {}).get("source_warehouse") or DYE_WAREHOUSE,
+            "txt": f"%{txt}%",
+            "start": start,
+            "page_len": page_len,
+        },
     )
+
+
+@frappe.whitelist()
+def get_manual_return_item_details(item_code, source_warehouse=None):
+    source_warehouse = source_warehouse or DYE_WAREHOUSE
+    item = frappe.db.get_value("Item", item_code, ["item_name", "item_group", "stock_uom"], as_dict=True)
+    if not item or not _get_material_category(item.item_group):
+        frappe.throw(_("只能选择染料或助剂物料"))
+    stock_qty_kg = flt(
+        frappe.db.get_value("Bin", {"item_code": item_code, "warehouse": source_warehouse}, "actual_qty") or 0
+    )
+    if stock_qty_kg <= 0:
+        frappe.throw(_("该物料在退货仓库没有可用库存"))
+    return {
+        "item_name": item.item_name,
+        "material_category": _get_material_category(item.item_group),
+        "stock_uom": item.stock_uom,
+        "stock_qty_kg": stock_qty_kg,
+    }
 
 
 @frappe.whitelist()
