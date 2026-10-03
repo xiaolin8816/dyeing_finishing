@@ -190,3 +190,11 @@ def get_material_sheet_details(material_sheet):
         item = frappe.get_doc("Item", row.item_code)
         data["items"].append({"material_sheet_item": row.name, "item_code": row.item_code, "item_name": row.item_name, "material_category": row.material_category, "planned_qty_g": row.actual_qty, "issued_qty_g": issued, "issue_qty_g": remaining, "issue_qty_kg": flt(remaining / 1000, 6), "stock_qty_kg": flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": DYE_WAREHOUSE}, "actual_qty") or 0), "stock_uom": item.stock_uom, "issue_status": _issue_status(row.actual_qty, issued)})
     return data
+
+@frappe.whitelist()
+def get_preview_document_code(issue_date=None):
+    """Return the next document code for display only; it does not reserve a series number."""
+    date = getdate(issue_date or nowdate())
+    series_key = f"CL{date.strftime('%y%m%d')}"
+    current = frappe.db.get_value("Series", series_key, "current") or 0
+    return f"{series_key}{int(current) + 1:03d}"
