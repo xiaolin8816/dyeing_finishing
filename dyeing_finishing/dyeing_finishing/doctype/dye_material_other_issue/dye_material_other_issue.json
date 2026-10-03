@@ -195,19 +195,19 @@
   {
    "fieldname": "document_row_2_column_2",
    "label": "",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "hide_label": 1
   },
   {
    "fieldname": "document_row_2_column_3",
    "label": "",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "hide_label": 1
   },
   {
    "fieldname": "document_row_2_column_4",
    "label": "",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "hide_label": 1
   },
   {
@@ -219,19 +219,19 @@
   {
    "fieldname": "document_row_3_column_2",
    "label": "",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "hide_label": 1
   },
   {
    "fieldname": "document_row_3_column_3",
    "label": "",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "hide_label": 1
   },
   {
    "fieldname": "document_row_3_column_4",
    "label": "",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "hide_label": 1
   },
   {
@@ -243,7 +243,7 @@
   {
    "fieldname": "document_row_4_column_2",
    "label": "",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "hide_label": 1
   },
   {
