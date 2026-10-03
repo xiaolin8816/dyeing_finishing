@@ -1,7 +1,7 @@
 import frappe
 
 
-WORKSPACES = ("印染整理", "染料管理")
+WORKSPACES = ("染料管理",)
 
 
 def execute():
