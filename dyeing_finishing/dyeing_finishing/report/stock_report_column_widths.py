@@ -14,6 +14,14 @@ REPORT_CONFIGS = {
             "issue_qty", "stock_uom", "location", "warehouse", "receipt_date",
         },
     },
+    "Dye Material Stock": {
+        "key": "dye_material_stock_report_column_widths",
+        "fields": {
+            "item_code", "item_name", "material_category", "packaging_specification",
+            "warehouse", "actual_qty", "stock_uom", "stock_value", "last_receipt_date",
+            "supplier_name",
+        },
+    },
     "Production Transit Warehouse Stock": {
         "key": "production_transit_warehouse_stock_report_column_widths",
         "fields": {
