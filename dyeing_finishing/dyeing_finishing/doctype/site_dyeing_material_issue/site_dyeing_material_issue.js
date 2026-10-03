@@ -1,0 +1,5 @@
+frappe.ui.form.on("Site Dyeing Material Issue", {
+ setup(frm) { frm.set_query("material_sheet", () => ({filters:{docstatus:1, material_sheet_status:["in",["待领料","部分领料"]]}})); },
+ material_sheet(frm) { if (!frm.doc.material_sheet) return; frappe.call({method:"dyeing_finishing.dyeing_finishing.doctype.site_dyeing_material_issue.site_dyeing_material_issue.get_material_sheet_details",args:{material_sheet:frm.doc.material_sheet},freeze:true,freeze_message:"正在带出料单明细…",callback:({message})=>{if(!message)return; ["production_flow_card","sales_order","customer_name","color_no","color","finished_product_name","dyeing_machine","source_warehouse"].forEach(f=>frm.set_value(f,message[f]||"")); frm.clear_table("items"); (message.items||[]).forEach(item=>{const row=frm.add_child("items");Object.assign(row,item)}); frm.refresh_field("items");}}); }
+});
+frappe.ui.form.on("Site Dyeing Material Issue Item", { issue_qty_g(frm,cdt,cdn) { const row=locals[cdt][cdn]; frappe.model.set_value(cdt,cdn,"issue_qty_kg",flt(row.issue_qty_g)/1000); } });

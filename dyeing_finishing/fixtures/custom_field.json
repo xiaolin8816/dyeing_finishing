@@ -451,5 +451,29 @@
     "fieldtype": "Data",
     "insert_after": "custom_package_count",
     "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Stock Entry Detail-custom_site_dyeing_material_issue",
+    "dt": "Stock Entry Detail",
+    "fieldname": "custom_site_dyeing_material_issue",
+    "label": "现场染色领料单",
+    "fieldtype": "Link",
+    "options": "Site Dyeing Material Issue",
+    "insert_after": "custom_production_flow_card",
+    "read_only": 1,
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Stock Entry Detail-custom_site_dyeing_material_sheet",
+    "dt": "Stock Entry Detail",
+    "fieldname": "custom_site_dyeing_material_sheet",
+    "label": "现场染色料单",
+    "fieldtype": "Link",
+    "options": "Site Dyeing Material Sheet",
+    "insert_after": "custom_site_dyeing_material_issue",
+    "read_only": 1,
+    "module": "dyeing_finishing"
   }
 ]

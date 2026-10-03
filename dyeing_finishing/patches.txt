@@ -17,3 +17,5 @@ dyeing_finishing.patches.v1_0.fix_dye_management_workspace_card
 dyeing_finishing.patches.v1_0.move_dyeing_receipt_type_to_details
 dyeing_finishing.patches.v1_0.fix_dye_material_receipt_report_link
 dyeing_finishing.patches.v1_0.add_dye_material_stock_workspace_link
+
+dyeing_finishing.patches.v1_0.add_site_dyeing_material_issue_workspace
