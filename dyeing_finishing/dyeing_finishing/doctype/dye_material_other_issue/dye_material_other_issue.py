@@ -143,6 +143,24 @@ class DyeMaterialOtherIssue(Document):
         self.stock_entry = entry.name
 
 
+def clear_other_issue_link_before_stock_entry_cancel(doc, method=None):
+    """Remove only the reverse link that would block automatic Stock Entry cancellation."""
+    if not any(row.get("custom_dye_material_other_issue") for row in doc.items):
+        return
+
+    frappe.db.sql(
+        """
+        UPDATE `tabStock Entry Detail`
+        SET custom_dye_material_other_issue = NULL
+        WHERE parent = %s
+          AND IFNULL(custom_dye_material_other_issue, '') != ''
+        """,
+        (doc.name,),
+    )
+    for row in doc.items:
+        row.custom_dye_material_other_issue = None
+
+
 @frappe.whitelist()
 def get_dye_material_item_details(item_code, warehouse):
     item = frappe.db.get_value("Item", item_code, ["item_name", "item_group", "stock_uom", "disabled"], as_dict=True)
