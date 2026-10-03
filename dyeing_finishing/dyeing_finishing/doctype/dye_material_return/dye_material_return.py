@@ -183,15 +183,26 @@ def get_dye_material_return_items(doctype, txt, searchfield, start, page_len, fi
 
 
 @frappe.whitelist()
-def get_purchase_receipt_return_details(purchase_receipt):
+def get_purchase_receipt_return_details(purchase_receipt, source_warehouse=None):
     receipt = frappe.get_doc("Purchase Receipt", purchase_receipt)
     receipt.check_permission("read")
     if receipt.docstatus != 1:
         frappe.throw(_("原染料入库单必须已提交"))
+    source_warehouse = source_warehouse or DYE_WAREHOUSE
+    if not frappe.db.exists("Warehouse", source_warehouse):
+        frappe.throw(_("未找到退货仓库：{0}").format(source_warehouse))
     data = {"supplier": receipt.supplier, "items": []}
     for source in receipt.items:
         item = frappe.db.get_value("Item", source.item_code, ["item_group", "stock_uom"], as_dict=True)
         if not item or not _get_material_category(item.item_group):
+            continue
+        stock_qty_kg = flt(
+            frappe.db.get_value(
+                "Bin", {"item_code": source.item_code, "warehouse": source_warehouse}, "actual_qty"
+            )
+            or 0
+        )
+        if stock_qty_kg <= 0:
             continue
         data["items"].append({
             "purchase_receipt_item": source.name,
@@ -200,6 +211,7 @@ def get_purchase_receipt_return_details(purchase_receipt):
             "material_category": _get_material_category(item.item_group),
             "batch_no": source.batch_no,
             "stock_uom": source.stock_uom or item.stock_uom,
+            "stock_qty_kg": stock_qty_kg,
             "return_qty_g": 0,
             "return_qty_kg": 0,
         })

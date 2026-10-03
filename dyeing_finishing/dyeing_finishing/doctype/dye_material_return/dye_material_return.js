@@ -25,7 +25,7 @@ function load_purchase_receipt_items(frm) {
     }
     frappe.call({
         method: "dyeing_finishing.dyeing_finishing.doctype.dye_material_return.dye_material_return.get_purchase_receipt_return_details",
-        args: { purchase_receipt: frm.doc.original_purchase_receipt },
+        args: { purchase_receipt: frm.doc.original_purchase_receipt, source_warehouse: frm.doc.source_warehouse },
         freeze: true,
         freeze_message: __("正在带出原入库明细"),
         callback: ({ message }) => {
