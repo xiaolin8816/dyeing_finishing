@@ -1,0 +1,59 @@
+{
+ "app": "dyeing_finishing",
+ "charts": [],
+ "content": "[{\"id\":\"配方与工艺-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>配方与工艺</b></span>\",\"col\":12}},{\"id\":\"配方与工艺-色号与配方-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>色号与配方</b></span>\",\"col\":12}},{\"id\":\"配方与工艺-色号与配方-card\",\"type\":\"card\",\"data\":{\"card_name\":\"色号与配方\",\"col\":4}}]",
+ "creation": "2026-10-03 00:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "template",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "配方与工艺",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "色号与配方",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "色号档案",
+   "link_count": 0,
+   "link_to": "Color Master",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "化验室配方档案",
+   "link_count": 0,
+   "link_to": "Laboratory Recipe",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "module": "dyeing_finishing",
+ "number_cards": [],
+ "parent_page": "印染整理",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 10,
+ "shortcuts": [],
+ "title": "配方与工艺",
+ "type": "Workspace",
+ "name": "配方与工艺"
+}
