@@ -88,12 +88,12 @@ def get_report_layout(report_name):
         return {
             "layout": _clean_layout(report_name, personal_layout),
             "has_personal_layout": True,
-            "can_set_global": frappe.has_role("System Manager"),
+            "can_set_global": "System Manager" in frappe.get_roles(),
         }
     return {
         "layout": global_layout,
         "has_personal_layout": False,
-        "can_set_global": frappe.has_role("System Manager"),
+        "can_set_global": "System Manager" in frappe.get_roles(),
     }
 
 
