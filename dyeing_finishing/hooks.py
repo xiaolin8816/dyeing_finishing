@@ -157,12 +157,6 @@ app_include_js = [
 # 	}
 # }
 
-doc_events = {
-    "Stock Entry": {
-        "before_cancel": "dyeing_finishing.dyeing_finishing.doctype.dye_material_other_issue.dye_material_other_issue.clear_other_issue_link_before_stock_entry_cancel",
-    },
-}
-
 # Scheduled Tasks
 # ---------------
 
@@ -300,6 +294,9 @@ doc_events = {
     "Purchase Receipt": {
         "autoname": "dyeing_finishing.dyeing_finishing.purchase_receipt.autoname",
         "validate": "dyeing_finishing.dyeing_finishing.purchase_receipt.validate",
+    },
+    "Stock Entry": {
+        "before_cancel": "dyeing_finishing.dyeing_finishing.doctype.dye_material_other_issue.dye_material_other_issue.clear_other_issue_link_before_stock_entry_cancel",
     },
 }
 
