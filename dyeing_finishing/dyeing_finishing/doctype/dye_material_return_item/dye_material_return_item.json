@@ -16,7 +16,6 @@
   "material_category",
   "batch_no",
   "stock_qty_kg",
-  "return_qty_g",
   "return_qty_kg",
   "stock_uom"
  ],
@@ -69,18 +68,10 @@
    "in_list_view": 1
   },
   {
-   "fieldname": "return_qty_g",
-   "label": "退货数量(g)",
-   "fieldtype": "Float",
-   "reqd": 1,
-   "precision": "3",
-   "in_list_view": 1
-  },
-  {
    "fieldname": "return_qty_kg",
    "label": "退货数量(kg)",
    "fieldtype": "Float",
-   "read_only": 1,
+   "reqd": 1,
    "precision": "4",
    "in_list_view": 1
   },

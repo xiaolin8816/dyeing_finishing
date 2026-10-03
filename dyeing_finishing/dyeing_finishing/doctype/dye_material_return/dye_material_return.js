@@ -10,10 +10,9 @@ function refresh_preview_document_code(frm) {
 }
 
 function set_return_totals(frm) {
-    let grams = 0;
-    (frm.doc.items || []).forEach(row => { grams += flt(row.return_qty_g); });
-    frm.set_value("total_return_qty_g", grams);
-    frm.set_value("total_return_qty_kg", flt(grams / 1000, 4));
+    let kilograms = 0;
+    (frm.doc.items || []).forEach(row => { kilograms += flt(row.return_qty_kg); });
+    frm.set_value("total_return_qty_kg", flt(kilograms, 4));
 }
 
 function is_receipt_mode(frm) {
@@ -107,10 +106,6 @@ frappe.ui.form.on("Dye Material Return Item", {
             }
         });
     },
-    return_qty_g(frm, cdt, cdn) {
-        const row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, "return_qty_kg", flt(flt(row.return_qty_g) / 1000, 4));
-        set_return_totals(frm);
-    },
+    return_qty_kg(frm) { set_return_totals(frm); },
     items_remove(frm) { set_return_totals(frm); }
 });

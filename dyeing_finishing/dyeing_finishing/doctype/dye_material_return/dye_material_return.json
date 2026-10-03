@@ -29,7 +29,6 @@
   "column_7",
   "stock_entry",
   "column_8",
-  "total_return_qty_g",
   "column_9",
   "column_10",
   "item_names",
@@ -125,14 +124,6 @@
    "fieldtype": "Link",
    "options": "Stock Entry",
    "read_only": 1
-  },
-  {
-   "fieldname": "total_return_qty_g",
-   "label": "本次退货克数",
-   "fieldtype": "Float",
-   "precision": "3",
-   "read_only": 1,
-   "in_list_view": 1
   },
   {
    "fieldname": "total_return_qty_kg",

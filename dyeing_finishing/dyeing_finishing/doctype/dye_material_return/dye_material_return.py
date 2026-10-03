@@ -37,7 +37,7 @@ class DyeMaterialReturn(Document):
     def before_submit(self):
         if not self.items:
             frappe.throw(_("退货明细不能为空"))
-        if not any(flt(row.return_qty_g) > 0 for row in self.items):
+        if not any(flt(row.return_qty_kg) > 0 for row in self.items):
             frappe.throw(_("请至少填写一行退货数量"))
 
     def on_submit(self):
@@ -105,10 +105,9 @@ class DyeMaterialReturn(Document):
                 frappe.throw(_("同一物料或原入库明细不能重复添加"))
             item_batch_keys.add(key)
             row.stock_qty_kg = flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": self.source_warehouse}, "actual_qty") or 0)
-            row.return_qty_g = flt(row.return_qty_g)
-            if row.return_qty_g < 0:
+            row.return_qty_kg = flt(row.return_qty_kg, 4)
+            if row.return_qty_kg < 0:
                 frappe.throw(_("物料 {0} 的退货数量不能小于 0").format(row.item_name or row.item_code))
-            row.return_qty_kg = flt(row.return_qty_g / 1000, 4)
             totals_by_item[row.item_code] = totals_by_item.get(row.item_code, 0) + row.return_qty_kg
         if self.source_type == "染料仓库存":
             for item_code, qty in totals_by_item.items():
@@ -117,8 +116,7 @@ class DyeMaterialReturn(Document):
                     frappe.throw(_("物料 {0} 库存不足，仓库库存 {1} kg，本次退货 {2} kg").format(item_code, available, qty))
 
     def _set_totals(self):
-        self.total_return_qty_g = sum(flt(row.return_qty_g) for row in self.items)
-        self.total_return_qty_kg = flt(self.total_return_qty_g / 1000, 4)
+        self.total_return_qty_kg = flt(sum(flt(row.return_qty_kg) for row in self.items), 4)
 
     def _set_item_names(self):
         names = []
@@ -260,7 +258,6 @@ def get_purchase_receipt_return_details(purchase_receipt, source_warehouse=None)
             "batch_no": source.batch_no,
             "stock_uom": source.stock_uom or item.stock_uom,
             "stock_qty_kg": stock_qty_kg,
-            "return_qty_g": 0,
             "return_qty_kg": 0,
         })
     return data
