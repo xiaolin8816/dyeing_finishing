@@ -34,7 +34,8 @@
   "document_row_3_column_4",
   "item_names",
   "items_section",
-  "items"
+  "items",
+  "amended_from"
  ],
  "fields": [
   {
@@ -210,6 +211,16 @@
    "fieldtype": "Small Text",
    "read_only": 1,
    "in_list_view": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "label": "修订来源",
+   "fieldtype": "Link",
+   "options": "Dye Material Other Issue",
+   "read_only": 1,
+   "no_copy": 1,
+   "hidden": 1,
+   "print_hide": 1
   }
  ],
  "permissions": [
