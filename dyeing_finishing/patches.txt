@@ -22,3 +22,5 @@ dyeing_finishing.patches.v1_0.add_site_dyeing_material_issue_workspace
 dyeing_finishing.patches.v1_0.add_dye_material_other_issue_workspace
 dyeing_finishing.patches.v1_0.configure_dye_material_other_issue_list
 dyeing_finishing.patches.v1_0.backfill_dye_material_other_issue_item_names
+
+dyeing_finishing.patches.v1_0.add_dye_material_return_workspace
