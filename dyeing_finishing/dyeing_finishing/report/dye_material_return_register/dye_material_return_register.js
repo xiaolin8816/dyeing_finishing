@@ -10,6 +10,7 @@ dyeing_finishing_report_layout.register({
     ],
     onload(report) {
         const title = "染料退货记录";
+        report.page_title = title;
         report.page.set_title(title);
         frappe.utils.set_title(title);
         report.page.add_inner_button("新建染料退货单", () => frappe.new_doc("Dye Material Return"));
