@@ -7,7 +7,7 @@
         "Color Master": ["配方与工艺", "色号档案"], "Laboratory Recipe": ["配方与工艺", "化验室配方档案"],
         "Customer Grey Fabric Receipt": ["胚布管理", "客户胚布入库"], "Grey Fabric Issue": ["胚布管理", "胚布出库单"], "Grey Fabric Stock": ["胚布管理", "胚布库存"], "Production Transit Warehouse Stock": ["胚布管理", "生产中转仓库存"],
         "Production Flow Card": ["生产管理", "生产流转卡"], "Site Dyeing Material Sheet": ["生产管理", "现场染色料单"],
-        "Site Dyeing Material Issue": ["染料管理", "现场染色领料单"], "Dye Material Receipt Register": ["染料管理", "染料入库记录"], "Dye Material Stock": ["染料管理", "染料库存"], "Dye Material Other Issue": ["染料管理", "染料其他出库单"], "Dye Material Return": ["染料管理", "染料退货单"],
+        "Site Dyeing Material Issue": ["染料管理", "现场染色领料单"], "Dye Material Receipt Register": ["染料管理", "染料入库记录"], "Dye Material Stock": ["染料管理", "染料库存"], "Dye Material Other Issue": ["染料管理", "染料其他出库单"], "Dye Material Return": ["染料管理", "染料退货单"], "Dye Material Return Register": ["染料管理", "染料退货记录"],
     };
     const normalized = (value) => String(value || "").replace(/-/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
     const workspace_route = (name) => `/desk/${frappe.router.slug(name)}`;
