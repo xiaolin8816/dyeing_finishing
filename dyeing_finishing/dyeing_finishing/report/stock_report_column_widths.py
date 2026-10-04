@@ -26,6 +26,11 @@ REPORT_CONFIGS = {
         "user_key": "dyeing_finishing_dye_material_receipt_register_layout",
         "fields": {"purchase_receipt", "posting_date", "supplier", "warehouse", "total_qty", "grand_total", "status"},
     },
+    "Dye Material Return Register": {
+        "key": "dye_material_return_register_report_layout",
+        "user_key": "dyeing_finishing_dye_material_return_register_layout",
+        "fields": {"dye_material_return", "return_date", "supplier", "item_code", "item_name", "return_qty_kg", "source_warehouse", "return_reason", "source_type", "stock_entry", "material_receipt_entry", "status"},
+    },
 }
 
 
