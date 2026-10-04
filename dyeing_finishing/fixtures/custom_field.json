@@ -488,4 +488,65 @@
   "read_only": 1,
   "module": "dyeing_finishing"
  }
+
+,
+ {
+  "doctype": "Custom Field",
+  "name": "Stock Entry-custom_dyeing_return_section",
+  "dt": "Stock Entry",
+  "fieldname": "custom_dyeing_return_section",
+  "label": "染料退货资料",
+  "fieldtype": "Section Break",
+  "insert_after": "stock_entry_type",
+  "depends_on": "eval:doc.custom_dye_material_return",
+  "module": "dyeing_finishing"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Stock Entry-custom_dyeing_return_business_type",
+  "dt": "Stock Entry",
+  "fieldname": "custom_dyeing_return_business_type",
+  "label": "业务类别",
+  "fieldtype": "Data",
+  "insert_after": "custom_dyeing_return_section",
+  "read_only": 1,
+  "in_list_view": 1,
+  "module": "dyeing_finishing"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Stock Entry-custom_dye_material_return",
+  "dt": "Stock Entry",
+  "fieldname": "custom_dye_material_return",
+  "label": "关联染料退货单",
+  "fieldtype": "Link",
+  "options": "Dye Material Return",
+  "insert_after": "custom_dyeing_return_business_type",
+  "read_only": 1,
+  "in_list_view": 1,
+  "module": "dyeing_finishing"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Stock Entry-custom_dyeing_return_supplier",
+  "dt": "Stock Entry",
+  "fieldname": "custom_dyeing_return_supplier",
+  "label": "供应商",
+  "fieldtype": "Link",
+  "options": "Supplier",
+  "insert_after": "custom_dye_material_return",
+  "read_only": 1,
+  "module": "dyeing_finishing"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Stock Entry-custom_dyeing_return_reason",
+  "dt": "Stock Entry",
+  "fieldname": "custom_dyeing_return_reason",
+  "label": "退货原因",
+  "fieldtype": "Data",
+  "insert_after": "custom_dyeing_return_supplier",
+  "read_only": 1,
+  "module": "dyeing_finishing"
+ }
 ]

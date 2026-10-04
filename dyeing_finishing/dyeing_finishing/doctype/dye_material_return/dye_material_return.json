@@ -28,8 +28,9 @@
   "source_type",
   "column_9",
   "source_warehouse",
-  "column_10",
+  "stock_entry_section",
   "material_receipt_entry",
+  "column_10",
   "stock_entry",
   "item_names",
   "items_section",
@@ -113,14 +114,14 @@
   },
   {
    "fieldname": "material_receipt_entry",
-   "label": "现场回转库存凭证",
+   "label": "现场回转入库凭证",
    "fieldtype": "Link",
    "options": "Stock Entry",
    "read_only": 1
   },
   {
    "fieldname": "stock_entry",
-   "label": "关联库存凭证",
+   "label": "退货出库库存凭证",
    "fieldtype": "Link",
    "options": "Stock Entry",
    "read_only": 1
@@ -140,6 +141,11 @@
    "read_only": 1,
    "hidden": 1,
    "in_list_view": 1
+  },
+  {
+   "fieldname": "stock_entry_section",
+   "label": "库存凭证",
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "items_section",

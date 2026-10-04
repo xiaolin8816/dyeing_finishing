@@ -154,6 +154,10 @@ class DyeMaterialReturn(Document):
                 "company": company,
                 "posting_date": self.return_date,
                 "remarks": _("染料退货单现场自动回转：{0}").format(self.name),
+                "custom_dyeing_return_business_type": "染料退货",
+                "custom_dye_material_return": self.name,
+                "custom_dyeing_return_supplier": self.supplier,
+                "custom_dyeing_return_reason": self.return_reason,
                 "items": self._entry_items("t_warehouse"),
             })
             receipt.insert(ignore_permissions=True)
@@ -170,6 +174,10 @@ class DyeMaterialReturn(Document):
             "company": company,
             "posting_date": self.return_date,
             "remarks": _("染料退货单：{0}；供应商：{1}；原因：{2}").format(self.name, self.supplier, self.return_reason),
+            "custom_dyeing_return_business_type": "染料退货",
+            "custom_dye_material_return": self.name,
+            "custom_dyeing_return_supplier": self.supplier,
+            "custom_dyeing_return_reason": self.return_reason,
             "items": self._entry_items("s_warehouse"),
         })
         issue.insert(ignore_permissions=True)
