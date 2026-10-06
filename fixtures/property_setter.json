@@ -1,0 +1,189 @@
+[
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order-po_no-label",
+    "doc_type": "Sales Order",
+    "doctype_or_field": "DocField",
+    "field_name": "po_no",
+    "property": "label",
+    "property_type": "Data",
+    "value": "客户订单号",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order-po_no-insert_after",
+    "doc_type": "Sales Order",
+    "doctype_or_field": "DocField",
+    "field_name": "po_no",
+    "property": "insert_after",
+    "property_type": "Data",
+    "value": "customer_name",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-uom-label",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "uom",
+    "property": "label",
+    "property_type": "Data",
+    "value": "单位",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order-po_no-hidden",
+    "doc_type": "Sales Order",
+    "doctype_or_field": "DocField",
+    "field_name": "po_no",
+    "property": "hidden",
+    "property_type": "Check",
+    "value": "1",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-item_name-in_list_view",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "item_name",
+    "property": "in_list_view",
+    "property_type": "Check",
+    "value": "1",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-uom-in_list_view",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "uom",
+    "property": "in_list_view",
+    "property_type": "Check",
+    "value": "1",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order-order_type-hidden",
+    "doc_type": "Sales Order",
+    "doctype_or_field": "DocField",
+    "field_name": "order_type",
+    "property": "hidden",
+    "property_type": "Check",
+    "value": "1",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-qty-precision",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "qty",
+    "property": "precision",
+    "property_type": "Int",
+    "value": "2",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-qty-columns",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "qty",
+    "property": "columns",
+    "property_type": "Int",
+    "value": "2",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order-naming_series-options",
+    "doc_type": "Sales Order",
+    "doctype_or_field": "DocField",
+    "field_name": "naming_series",
+    "property": "options",
+    "property_type": "Text",
+    "value": "SO.YYYY.MM.####",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order-naming_series-default",
+    "doc_type": "Sales Order",
+    "doctype_or_field": "DocField",
+    "field_name": "naming_series",
+    "property": "default",
+    "property_type": "Data",
+    "value": "SO.YYYY.MM.####",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order-naming_series-hidden",
+    "doc_type": "Sales Order",
+    "doctype_or_field": "DocField",
+    "field_name": "naming_series",
+    "property": "hidden",
+    "property_type": "Check",
+    "value": "1",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-delivery_date-insert_after",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "delivery_date",
+    "property": "insert_after",
+    "property_type": "Data",
+    "value": "custom_finished_specification",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Sales Order Item-item_code-columns",
+    "doc_type": "Sales Order Item",
+    "doctype_or_field": "DocField",
+    "field_name": "item_code",
+    "property": "columns",
+    "property_type": "Int",
+    "value": "2",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Customer-naming_series-options",
+    "doc_type": "Customer",
+    "doctype_or_field": "DocField",
+    "field_name": "naming_series",
+    "property": "options",
+    "property_type": "Text",
+    "value": "A.####",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Customer-naming_series-default",
+    "doc_type": "Customer",
+    "doctype_or_field": "DocField",
+    "field_name": "naming_series",
+    "property": "default",
+    "property_type": "Data",
+    "value": "A.####",
+    "module": "dyeing_finishing"
+  },
+  {
+    "doctype": "Property Setter",
+    "name": "Customer-naming_series-hidden",
+    "doc_type": "Customer",
+    "doctype_or_field": "DocField",
+    "field_name": "naming_series",
+    "property": "hidden",
+    "property_type": "Check",
+    "value": "1",
+    "module": "dyeing_finishing"
+  }
+]

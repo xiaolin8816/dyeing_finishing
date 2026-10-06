@@ -1,0 +1,66 @@
+{
+ "app": "dyeing_finishing",
+ "charts": [],
+ "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>印染整理</b></span>\",\"col\":12}},{\"id\":\"dyeing-navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>功能导航</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"印染基础资料\",\"col\":4}},{\"id\":\"dyeing-recipe-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"配方与工艺\",\"col\":4}},{\"id\":\"grey-fabric-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"胚布管理\",\"col\":4}},{\"id\":\"production-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"生产管理\",\"col\":4}},{\"id\":\"dye-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"染料管理\",\"col\":4}},{\"id\":\"finished-goods-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品管理\",\"col\":4}}]",
+ "creation": "2026-09-28 19:18:12.916039",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "dye",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "印染整理",
+ "links": [],
+ "modified": "2026-10-04 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "印染整理",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 0.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "label": "印染基础资料",
+   "type": "URL",
+   "url": "/desk/印染基础资料"
+  },
+  {
+   "color": "Grey",
+   "label": "配方与工艺",
+   "type": "URL",
+   "url": "/desk/配方与工艺"
+  },
+  {
+   "color": "Grey",
+   "label": "胚布管理",
+   "type": "URL",
+   "url": "/desk/胚布管理"
+  },
+  {
+   "color": "Grey",
+   "label": "生产管理",
+   "type": "URL",
+   "url": "/desk/生产管理"
+  },
+  {
+   "color": "Grey",
+   "label": "染料管理",
+   "type": "URL",
+   "url": "/desk/染料管理"
+  },
+  {
+   "color": "Grey",
+   "label": "成品管理",
+   "type": "URL",
+   "url": "/desk/成品管理"
+  }
+ ],
+ "title": "印染整理",
+ "type": "Workspace"
+}

@@ -1,0 +1,338 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "SO.YYYY.MM.####",
+ "creation": "2026-10-05 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer_section",
+  "customer",
+  "delivery_date",
+  "list_finished_product_name",
+  "list_color_no",
+  "list_color",
+  "customer_column",
+  "customer_name",
+  "order_type",
+  "customer_column_2",
+  "customer_order_no",
+  "order_remark",
+  "customer_column_3",
+  "transaction_date",
+  "company",
+  "currency",
+  "items_section",
+  "items",
+  "requirements_html",
+  "process_section",
+  "process_requirements",
+  "packaging_requirements",
+  "totals_section",
+  "total_qty",
+  "totals_column",
+  "total_amount",
+  "connection_section",
+  "erpnext_sales_order",
+  "change_log_tab",
+  "change_logs",
+  "change_reason",
+  "change_note",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer_section",
+   "fieldtype": "Section Break",
+   "label": "订单信息"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "客户",
+   "options": "Customer",
+   "reqd": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "客户名称",
+   "read_only": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "list_finished_product_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "成品名称",
+   "read_only": 1,
+   "hidden": 1
+   ,"allow_on_submit": 1
+  },
+  {
+   "fieldname": "list_color_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "色号",
+   "options": "Color Master",
+   "read_only": 1,
+   "hidden": 1
+   ,"allow_on_submit": 1
+  },
+  {
+   "fieldname": "list_color",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "颜色",
+   "read_only": 1,
+   "hidden": 1
+   ,"allow_on_submit": 1
+  },
+  {
+   "fieldname": "customer_order_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "客户订单号"
+   ,"allow_on_submit": 1
+  },
+  {
+   "fieldname": "customer_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "transaction_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "订单日期",
+   "reqd": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "交货日期",
+   "reqd": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "default": "来料加工",
+   "fieldname": "order_type",
+   "fieldtype": "Select",
+   "label": "订单类型",
+   "options": "来料加工\n全代料",
+   "reqd": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "default": "",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "公司",
+   "options": "Company",
+   "reqd": 1,
+   "hidden": 1
+   ,"allow_on_submit": 1
+  },
+  {
+   "fetch_from": "company.default_currency",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "币种",
+   "options": "Currency",
+   "read_only": 1,
+   "hidden": 1
+   ,"allow_on_submit": 1
+  },
+  {
+   "fieldname": "order_remark",
+   "fieldtype": "Small Text",
+   "label": "订单备注",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "items_section",
+   "fieldtype": "Section Break",
+   "label": "订单明细"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "订单明细",
+   "options": "Dyeing Sales Order Item",
+   "reqd": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "requirements_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "process_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "process_requirements",
+   "fieldtype": "Table",
+   "label": "加工要求",
+   "options": "Sales Order Process Requirement",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "packaging_requirements",
+   "fieldtype": "Table",
+   "label": "包装要求",
+   "options": "Sales Order Packaging Requirement",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "合计"
+  },
+  {
+   "fieldname": "total_qty",
+   "fieldtype": "Float",
+   "label": "总数量",
+   "precision": "3",
+   "read_only": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "totals_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "总金额",
+   "options": "currency",
+   "read_only": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "connection_section",
+   "fieldtype": "Section Break",
+   "label": "系统关联"
+  },
+  {
+   "fieldname": "erpnext_sales_order",
+   "fieldtype": "Link",
+   "label": "ERPNext销售订单",
+   "options": "Sales Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "change_log_tab",
+   "fieldtype": "Tab Break",
+   "label": "变更记录"
+  },
+  {
+   "fieldname": "change_logs",
+   "fieldtype": "Table",
+   "label": "变更记录",
+   "options": "Dyeing Sales Order Change Log",
+   "read_only": 1,
+   "cannot_add_rows": 1,
+   "cannot_delete_rows": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "change_reason",
+   "fieldtype": "Data",
+   "label": "本次修改原因",
+   "hidden": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "change_note",
+   "fieldtype": "Small Text",
+   "label": "本次修改说明",
+   "hidden": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Dyeing Sales Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "customer_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_column_3",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-10-05 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Dyeing Sales Order",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "customer_name"
+ ,"track_changes": 1
+}

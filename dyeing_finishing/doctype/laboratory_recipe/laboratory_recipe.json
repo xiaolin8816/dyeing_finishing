@@ -1,0 +1,343 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 0,
+ "autoname": "HY.YY.MM.DD.###",
+ "creation": "2026-10-01 15:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "document_section",
+  "recipe_no",
+  "recipe_status",
+  "document_column_2",
+  "recipe_version",
+  "sampling_date",
+  "confirmation_date",
+  "document_column_3",
+  "color_no",
+  "color",
+  "document_column_4",
+  "process_parameter_template",
+  "sampler",
+  "finished_product_name",
+  "customer",
+  "customer_name",
+  "fabric_section",
+  "grey_fabric_batch",
+  "grey_fabric",
+  "grey_fabric_code",
+  "fabric_column_2",
+  "grey_fabric_name",
+  "sample_weight",
+  "fabric_column_3",
+  "bath_ratio",
+  "color_light_requirement",
+  "color_card_image",
+  "sample_image",
+  "formula_tab",
+  "formula_section",
+  "recipe_items",
+  "process_tab",
+  "process_section",
+  "process_parameters",
+  "attachments_tab",
+  "attachment_section",
+  "color_card_image",
+  "sample_image",
+  "remarks_tab",
+  "remarks_section",
+  "remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "recipe_no",
+   "label": "配方编号",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "customer_name",
+   "label": "客户名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "finished_product_name",
+   "label": "成品名称",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "color_no",
+   "label": "色号",
+   "fieldtype": "Link",
+   "options": "Color Master",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "color",
+   "label": "颜色",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "recipe_status",
+   "label": "配方状态",
+   "fieldtype": "Select",
+   "options": "草稿\n待确认\n已确认\n停用",
+   "default": "草稿",
+   "reqd": 1,
+   "in_list_view": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "recipe_version",
+   "label": "配方版本",
+   "fieldtype": "Data",
+   "default": "V1",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "sampling_date",
+   "label": "打样日期",
+   "fieldtype": "Date",
+   "default": "Today",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "details_tab",
+   "label": "详细信息",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "document_section",
+   "label": "单据信息",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "document_column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_column_3",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_column_4",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sampler",
+   "label": "打样员",
+   "fieldtype": "Link",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "customer",
+   "label": "客户",
+   "fieldtype": "Link",
+   "options": "Customer",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "fabric_section",
+   "label": "胚布与试样资料",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "grey_fabric_batch",
+   "label": "胚布批次",
+   "fieldtype": "Link",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "grey_fabric",
+   "label": "胚布档案",
+   "fieldtype": "Link",
+   "options": "Grey Fabric Master",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "grey_fabric_code",
+   "label": "胚布编码",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fabric_column_2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grey_fabric_name",
+   "label": "胚布名称",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sample_weight",
+   "label": "试样布重",
+   "fieldtype": "Float",
+   "precision": "3"
+  },
+  {
+   "fieldname": "fabric_column_3",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bath_ratio",
+   "label": "浴比",
+   "fieldtype": "Data",
+   "description": "例如：1:10"
+  },
+  {
+   "fieldname": "color_light_requirement",
+   "label": "色光要求",
+   "fieldtype": "Small Text",
+   "description": "例如：深浅、偏红、偏黄"
+  },
+  {
+   "fieldname": "confirmation_date",
+   "label": "确认日期",
+   "fieldtype": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attachments_tab",
+   "label": "附件",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "attachment_section",
+   "label": "色卡与试样图片",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "color_card_image",
+   "label": "色卡图片",
+   "fieldtype": "Attach Image"
+  },
+  {
+   "fieldname": "sample_image",
+   "label": "试样图片",
+   "fieldtype": "Attach Image"
+  },
+  {
+   "fieldname": "formula_tab",
+   "label": "配方明细",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "formula_section",
+   "label": "配方明细",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "recipe_items",
+   "label": "配方明细",
+   "fieldtype": "Table",
+   "options": "Laboratory Recipe Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "process_tab",
+   "label": "工艺参数",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "process_section",
+   "label": "工艺参数",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "process_parameters",
+   "label": "工艺参数",
+   "fieldtype": "Table",
+   "options": "Laboratory Recipe Process Parameter"
+  },
+  {
+   "fieldname": "remarks_tab",
+   "label": "备注",
+   "fieldtype": "Tab Break"
+  },
+  {
+   "fieldname": "remarks_section",
+   "label": "备注资料",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remark",
+   "label": "备注",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "process_parameter_template",
+   "label": "工艺参数模板",
+   "fieldtype": "Link",
+   "options": "Process Parameter Template"
+  }
+ ],
+ "grid_page_length": 50,
+ "links": [],
+ "modified": "2026-10-01 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Laboratory Recipe",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Stock User",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "recipe_no",
+ "track_changes": 1
+}

@@ -1,0 +1,28 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-05 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": ["changed_on","changed_by","reason","note","summary","synced_flow_cards"],
+ "fields": [
+  {"fieldname":"changed_on","fieldtype":"Datetime","in_list_view":1,"label":"修改时间","read_only":1},
+  {"fieldname":"changed_by","fieldtype":"Link","in_list_view":1,"label":"修改人","options":"User","read_only":1},
+  {"fieldname":"reason","fieldtype":"Data","in_list_view":1,"label":"修改原因","read_only":1},
+  {"fieldname":"note","fieldtype":"Small Text","label":"补充说明","read_only":1},
+  {"fieldname":"summary","fieldtype":"Long Text","label":"变更内容","read_only":1},
+  {"fieldname":"synced_flow_cards","fieldtype":"Small Text","label":"已同步生产流转卡","read_only":1}
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-05 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Dyeing Sales Order Change Log",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
