@@ -292,6 +292,7 @@ def get_visual_designer_data(crispy_format):
 	meta = frappe.get_meta(doc.doc_type)
 	layout = _json(doc.layout_json, {})
 	visual = layout.get("dyeing_visual") or _visual_from_crispy_layout(doc, layout)
+	_normalize_visual_layout(visual)
 	groups = [{"key": "main", "label": "主表字段", "fields": _visual_fields(meta)}]
 	for field in meta.fields:
 		if field.fieldtype == "Table" and field.options:
@@ -323,6 +324,7 @@ def save_visual_designer(crispy_format, visual):
 	frappe.only_for("System Manager")
 	doc = frappe.get_doc("Crispy Format", crispy_format)
 	data = _json(visual, None)
+	_normalize_visual_layout(data)
 	_validate_visual_layout(doc.doc_type, data)
 	layout = _json(doc.layout_json, {})
 	layout.update({"schema_version": 4, "dyeing_visual": data})
@@ -636,13 +638,32 @@ def _validate_visual_layout(doctype, data):
 		frappe.throw(_("上下边距不能大于纸张高度"))
 	meta = frappe.get_meta(doctype)
 	for index, item in enumerate(data["elements"], 1):
-		if item.get("type") not in {"text", "field", "rect", "line", "vline", "grid", "barcode", "table"}:
+		if item.get("type") not in {"text", "field", "rect", "line", "vline", "grid", "barcode", "qrcode", "calculated", "table"}:
 			frappe.throw(_("第 {0} 个组件类型无效").format(index))
 		for key in ("x", "y", "w", "h"):
 			try: float(item.get(key) or 0)
 			except (TypeError, ValueError): frappe.throw(_("第 {0} 个组件的 {1} 无效").format(index, key))
-		if item.get("type") in {"field", "barcode", "table"} and not str(item.get("fieldname") or "").startswith("__") and not meta.get_field(item.get("fieldname")):
+		if item.get("type") in {"field", "barcode", "qrcode", "table", "calculated"} and not str(item.get("fieldname") or "").startswith("__") and not meta.get_field(item.get("fieldname")):
 			frappe.throw(_("第 {0} 个组件引用了不存在的字段：{1}").format(index, item.get("fieldname")))
+		if item.get("type") == "qrcode":
+			if item.get("error_correction", "m") not in {"l", "m", "q", "h"}:
+				frappe.throw(_("第 {0} 个二维码的纠错等级无效").format(index))
+			if not 0 <= cint(item.get("quiet_zone", 4)) <= 16:
+				frappe.throw(_("第 {0} 个二维码的留白应在 0 至 16 之间").format(index))
+		if item.get("type") == "barcode":
+			if item.get("barcode_type", "code128") != "code128":
+				frappe.throw(_("第 {0} 个条码类型暂不支持").format(index))
+			if not 0 <= cint(item.get("quiet_zone", 10)) <= 50:
+				frappe.throw(_("第 {0} 个条码的留白应在 0 至 50 之间").format(index))
+		if item.get("type") == "calculated":
+			calc_type = item.get("calc_type") or "rmb_upper"
+			if calc_type not in {"rmb_upper", "table_sum", "table_avg", "table_count", "table_min", "table_max"}:
+				frappe.throw(_("第 {0} 个计算字段的计算方式无效").format(index))
+			if calc_type.startswith("table_"):
+				table_field = meta.get_field(item.get("fieldname"))
+				child_meta = frappe.get_meta(table_field.options) if table_field and table_field.fieldtype == "Table" and table_field.options else None
+				if not child_meta or (calc_type != "table_count" and not child_meta.get_field(item.get("column_field"))):
+					frappe.throw(_("第 {0} 个计算字段的明细数据源无效").format(index))
 		if item.get("type") in {"line", "vline", "grid"}:
 			line_width = float(item.get("line_width") or .5)
 			if line_width < .1 or line_width > 10:
@@ -657,12 +678,71 @@ def _validate_visual_layout(doctype, data):
 			groups, rows = cint(item.get("repeat_columns")), cint(item.get("rows_per_group"))
 			if not 1 <= groups <= 8 or not 1 <= rows <= 100:
 				frappe.throw(_("第 {0} 个明细表的分组数或每组行数无效").format(index))
+		if item.get("type") == "table":
+			if item.get("row_height_mode", "fill") not in {"auto", "fixed", "fill"}:
+				frappe.throw(_("第 {0} 个明细表的行高模式无效").format(index))
+			for height_key, height_label in (("header_row_height_mm", "表头行高"), ("detail_row_height_mm", "明细行高"), ("summary_row_height_mm", "汇总行高")):
+				height_value = float(item.get(height_key) or 0)
+				if height_value < 2 or height_value > 100:
+					frappe.throw(_("第 {0} 个明细表的{1}应在 2 至 100 mm 之间").format(index, height_label))
+			if not 1 <= cint(item.get("rows_per_page") or item.get("rows_per_group") or 8) <= 500:
+				frappe.throw(_("第 {0} 个明细表的每页行数应在 1 至 500 之间").format(index))
+			if item.get("overflow", "shrink") not in {"wrap", "clip", "shrink"}:
+				frappe.throw(_("第 {0} 个明细表的内容超出处理无效").format(index))
+			table_field = meta.get_field(item.get("fieldname"))
+			child_meta = frappe.get_meta(table_field.options) if table_field and table_field.fieldtype == "Table" and table_field.options else None
+			if not child_meta:
+				frappe.throw(_("第 {0} 个明细表数据源无效：{1}").format(index, item.get("fieldname")))
+			if not item.get("columns"):
+				frappe.throw(_("第 {0} 个明细表至少需要一个显示列").format(index))
+			for column_index, column in enumerate(item.get("columns") or [], 1):
+				if not child_meta.get_field(column.get("fieldname")):
+					frappe.throw(_("第 {0} 个明细表的第 {1} 列引用了不存在的字段：{2}").format(index, column_index, column.get("fieldname")))
+				width = float(column.get("width_mm") or 0)
+				if width < 0 or width > float(item.get("w") or 0):
+					frappe.throw(_("第 {0} 个明细表的第 {1} 列宽度无效").format(index, column_index))
+				if column.get("align", "center") not in {"left", "center", "right"}:
+					frappe.throw(_("第 {0} 个明细表的第 {1} 列对齐方式无效").format(index, column_index))
+				if column.get("aggregate", "none") not in {"none", "sum", "count", "avg"}:
+					frappe.throw(_("第 {0} 个明细表的第 {1} 列汇总方式无效").format(index, column_index))
+
+
+def _normalize_visual_layout(data):
+	"""Upgrade legacy visual values in memory before validation and publishing."""
+	if not isinstance(data, dict):
+		return data
+	alignments = {"start": "left", "end": "right", "auto": "left"}
+	for item in data.get("elements") or []:
+		if item.get("align") in alignments:
+			item["align"] = alignments[item["align"]]
+		if item.get("type") == "qrcode":
+			item.setdefault("error_correction", "m")
+			item.setdefault("quiet_zone", 4)
+		if item.get("type") == "barcode":
+			item.setdefault("barcode_type", "code128")
+			item.setdefault("show_barcode_text", 1)
+			item.setdefault("quiet_zone", 10)
+		if item.get("type") != "table":
+			continue
+		item.setdefault("row_height_mode", "fill" if cint(item.get("fill_height", 1)) else "auto")
+		item.setdefault("header_row_height_mm", 7)
+		item.setdefault("detail_row_height_mm", 7)
+		item.setdefault("summary_row_height_mm", 7)
+		item.setdefault("rows_per_page", cint(item.get("rows_per_group") or 8))
+		item.setdefault("repeat_header", 1)
+		item.setdefault("fill_blank_rows", cint(item.get("fill_height", 1)))
+		item.setdefault("overflow", "shrink")
+		for column in item.get("columns") or []:
+			column["align"] = alignments.get(column.get("align"), column.get("align") or "center")
+			column.setdefault("width_mm", 0)
+			column.setdefault("aggregate", "none")
+	return data
 
 
 def _visual_crispy_sections(data):
 	fields = []
 	for item in data.get("elements") or []:
-		if item.get("type") in {"field", "barcode", "table"} and item.get("fieldname"):
+		if item.get("type") in {"field", "barcode", "qrcode", "table", "calculated"} and item.get("fieldname"):
 			field = {"fieldname": item["fieldname"], "label": item.get("label") or item["fieldname"], "fieldtype": "Table" if item["type"] == "table" else "Data", "align": "auto"}
 			if item["type"] == "table": field["columns"] = item.get("columns") or []
 			fields.append(field)
@@ -691,13 +771,114 @@ def _visual_to_typst(data):
 				column_field = str(column.get("fieldname") or "").strip()
 				if column_field:
 					required_fields.add(f"{fieldname}.{column_field}")
+		if item.get("type") == "calculated" and str(item.get("calc_type") or "").startswith("table_"):
+			column_field = str(item.get("column_field") or "").strip()
+			if column_field:
+				required_fields.add(f"{fieldname}.{column_field}")
 	copies_field = str(data.get("copies_field") or "").strip()
 	if copies_field:
 		required_fields.add(copies_field)
 	field_hint = "// fields: " + ", ".join(sorted(required_fields))
 	lines = [field_hint,
 		f'#set page(width: {float(page["width_mm"]):g}mm, height: {float(page["height_mm"]):g}mm, margin: 0mm)',
-		'#set text(font: ("WenQuanYi Zen Hei", "Unifont", "Inter"), size: 9pt)', '#let val(key) = doc.at(key, default: "")']
+		'#set text(font: ("WenQuanYi Zen Hei", "Unifont"), size: 9pt)',
+		'#import "@local/crispy-print:0.1.0": crispy-qrcode',
+		'#let val(key) = doc.at(key, default: "")',
+		'''#let rmb-group(number) = {
+  let digits = ("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖")
+  let units = ("仟", "佰", "拾", "")
+  let divisors = (1000, 100, 10, 1)
+  let result = ""
+  let pending-zero = false
+  for index in range(4) {
+    let digit = calc.rem(calc.floor(number / divisors.at(index)), 10)
+    if digit == 0 {
+      if result != "" { pending-zero = true }
+    } else {
+      if pending-zero { result += "零"; pending-zero = false }
+      result += digits.at(digit) + units.at(index)
+    }
+  }
+  result
+}''',
+		'''#let rmb-upper(value, prefix: true, empty-as-zero: false) = {
+  if value == none or str(value).trim() == "" {
+    if empty-as-zero { "人民币零元整" } else { "" }
+  } else {
+    let amount = float(str(value))
+    let cents = int(calc.round(calc.abs(amount) * 100))
+    let integer = calc.floor(cents / 100)
+    let fraction = calc.rem(cents, 100)
+    let groups = (
+      calc.rem(integer, 10000),
+      calc.rem(calc.floor(integer / 10000), 10000),
+      calc.rem(calc.floor(integer / 100000000), 10000),
+      calc.rem(calc.floor(integer / 1000000000000), 10000),
+    )
+    let group-units = ("", "万", "亿", "万亿")
+    let result = ""
+    let pending-zero = false
+    for index in (3, 2, 1, 0) {
+      let group = groups.at(index)
+      if group == 0 {
+        if result != "" { pending-zero = true }
+      } else {
+        if result != "" and (pending-zero or group < 1000) { result += "零" }
+        result += rmb-group(group) + group-units.at(index)
+        pending-zero = false
+      }
+    }
+    if result == "" { result = "零" }
+    result += "元"
+    let jiao = calc.floor(fraction / 10)
+    let fen = calc.rem(fraction, 10)
+    let digits = ("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖")
+    if jiao == 0 and fen == 0 { result += "整" }
+    else {
+      if jiao > 0 { result += digits.at(jiao) + "角" }
+      else if integer > 0 and fen > 0 { result += "零" }
+      if fen > 0 { result += digits.at(fen) + "分" }
+    }
+    (if amount < 0 { "负" } else { "" }) + (if prefix { "人民币" } else { "" }) + result
+  }
+}''',
+		'''#let code128(data, width: 50mm, height: 10mm, quiet-zone: 10, show-text: true) = {
+  let patterns = (
+    "212222", "222122", "222221", "121223", "121322", "131222", "122213", "122312", "132212", "221213", "221312", "231212",
+    "112232", "122132", "122231", "113222", "123122", "123221", "223211", "221132", "221231", "213212", "223112", "312131",
+    "311222", "321122", "321221", "312212", "322112", "322211", "212123", "212321", "232121", "111323", "131123", "131321",
+    "112313", "132113", "132311", "211313", "231113", "231311", "112133", "112331", "132131", "113123", "113321", "133121",
+    "313121", "211331", "231131", "213113", "213311", "213131", "311123", "311321", "331121", "312113", "312311", "332111",
+    "314111", "221411", "431111", "111224", "111422", "121124", "121421", "141122", "141221", "112214", "112412", "122114",
+    "122411", "142112", "142211", "241211", "221114", "413111", "241112", "134111", "111242", "121142", "121241", "114212",
+    "124112", "124211", "411212", "421112", "421211", "212141", "214121", "412121", "111143", "111341", "131141", "114113",
+    "114311", "411113", "411311", "113141", "114131", "311141", "411131", "211412", "211214", "211232", "2331112",
+  )
+  let charset = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+  let values = str(data).clusters().map(character => {
+    let position = charset.clusters().position(item => item == character)
+    if position == none { 31 } else { position }
+  })
+  let checksum = 104
+  for pair in values.enumerate() { checksum += pair.at(1) * (pair.at(0) + 1) }
+  let codes = (104,) + values + (calc.rem(checksum, 103), 106)
+  let total-units = quiet-zone * 2
+  for code in codes { for digit in patterns.at(code).clusters() { total-units += int(digit) } }
+  let module = width / total-units
+  let widths = (quiet-zone * module,)
+  let cells = ([],)
+  for code in codes {
+    for pair in patterns.at(code).clusters().enumerate() {
+      widths.push(int(pair.at(1)) * module)
+      cells.push(if calc.rem(pair.at(0), 2) == 0 { rect(width: 100%, height: 100%, fill: black, stroke: none) } else { [] })
+    }
+  }
+  widths.push(quiet-zone * module); cells.push([])
+  stack(dir: ttb, spacing: 1pt,
+    grid(columns: widths, rows: (height,), gutter: 0pt, ..cells),
+    if show-text { align(center, text(size: 7pt, str(data))) } else { [] },
+  )
+}''']
 	for item in sorted(data.get("elements") or [], key=lambda row: (int(row.get("z") or 0), row.get("id") or "")):
 		type_ = item.get("type"); x = float(item.get("x") or 0); y = float(item.get("y") or 0)
 		w = max(float(item.get("w") or 1), .5); h = max(float(item.get("h") or 1), .5)
@@ -729,12 +910,13 @@ def _visual_to_typst(data):
 				fieldname = _typst_text(item.get("fieldname"))
 				column_widths = []
 				for _group in range(groups):
-					column_widths.extend(["1fr"] * len(cols))
-				head = ", ".join(f'[{_typst_text(col.get("label") or col.get("fieldname"))}]'
+					column_widths.extend([f'{float(col.get("width_mm")):g}mm' if float(col.get("width_mm") or 0) > 0 else "1fr" for col in cols])
+				head = ", ".join(f'[#align({col.get("align") if col.get("align") in {"left", "center", "right"} else "center"})[{_typst_text(col.get("label") or col.get("fieldname"))}]]'
 					for _group in range(groups) for col in cols)
 				cells = ", ".join(
-					f'[#if group * {rows_per_group} + row-index < val("{fieldname}").len() '
-					f'{{ val("{fieldname}").at(group * {rows_per_group} + row-index).at("{_typst_text(col.get("fieldname"))}", default: "") }}]'
+					f'[#align({col.get("align") if col.get("align") in {"left", "center", "right"} else "center"})['
+					f'#if group * {rows_per_group} + row-index < val("{fieldname}").len() '
+					f'{{ val("{fieldname}").at(group * {rows_per_group} + row-index).at("{_typst_text(col.get("fieldname"))}", default: "") }}]]'
 					for col in cols
 				)
 				available_height = max(h - 2, 1)
@@ -744,9 +926,22 @@ def _visual_to_typst(data):
 					f'table.header({head}), ..range({rows_per_group}).map(row-index => '
 					f'range({groups}).map(group => ({cells})).flatten()).flatten())')
 			else:
-				head = ", ".join(f'[{_typst_text(col.get("label") or col.get("fieldname"))}]' for col in cols)
-				cells = ", ".join(f'[#row.at("{_typst_text(col.get("fieldname"))}", default: "")]' for col in cols)
-				content = f'#table(columns: ({", ".join(["1fr"] * len(cols))}), table.header({head}), ..val("{_typst_text(item.get("fieldname"))}").map(row => ({cells})).flatten())'
+				column_widths = [f'{float(col.get("width_mm")):g}mm' if float(col.get("width_mm") or 0) > 0 else "1fr" for col in cols]
+				head = ", ".join(f'[#align({col.get("align") if col.get("align") in {"left", "center", "right"} else "center"})[{_typst_text(col.get("label") or col.get("fieldname"))}]]' for col in cols)
+				cells = ", ".join(f'[#align({col.get("align") if col.get("align") in {"left", "center", "right"} else "center"})[#row.at("{_typst_text(col.get("fieldname"))}", default: "")]]' for col in cols)
+				footer_cells = []
+				for col in cols:
+					mode = col.get("aggregate") or "none"
+					field = _typst_text(col.get("fieldname"))
+					if mode == "count": aggregate = f'计数：#val("{_typst_text(item.get("fieldname"))}").len()'
+					elif mode in {"sum", "avg"}:
+						values = f'val("{_typst_text(item.get("fieldname"))}").map(row => row.at("{field}", default: 0))'
+						aggregate = f'{"平均" if mode == "avg" else "合计"}：#{values}.sum()'
+						if mode == "avg": aggregate = f'平均：#if {values}.len() > 0 {{ {values}.sum() / {values}.len() }} else {{ 0 }}'
+					else: aggregate = ""
+					footer_cells.append(f'[#align({col.get("align") if col.get("align") in {"left", "center", "right"} else "center"})[#text(weight: "bold")[{aggregate}]]]')
+				footer = f', table.footer({", ".join(footer_cells)})' if any((col.get("aggregate") or "none") != "none" for col in cols) else ""
+				content = f'#table(columns: ({", ".join(column_widths)}), table.header({head}), ..val("{_typst_text(item.get("fieldname"))}").map(row => ({cells})).flatten(){footer})'
 		else:
 			label = _typst_text(item.get("label") or item.get("fieldname"))
 			fieldname = item.get("fieldname") or ""
