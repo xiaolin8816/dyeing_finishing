@@ -66,7 +66,11 @@
         });
     }
 
+    const existing = frappe.listview_settings["Laboratory Recipe"] || {};
+    const original_onload = existing.onload;
+    const original_refresh = existing.refresh;
     frappe.listview_settings["Laboratory Recipe"] = {
+        ...existing,
         hide_name_filter: true,
         custom_filter_configs: [
             {
@@ -90,13 +94,12 @@
             },
         ],
         onload(listview) {
-            order_columns(listview);
+            original_onload?.call(this, listview);
             hide_unused_top_filters(listview);
             apply_current_month_filter(listview);
         },
         refresh(listview) {
-            order_columns(listview);
-            window.setTimeout(() => apply_recipe_version_width(listview), 0);
+            original_refresh?.call(this, listview);
         },
     };
 })();

@@ -1,0 +1,18 @@
+{
+ "actions": [],
+ "creation": "2026-10-14 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["operation", "operation_name"],
+ "fields": [
+  {"fieldname":"operation","label":"可操作工序","fieldtype":"Link","options":"Production Operation","reqd":1,"in_list_view":1},
+  {"fieldname":"operation_name","label":"工序名称","fieldtype":"Data","fetch_from":"operation.production_operation_name","read_only":1,"in_list_view":1}
+ ],
+ "istable": 1,
+ "modified": "2026-10-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Employee Operation Permission Operation",
+ "owner": "Administrator"
+}

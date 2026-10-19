@@ -1,7 +1,7 @@
 {
  "app": "dyeing_finishing",
  "charts": [],
- "content": "[{\"id\":\"finished-goods-management-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>成品管理</b></span>\",\"col\":12}}]",
+ "content": "[{\"id\":\"finished-goods-management-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>成品管理</b></span>\",\"col\":12}},{\"id\":\"finished-packing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>成品包装、入库、出库与返修</b></span>\",\"col\":12}},{\"id\":\"finished-blank-label-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品空白标签打印单\",\"col\":4}},{\"id\":\"finished-packing-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品包装入库单\",\"col\":4}},{\"id\":\"finished-delivery-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品出库单\",\"col\":4}},{\"id\":\"finished-customer-transfer-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品转客户单\",\"col\":4}},{\"id\":\"finished-return-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品退货处理单\",\"col\":4}},{\"id\":\"finished-stock-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品库存查询\",\"col\":4}},{\"id\":\"finished-return-stock-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品退货库存查询\",\"col\":4}},{\"id\":\"finished-return-to-grey-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品退货转胚布仓\",\"col\":4}},{\"id\":\"finished-to-grey-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品库存转胚布仓\",\"col\":4}},{\"id\":\"finished-product-master-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>成品档案</b></span>\",\"col\":12}},{\"id\":\"finished-product-master-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品物料档案\",\"col\":4}}]",
  "creation": "2026-10-04 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -21,7 +21,78 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 60,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Purple",
+   "doc_view": "List",
+   "label": "成品空白标签打印单",
+   "link_to": "Finished Product Blank Label",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "成品包装入库单",
+   "link_to": "Finished Product Packing Receipt",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "成品出库单",
+   "link_to": "Finished Product Delivery",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "doc_view": "List",
+   "label": "成品转客户单",
+   "link_to": "Finished Product Customer Transfer",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "成品退货处理单",
+   "link_to": "Finished Product Return",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "format": "{} 个成品",
+   "label": "成品物料档案",
+   "link_to": "Item",
+   "stats_filter": "[[\"Item\",\"item_group\",\"=\",\"成品\"]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "label": "成品库存查询",
+   "link_to": "Finished Product Stock",
+   "type": "Report"
+  },
+  {
+   "color": "Red",
+   "label": "成品退货库存查询",
+   "link_to": "Finished Product Return Stock",
+   "type": "Report"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "成品退货转胚布仓",
+   "link_to": "Finished Product Return to Grey Fabric",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "成品库存转胚布仓",
+   "link_to": "Finished Product to Grey Fabric",
+   "type": "DocType"
+  }
+ ],
  "title": "成品管理",
  "type": "Workspace"
 }

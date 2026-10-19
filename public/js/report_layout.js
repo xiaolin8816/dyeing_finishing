@@ -114,13 +114,23 @@
         render_rows(dialog, columns, state);
     }
 
-    window.dyeing_finishing_report_layout = { register({ report_name, filters = [], onload }) {
+    window.dyeing_finishing_report_layout = { register({ report_name, filters = [], onload, after_datatable_render, datatable_options = {} }) {
         let current_report;
         frappe.query_reports[report_name] = { filters, onload(report) {
             current_report = report;
+            $(report.page?.wrapper || []).addClass("dyeing-finishing-striped-report");
             if (onload) onload(report);
             frappe.call({ method: GET_LAYOUT_METHOD, args: { report_name } }).then((response) => { const result = response.message || {}; report._dyeing_finishing_report_layout = result.layout || { widths: {}, order: [], hidden: [], sticky: [] }; report._dyeing_finishing_can_set_global_layout = result.can_set_global; report.refresh(); });
             report.page.add_menu_item("列设置", () => show_layout_dialog(report, report_name, report._dyeing_finishing_can_set_global_layout));
-        }, get_datatable_options(options) { const layout = current_report?._dyeing_finishing_report_layout; if (layout) options.columns = ordered_columns(options.columns || [], layout); return options; }, after_datatable_render(datatable) { if (current_report) apply_layout(current_report, datatable); } };
+        }, get_datatable_options(options) {
+            Object.assign(options, datatable_options);
+            const layout = current_report?._dyeing_finishing_report_layout;
+            if (layout) options.columns = ordered_columns(options.columns || [], layout);
+            return options;
+        }, after_datatable_render(datatable) {
+            $(datatable?.wrapper || []).addClass("dyeing-finishing-striped-report");
+            if (current_report) apply_layout(current_report, datatable);
+            if (after_datatable_render && current_report) after_datatable_render(current_report, datatable);
+        } };
     }};
 })();

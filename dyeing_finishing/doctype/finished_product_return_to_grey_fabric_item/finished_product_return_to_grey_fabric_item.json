@@ -1,0 +1,15 @@
+{
+ "actions":[], "allow_rename":0, "creation":"2026-10-10 00:00:00.000000", "doctype":"DocType", "editable_grid":1, "engine":"InnoDB", "istable":1, "module":"dyeing_finishing", "name":"Finished Product Return to Grey Fabric Item", "owner":"Administrator",
+ "field_order":["piece_no","return_document","available_weight","available_yard_qty","transfer_weight","transfer_yard_qty","source_delivery","roll_no","return_item"],
+ "fields":[
+  {"fieldname":"piece_no","label":"匹号","fieldtype":"Int","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"return_document","label":"来源退货处理单","fieldtype":"Link","options":"Finished Product Return","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"available_weight","label":"可转重量(Kg)","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"available_yard_qty","label":"可转码数(Y)","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"transfer_weight","label":"转胚布重量(Kg)","fieldtype":"Float","precision":"3","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"transfer_yard_qty","label":"转胚布码数(Y)","fieldtype":"Float","precision":"3","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"source_delivery","label":"原成品出库单","fieldtype":"Link","options":"Finished Product Delivery","read_only":1},
+  {"fieldname":"roll_no","label":"成品卷号","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"return_item","label":"退货明细记录","fieldtype":"Data","hidden":1,"read_only":1,"no_copy":1}
+ ], "permissions":[]
+}

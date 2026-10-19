@@ -12,6 +12,7 @@ GENERATED_CHILD_SIDEBARS = (
 	"生产管理",
 	"染料管理",
 	"成品管理",
+	"系统管理",
 )
 
 

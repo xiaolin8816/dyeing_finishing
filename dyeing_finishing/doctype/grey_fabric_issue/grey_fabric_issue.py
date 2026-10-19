@@ -6,9 +6,7 @@ from frappe.model.document import Document
 from frappe.utils import flt, getdate, nowdate
 
 from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, ensure_flow_card_open, record_production_progress, remove_production_progress
-
-TARGET_WAREHOUSE = "生产中转仓 - 沅泰"
-
+from dyeing_finishing.dyeing_finishing.settings import get_setting
 
 class GreyFabricIssue(Document):
     def before_insert(self):
@@ -112,7 +110,7 @@ class GreyFabricIssue(Document):
                 frappe.throw(_("第 {0} 行批次 {1} 不属于当前客户或没有可用胚布库存").format(row.idx, row.batch_no))
             if plan.grey_fabric_name and detail.grey_fabric_name != plan.grey_fabric_name:
                 frappe.throw(_("第 {0} 行批次胚布名称与流转卡领用计划不一致").format(row.idx))
-            if plan.color and detail.color and detail.color.strip() != plan.color.strip():
+            if card.flow_card_type != "回修" and plan.color and detail.color and detail.color.strip() != plan.color.strip():
                 frappe.throw(_("第 {0} 行批次颜色与流转卡领用计划不一致").format(row.idx))
             set_row_details(row, plan, detail, self.flow_card, self.name)
             by_batch[row.batch_no]["rolls"] += flt(row.issue_roll_count)
@@ -139,9 +137,10 @@ class GreyFabricIssue(Document):
     def _create_stock_entry(self):
         if self.stock_entry:
             return
-        if not frappe.db.exists("Warehouse", TARGET_WAREHOUSE):
-            frappe.throw(_("未找到生产中转仓：{0}").format(TARGET_WAREHOUSE))
-        company = frappe.db.get_value("Warehouse", TARGET_WAREHOUSE, "company")
+        target_warehouse = get_setting("production_transit_warehouse")
+        if not frappe.db.exists("Warehouse", target_warehouse):
+            frappe.throw(_("未找到生产中转仓：{0}").format(target_warehouse))
+        company = frappe.db.get_value("Warehouse", target_warehouse, "company")
         stock_items = []
         for row in self.items:
             if not flt(row.issue_qty):
@@ -152,7 +151,7 @@ class GreyFabricIssue(Document):
                     "qty": flt(row.issue_qty),
                     "uom": frappe.db.get_value("Item", row.item_code, "stock_uom"),
                     "s_warehouse": row.location,
-                    "t_warehouse": TARGET_WAREHOUSE,
+                    "t_warehouse": target_warehouse,
                     "batch_no": row.batch_no,
                     "custom_roll_count": flt(row.issue_roll_count),
                     "custom_grey_fabric_issue": self.name,
@@ -163,7 +162,7 @@ class GreyFabricIssue(Document):
             )
         if not stock_items:
             frappe.throw(_("没有可生成库存转移的出库数量"))
-        entry = frappe.get_doc({"doctype":"Stock Entry","stock_entry_type":"Material Transfer","purpose":"Material Transfer","company":company,"posting_date":self.outbound_date,"to_warehouse":TARGET_WAREHOUSE,"remarks":_("胚布出库单：{0}；生产流转卡：{1}").format(self.name,self.flow_card),"items":stock_items})
+        entry = frappe.get_doc({"doctype":"Stock Entry","stock_entry_type":"Material Transfer","purpose":"Material Transfer","company":company,"posting_date":self.outbound_date,"to_warehouse":target_warehouse,"remarks":_("胚布出库单：{0}；生产流转卡：{1}").format(self.name,self.flow_card),"items":stock_items})
         entry.insert(ignore_permissions=True)
         entry.submit()
         self.db_set("stock_entry", entry.name, update_modified=False)
@@ -196,7 +195,8 @@ def get_batch_stock_details(batch_no, customer, location=None):
 
 def set_row_details(row, plan, detail, flow_card, exclude_name=None):
     total = get_issue_totals(flow_card, plan.name, exclude_name)
-    row.item_code, row.grey_fabric_name, row.specification, row.color = detail.item_code, detail.grey_fabric_name, detail.specification, detail.color
+    row.item_code, row.grey_fabric_name, row.specification = detail.item_code, detail.grey_fabric_name, detail.specification
+    row.color = plan.color or detail.color
     row.stock_roll_count, row.stock_qty = detail.stock_roll_count, detail.stock_qty
     row.planned_roll_count, row.planned_qty = plan.planned_roll_count, plan.planned_qty
     row.issued_roll_count, row.issued_qty = total.rolls, total.qty
@@ -218,7 +218,7 @@ def get_flow_card_details(flow_card):
             continue
         total = get_issue_totals(card.name, plan.name)
         remaining_rolls, remaining_qty = max(flt(plan.planned_roll_count)-total.rolls,0), max(flt(plan.planned_qty)-total.qty,0)
-        result["items"].append({"flow_card_grey_fabric_issue":plan.name,"source_type":"自动带出","batch_no":plan.batch_no,"item_code":detail.item_code,"grey_fabric_name":detail.grey_fabric_name,"specification":detail.specification,"color":detail.color,"stock_roll_count":detail.stock_roll_count,"stock_qty":detail.stock_qty,"planned_roll_count":plan.planned_roll_count,"planned_qty":plan.planned_qty,"issued_roll_count":total.rolls,"issued_qty":total.qty,"issue_roll_count":min(remaining_rolls,flt(detail.stock_roll_count)),"issue_qty":min(remaining_qty,flt(detail.stock_qty)),"warehouse":detail.warehouse,"location":detail.location,"shortage_roll_count":max(remaining_rolls-flt(detail.stock_roll_count),0),"shortage_qty":max(remaining_qty-flt(detail.stock_qty),0)})
+        result["items"].append({"flow_card_grey_fabric_issue":plan.name,"source_type":"自动带出","batch_no":plan.batch_no,"item_code":detail.item_code,"grey_fabric_name":detail.grey_fabric_name,"specification":detail.specification,"color":plan.color or detail.color,"stock_roll_count":detail.stock_roll_count,"stock_qty":detail.stock_qty,"planned_roll_count":plan.planned_roll_count,"planned_qty":plan.planned_qty,"issued_roll_count":total.rolls,"issued_qty":total.qty,"issue_roll_count":min(remaining_rolls,flt(detail.stock_roll_count)),"issue_qty":min(remaining_qty,flt(detail.stock_qty)),"warehouse":detail.warehouse,"location":detail.location,"shortage_roll_count":max(remaining_rolls-flt(detail.stock_roll_count),0),"shortage_qty":max(remaining_qty-flt(detail.stock_qty),0)})
     return result
 
 
@@ -237,7 +237,7 @@ def get_available_grey_fabric_batches(doctype, txt, searchfield, start, page_len
     card = frappe.get_doc("Production Flow Card", filters.get("flow_card"))
     plan = next((row for row in card.get("grey_fabric_issues") or [] if row.name == filters.get("source_row")), None)
     rows = _batch_stock_query(card.customer, "来料加工", location=plan.location if plan else None)
-    return [(row.batch_no,row.grey_fabric_name,row.color,row.location) for row in rows if (not plan or not plan.grey_fabric_name or row.grey_fabric_name == plan.grey_fabric_name) and (not plan or not plan.color or not row.color or row.color.strip() == plan.color.strip()) and row.batch_no not in excluded_batches and txt.lower() in row.batch_no.lower()][start:start+page_len]
+    return [(row.batch_no,row.grey_fabric_name,row.color,row.location) for row in rows if (not plan or not plan.grey_fabric_name or row.grey_fabric_name == plan.grey_fabric_name) and (card.flow_card_type == "回修" or not plan or not plan.color or not row.color or row.color.strip() == plan.color.strip()) and row.batch_no not in excluded_batches and txt.lower() in row.batch_no.lower()][start:start+page_len]
 
 
 @frappe.whitelist()

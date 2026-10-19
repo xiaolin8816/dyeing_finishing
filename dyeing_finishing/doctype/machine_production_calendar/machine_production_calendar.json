@@ -1,0 +1,34 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:TW-{YY}{MM}{DD}-{###}",
+ "creation": "2026-10-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "details_section", "maintenance_no", "column_2", "production_resource", "column_3", "calendar_type",
+  "time_section", "start_datetime", "time_col_2", "end_datetime", "time_col_3", "production_shift",
+  "reason_section", "reason", "remarks_section", "remarks"
+ ],
+ "fields": [
+  {"fieldname":"details_section","label":"设备停机记录","fieldtype":"Section Break"},
+  {"fieldname":"maintenance_no","label":"停机维护编号","fieldtype":"Data","read_only":1,"in_list_view":1},
+  {"fieldname":"column_2","fieldtype":"Column Break"},
+  {"fieldname":"production_resource","label":"生产机台","fieldtype":"Link","options":"Production Resource","reqd":1,"in_list_view":1},
+  {"fieldname":"column_3","fieldtype":"Column Break"},
+  {"fieldname":"calendar_type","label":"停机类型","fieldtype":"Select","options":"计划停机\n设备故障\n设备维修\n保养清洗\n临时停机","default":"计划停机","reqd":1,"in_list_view":1},
+  {"fieldname":"time_section","label":"停机时间","fieldtype":"Section Break"},
+  {"fieldname":"start_datetime","label":"停机开始时间","fieldtype":"Datetime","reqd":1,"in_list_view":1},
+  {"fieldname":"time_col_2","fieldtype":"Column Break"},
+  {"fieldname":"end_datetime","label":"预计恢复时间","fieldtype":"Datetime","reqd":1,"in_list_view":1},
+  {"fieldname":"time_col_3","fieldtype":"Column Break"},
+  {"fieldname":"production_shift","label":"影响班次","fieldtype":"Link","options":"Production Shift"},
+  {"fieldname":"reason_section","label":"停机说明","fieldtype":"Section Break"},
+  {"fieldname":"reason","label":"停机或维护原因","fieldtype":"Data"},
+  {"fieldname":"remarks_section","label":"备注","fieldtype":"Section Break"},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],
+ "modified":"2026-10-13 00:00:00.000000","modified_by":"Administrator","module":"dyeing_finishing","name":"Machine Production Calendar","owner":"Administrator",
+ "permissions":[{"role":"System Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1},{"role":"Manufacturing Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1}],
+ "sort_field":"start_datetime","sort_order":"DESC","title_field":"maintenance_no","track_changes":1
+}

@@ -8,9 +8,7 @@ from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_f
     ensure_flow_card_open,
     record_production_progress,
 )
-
-
-DYE_WAREHOUSE = "染料仓库 - 沅泰"
+from dyeing_finishing.dyeing_finishing.settings import get_setting
 
 
 class SiteDyeingMaterialIssue(Document):
@@ -48,7 +46,7 @@ class SiteDyeingMaterialIssue(Document):
             self.name,
             quantity=self.total_issue_qty_kg,
             uom="kg",
-            dyeing_machine=self.dyeing_machine,
+            production_resource=self.production_resource,
             description=_("现场染色领料单：{0}；本次领料 {1} kg").format(self.name, self.total_issue_qty_kg),
         )
 
@@ -69,7 +67,7 @@ class SiteDyeingMaterialIssue(Document):
             self.name,
             quantity=self.total_issue_qty_kg,
             uom="kg",
-            dyeing_machine=self.dyeing_machine,
+            production_resource=self.production_resource,
             description=_("现场染色领料单已撤销：{0}").format(self.name),
         )
 
@@ -86,8 +84,8 @@ class SiteDyeingMaterialIssue(Document):
         self.color_no = sheet.color_no
         self.color = sheet.color
         self.finished_product_name = sheet.finished_product_name
-        self.dyeing_machine = sheet.dyeing_machine
-        self.source_warehouse = self.source_warehouse or DYE_WAREHOUSE
+        self.production_resource = sheet.production_resource
+        self.source_warehouse = self.source_warehouse or get_setting("dye_material_warehouse")
 
     def _set_item_details(self):
         if not frappe.db.exists("Warehouse", self.source_warehouse):
@@ -179,8 +177,9 @@ def get_material_sheet_details(material_sheet):
     sheet.check_permission("read")
     if sheet.docstatus != 1:
         frappe.throw(_("现场染色料单必须已提交"))
-    data = {field: sheet.get(field) for field in ("production_flow_card", "sales_order", "customer_name", "color_no", "color", "finished_product_name", "dyeing_machine")}
-    data["source_warehouse"] = DYE_WAREHOUSE
+    data = {field: sheet.get(field) for field in ("production_flow_card", "sales_order", "customer_name", "color_no", "color", "finished_product_name", "production_resource")}
+    dye_warehouse = get_setting("dye_material_warehouse")
+    data["source_warehouse"] = dye_warehouse
     data["items"] = []
     for row in sheet.items:
         issued = get_issued_qty(row.name)
@@ -188,7 +187,7 @@ def get_material_sheet_details(material_sheet):
         if remaining <= 0:
             continue
         item = frappe.get_doc("Item", row.item_code)
-        data["items"].append({"material_sheet_item": row.name, "item_code": row.item_code, "item_name": row.item_name, "material_category": row.material_category, "planned_qty_g": row.actual_qty, "issued_qty_g": issued, "issue_qty_g": remaining, "issue_qty_kg": flt(remaining / 1000, 6), "stock_qty_kg": flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": DYE_WAREHOUSE}, "actual_qty") or 0), "stock_uom": item.stock_uom, "issue_status": _issue_status(row.actual_qty, issued)})
+        data["items"].append({"material_sheet_item": row.name, "item_code": row.item_code, "item_name": row.item_name, "material_category": row.material_category, "planned_qty_g": row.actual_qty, "issued_qty_g": issued, "issue_qty_g": remaining, "issue_qty_kg": flt(remaining / 1000, 6), "stock_qty_kg": flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": dye_warehouse}, "actual_qty") or 0), "stock_uom": item.stock_uom, "issue_status": _issue_status(row.actual_qty, issued)})
     return data
 
 @frappe.whitelist()

@@ -24,7 +24,7 @@
   "document_row_2_column_3",
   "customer_name",
   "document_row_2_column_4",
-  "dyeing_machine",
+  "production_resource",
   "document_row_3",
   "color_no",
   "document_row_3_column_2",
@@ -102,9 +102,9 @@
   },
   {
    "fieldname": "sales_order",
-   "label": "销售订单",
+   "label": "染整销售订单",
    "fieldtype": "Link",
-   "options": "Sales Order",
+   "options": "Dyeing Sales Order",
    "read_only": 1
   },
   {
@@ -133,10 +133,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "dyeing_machine",
-   "label": "染色机台",
+   "fieldname": "production_resource",
+   "label": "生产机台",
    "fieldtype": "Link",
-   "options": "Dyeing Machine",
+   "options": "Production Resource",
    "read_only": 1
   },
   {

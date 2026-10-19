@@ -17,10 +17,32 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "胚布收发与库存",
-   "link_count": 4,
+   "link_count": 6,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "胚布过户单",
+   "link_count": 0,
+   "link_to": "Grey Fabric Customer Transfer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "客户胚布退货单",
+   "link_count": 0,
+   "link_to": "Customer Grey Fabric Return",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "dependencies": "",

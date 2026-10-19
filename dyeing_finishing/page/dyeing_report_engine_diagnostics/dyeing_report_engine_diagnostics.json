@@ -1,0 +1,20 @@
+{
+ "content": null,
+ "creation": "2026-10-19 00:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Page",
+ "icon": "diagnostic",
+ "idx": 0,
+ "modified": "2026-10-19 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "dyeing-report-engine-diagnostics",
+ "owner": "Administrator",
+ "page_name": "dyeing-report-engine-diagnostics",
+ "roles": [{"role": "System Manager"}],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "报表引擎诊断"
+}

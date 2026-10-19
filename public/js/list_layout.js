@@ -8,7 +8,13 @@
     const MAX_WIDTH = 600;
     const ROOT_WORKSPACE = "印染整理";
     const SHARED_ROUTE_CONTEXT_KEY = "dyeing_finishing.shared_route_owner";
-    const SUPPORTED_DOCTYPES = new Set(["Production Flow Card", "Dye Material Other Issue", "Item"]);
+    const SUPPORTED_DOCTYPES = new Set([
+        "Process Requirement", "Packaging Requirement", "Production Operation", "Process Parameter Template",
+        "Production Work Center", "Production Resource", "Grey Fabric Master", "Item Group", "Color Master", "Laboratory Recipe",
+        "Customer Grey Fabric Receipt", "Grey Fabric Issue", "Grey Fabric Customer Transfer", "Customer Grey Fabric Return", "Dyeing Sales Order", "Production Flow Card", "Production Operation Report", "Employee Operation Permission", "Production Shift", "Machine Production Calendar", "Dyeing Production Schedule",
+        "Site Dyeing Material Sheet", "Site Dyeing Material Issue", "Dye Material Other Issue",
+        "Dye Material Return", "Finished Product Packing Receipt", "Finished Product Delivery", "Finished Product Customer Transfer", "Finished Product Return", "Finished Product Return to Grey Fabric", "Finished Product to Grey Fabric", "Finished Product Blank Label", "Item", "Company", "Customer", "Supplier", "Employee", "UOM", "Purchase Receipt",
+    ]);
     const FIELD_LABELS = {
         "Item Name": "物料名称",
         "Item Group": "物料组",
@@ -16,21 +22,52 @@
         "Item Type": "条目类型",
     };
 
-    function is_dyeing_material_item_list(listview) {
+    function item_list_profile(listview) {
         if (listview.doctype !== "Item") return false;
         const item_group_filter = new URLSearchParams(window.location.search).get("item_group") || "";
-        return frappe.app?.sidebar?.sidebar_title === ROOT_WORKSPACE
-            || window.sessionStorage.getItem(SHARED_ROUTE_CONTEXT_KEY) === "item"
-            || (item_group_filter.includes("染料") && item_group_filter.includes("助剂"));
+        if (item_group_filter.includes("成品")) return "Finished Product Item";
+        if (item_group_filter.includes("染料") && item_group_filter.includes("助剂")) return "Dyeing Material Item";
+        if (frappe.app?.sidebar?.sidebar_title !== ROOT_WORKSPACE
+            && window.sessionStorage.getItem(SHARED_ROUTE_CONTEXT_KEY) !== "item") return null;
+        return window.sessionStorage.getItem("dyeing_finishing.item_profile") === "finished_product"
+            ? "Finished Product Item"
+            : "Dyeing Material Item";
     }
 
     function layout_profile(listview) {
         if (listview.doctype === "Item") {
-            return is_dyeing_material_item_list(listview)
-                ? "Dyeing Material Item"
-                : null;
+            return item_list_profile(listview);
+        }
+        if (listview.doctype === "Item Group") {
+            const entered_from_dyeing = frappe.app?.sidebar?.sidebar_title === ROOT_WORKSPACE
+                || window.sessionStorage.getItem(SHARED_ROUTE_CONTEXT_KEY) === "item group";
+            return entered_from_dyeing ? "Dyeing Item Group" : null;
+        }
+        if (listview.doctype === "Company") {
+            const entered_from_dyeing = frappe.app?.sidebar?.sidebar_title === ROOT_WORKSPACE
+                || window.sessionStorage.getItem(SHARED_ROUTE_CONTEXT_KEY) === "company";
+            return entered_from_dyeing ? "Dyeing Company" : null;
+        }
+        const shared_profiles = {
+            "Customer": "Dyeing Customer",
+            "Supplier": "Dyeing Supplier",
+            "Employee": "Dyeing Employee",
+            "UOM": "Dyeing UOM",
+            "Purchase Receipt": "Dyeing Purchase Receipt",
+        };
+        if (shared_profiles[listview.doctype]) {
+            const target = listview.doctype.toLowerCase();
+            const entered_from_dyeing = frappe.app?.sidebar?.sidebar_title === ROOT_WORKSPACE
+                || window.sessionStorage.getItem(SHARED_ROUTE_CONTEXT_KEY) === target;
+            return entered_from_dyeing ? shared_profiles[listview.doctype] : null;
         }
         return SUPPORTED_DOCTYPES.has(listview.doctype) ? listview.doctype : null;
+    }
+
+    function mark_dyeing_list(listview, enabled) {
+        const $wrapper = $(listview.page?.wrapper || listview.$page || []);
+        $wrapper.toggleClass("dyeing-finishing-striped-list", Boolean(enabled));
+        listview.$result?.toggleClass("dyeing-finishing-striped-list", Boolean(enabled));
     }
 
     const fieldname_of = (column) => column.type === "Status" ? "__status" : column.df?.fieldname;
@@ -102,7 +139,7 @@
             const $columns = elements_for(listview, fieldname);
             const width = $columns.filter(".list-row:not(.list-row-head) .list-row-col").first().outerWidth();
             if (!width) return;
-            $columns.css({ position: "sticky", left: `${left}px`, zIndex: 2, background: "var(--card-bg, #fff)" });
+            $columns.css({ position: "sticky", left: `${left}px`, zIndex: 2, background: "inherit" });
             listview.$result.find(".list-row-head .list-row-col").filter((_, element) => $(element).is($columns)).css({ zIndex: 3, background: "var(--card-bg, #fff)" });
             left += width;
         });
@@ -187,7 +224,11 @@
         const order = [...columns].sort((left, right) => (positions.has(left.fieldname) ? positions.get(left.fieldname) : 10000) - (positions.has(right.fieldname) ? positions.get(right.fieldname) : 10000)).map((column) => column.fieldname);
         const hidden = new Set(layout.hidden || []);
         const state = { visible: order.filter((fieldname) => !hidden.has(fieldname)), widths: { ...(layout.widths || {}) }, sticky: new Set(layout.sticky || []) };
-        const dialog_title = profile === "Dyeing Material Item" ? "染化料物料档案 · 统一列表设置" : "列设置";
+        const dialog_title = profile === "Dyeing Material Item"
+            ? "染料物料档案 · 统一列表设置"
+            : profile === "Finished Product Item"
+                ? "成品物料档案 · 统一列表设置"
+                : "列设置";
         const dialog = new frappe.ui.Dialog({ title: dialog_title, fields: [{ fieldname: "columns_html", fieldtype: "HTML" }, ...(can_set_global ? [{ label: "设为全员默认布局", fieldname: "apply_to_all", fieldtype: "Check", default: 1, description: "勾选后，未设置个人布局的用户将使用此布局。" }] : [])], primary_action_label: "保存", primary_action(values) {
             const next_layout = { widths: state.widths, order: state.visible, hidden: columns.map((column) => column.fieldname).filter((fieldname) => !state.visible.includes(fieldname)), sticky: [...state.sticky] };
             const method = values.apply_to_all ? SET_GLOBAL_LAYOUT_METHOD : SET_MY_LAYOUT_METHOD;
@@ -214,18 +255,21 @@
 
     function setup_list_layout(doctype) {
         const existing = frappe.listview_settings[doctype] || {};
-        frappe.listview_settings[doctype] = {
+        if (existing.__dyeing_finishing_list_layout_wrapper) return;
+        const wrapped = {
             ...existing,
             onload(listview) {
                 install_list_settings_override();
                 if (existing.onload) existing.onload(listview);
                 const profile = layout_profile(listview);
+                mark_dyeing_list(listview, profile);
                 if (!profile) return;
                 load_layout(listview, profile);
             },
             refresh(listview) {
                 if (existing.refresh) existing.refresh(listview);
                 const profile = layout_profile(listview);
+                mark_dyeing_list(listview, profile);
                 if (!profile) {
                     if (listview.__dyeing_finishing_list_layout_profile) reset_layout(listview);
                     return;
@@ -237,9 +281,30 @@
                 window.setTimeout(() => apply_layout(listview), 0);
             },
         };
+        // DocType list scripts are evaluated while metadata is fetched and may
+        // replace settings registered earlier by app_include_js.  The marker
+        // lets setup_defaults re-install this wrapper only when that happened.
+        Object.defineProperty(wrapped, "__dyeing_finishing_list_layout_wrapper", {
+            value: true,
+            enumerable: false,
+        });
+        frappe.listview_settings[doctype] = wrapped;
     }
 
     SUPPORTED_DOCTYPES.forEach(setup_list_layout);
+
+    // fetch_meta() runs before setup_defaults().  Re-wrap here so a DocType's
+    // own list script or a database Client Script cannot overwrite the unified
+    // settings between the application bundle loading and list construction.
+    const UnifiedListView = frappe.views?.ListView;
+    if (UnifiedListView && !UnifiedListView.prototype.__dyeing_finishing_setup_defaults_override) {
+        const original_setup_defaults = UnifiedListView.prototype.setup_defaults;
+        UnifiedListView.prototype.setup_defaults = function() {
+            if (SUPPORTED_DOCTYPES.has(this.doctype)) setup_list_layout(this.doctype);
+            return original_setup_defaults.apply(this, arguments);
+        };
+        UnifiedListView.prototype.__dyeing_finishing_setup_defaults_override = true;
+    }
 
     function install_list_settings_override() {
         const ListView = frappe.views?.ListView;

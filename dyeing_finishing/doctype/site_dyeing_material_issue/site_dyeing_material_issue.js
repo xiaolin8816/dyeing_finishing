@@ -34,7 +34,7 @@ frappe.ui.form.on("Site Dyeing Material Issue", {
 			freeze_message: "正在带出料单明细…",
 			callback: ({ message }) => {
 				if (!message) return;
-				["production_flow_card", "sales_order", "customer_name", "color_no", "color", "finished_product_name", "dyeing_machine", "source_warehouse"].forEach(field => frm.set_value(field, message[field] || ""));
+				["production_flow_card", "sales_order", "customer_name", "color_no", "color", "finished_product_name", "production_resource", "source_warehouse"].forEach(field => frm.set_value(field, message[field] || ""));
 				frm.clear_table("items");
 				(message.items || []).forEach(item => {
 					const row = frm.add_child("items");

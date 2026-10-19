@@ -1,7 +1,7 @@
 {
  "app": "dyeing_finishing",
  "charts": [],
- "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>印染整理</b></span>\",\"col\":12}},{\"id\":\"dyeing-navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>功能导航</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"印染基础资料\",\"col\":4}},{\"id\":\"dyeing-recipe-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"配方与工艺\",\"col\":4}},{\"id\":\"grey-fabric-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"胚布管理\",\"col\":4}},{\"id\":\"production-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"生产管理\",\"col\":4}},{\"id\":\"dye-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"染料管理\",\"col\":4}},{\"id\":\"finished-goods-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成品管理\",\"col\":4}}]",
+ "content": "[{\"id\":\"dyeing-finishing-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u5370\u67d3\u6574\u7406</b></span>\",\"col\":12}},{\"id\":\"dyeing-navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u529f\u80fd\u5bfc\u822a</b></span>\",\"col\":12}},{\"id\":\"dyeing-master-data-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u57fa\u7840\u8d44\u6599\",\"col\":4}},{\"id\":\"dyeing-recipe-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u914d\u65b9\u4e0e\u5de5\u827a\",\"col\":4}},{\"id\":\"grey-fabric-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u80da\u5e03\u7ba1\u7406\",\"col\":4}},{\"id\":\"production-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u751f\u4ea7\u7ba1\u7406\",\"col\":4}},{\"id\":\"dye-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u67d3\u6599\u7ba1\u7406\",\"col\":4}},{\"id\":\"finished-goods-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u6210\u54c1\u7ba1\u7406\",\"col\":4}},{\"id\":\"system-management-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u7cfb\u7edf\u7ba1\u7406\",\"col\":4}}]",
  "creation": "2026-09-28 19:18:12.916039",
  "custom_blocks": [],
  "docstatus": 0,
@@ -11,12 +11,12 @@
  "icon": "dye",
  "idx": 0,
  "is_hidden": 0,
- "label": "印染整理",
+ "label": "\u5370\u67d3\u6574\u7406",
  "links": [],
- "modified": "2026-10-04 00:00:00.000000",
+ "modified": "2026-10-17 08:45:34.868887",
  "modified_by": "Administrator",
  "module": "dyeing_finishing",
- "name": "印染整理",
+ "name": "\u5370\u67d3\u6574\u7406",
  "number_cards": [],
  "owner": "Administrator",
  "public": 1,
@@ -26,41 +26,54 @@
  "shortcuts": [
   {
    "color": "Grey",
-   "label": "印染基础资料",
+   "doc_view": "",
+   "label": "\u57fa\u7840\u8d44\u6599",
    "type": "URL",
-   "url": "/desk/印染基础资料"
+   "url": "/desk/\u5370\u67d3\u57fa\u7840\u8d44\u6599"
   },
   {
    "color": "Grey",
-   "label": "配方与工艺",
+   "doc_view": "",
+   "label": "\u914d\u65b9\u4e0e\u5de5\u827a",
    "type": "URL",
-   "url": "/desk/配方与工艺"
+   "url": "/desk/\u914d\u65b9\u4e0e\u5de5\u827a"
   },
   {
    "color": "Grey",
-   "label": "胚布管理",
+   "doc_view": "",
+   "label": "\u80da\u5e03\u7ba1\u7406",
    "type": "URL",
-   "url": "/desk/胚布管理"
+   "url": "/desk/\u80da\u5e03\u7ba1\u7406"
   },
   {
    "color": "Grey",
-   "label": "生产管理",
+   "doc_view": "",
+   "label": "\u751f\u4ea7\u7ba1\u7406",
    "type": "URL",
-   "url": "/desk/生产管理"
+   "url": "/desk/\u751f\u4ea7\u7ba1\u7406"
   },
   {
    "color": "Grey",
-   "label": "染料管理",
+   "doc_view": "",
+   "label": "\u67d3\u6599\u7ba1\u7406",
    "type": "URL",
-   "url": "/desk/染料管理"
+   "url": "/desk/\u67d3\u6599\u7ba1\u7406"
   },
   {
    "color": "Grey",
-   "label": "成品管理",
+   "doc_view": "",
+   "label": "\u6210\u54c1\u7ba1\u7406",
    "type": "URL",
-   "url": "/desk/成品管理"
+   "url": "/desk/\u6210\u54c1\u7ba1\u7406"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "",
+   "label": "\u7cfb\u7edf\u7ba1\u7406",
+   "type": "URL",
+   "url": "/desk/\u7cfb\u7edf\u7ba1\u7406"
   }
  ],
- "title": "印染整理",
+ "title": "\u5370\u67d3\u6574\u7406",
  "type": "Workspace"
 }

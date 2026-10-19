@@ -5,3 +5,136 @@
     z-index: 3;
     background: var(--subtle-fg);
 }
+
+/* 印染整理列表与查询报表：淡蓝交替行，便于横向阅读。 */
+:root {
+    --dyeing-row-alt-bg: var(--bg-color, #ffffff);
+    --dyeing-row-hover-bg: #eef6ff;
+    --dyeing-row-selected-bg: #dbeafe;
+}
+
+[data-theme="dark"] {
+    --dyeing-row-alt-bg: var(--bg-color, #111827);
+    --dyeing-row-hover-bg: #20364e;
+    --dyeing-row-selected-bg: #294766;
+}
+
+.frappe-list .result.dyeing-finishing-striped-list > .list-row-container:nth-child(even) > .list-row:not(.list-row-head),
+.dyeing-finishing-striped-list .frappe-list .result > .list-row-container:nth-child(even) > .list-row:not(.list-row-head) {
+    background-color: var(--dyeing-row-alt-bg);
+}
+
+.frappe-list .result.dyeing-finishing-striped-list > .list-row-container > .list-row:not(.list-row-head):hover,
+.dyeing-finishing-striped-list .frappe-list .result > .list-row-container > .list-row:not(.list-row-head):hover {
+    background-color: var(--dyeing-row-hover-bg);
+}
+
+.frappe-list .result.dyeing-finishing-striped-list > .list-row-container > .list-row:not(.list-row-head).checked,
+.frappe-list .result.dyeing-finishing-striped-list > .list-row-container.list-row--selected > .list-row,
+.dyeing-finishing-striped-list .frappe-list .result > .list-row-container > .list-row:not(.list-row-head).checked,
+.dyeing-finishing-striped-list .frappe-list .result > .list-row-container.list-row--selected > .list-row {
+    background-color: var(--dyeing-row-selected-bg);
+}
+
+.dyeing-finishing-striped-report .dt-scrollable .dt-row:not(.dt-row-header):nth-child(even) .dt-cell {
+    background-color: var(--dyeing-row-alt-bg);
+}
+
+.dyeing-finishing-striped-report .dt-scrollable .dt-row:not(.dt-row-header):hover .dt-cell {
+    background-color: var(--dyeing-row-hover-bg);
+}
+
+.dyeing-finishing-striped-report .dt-scrollable .dt-row.dt-row--highlight .dt-cell,
+.dyeing-finishing-striped-report .dt-scrollable .dt-cell--highlight {
+    background-color: var(--dyeing-row-selected-bg);
+}
+
+/* 页面级兜底：兼容列表脚本延迟加载、列表重新渲染及右侧固定区域。 */
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:nth-child(even),
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:nth-child(even) > .list-row,
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:nth-child(even) > .list-row > .level-left,
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:nth-child(even) > .list-row > .level-right {
+    background-color: var(--dyeing-row-alt-bg) !important;
+}
+
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:not(:first-child) > .list-row > .level-right {
+    background-color: inherit;
+}
+
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:not(:first-child):hover,
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:not(:first-child):hover > .list-row,
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:not(:first-child):hover > .list-row > .level-right {
+    background-color: var(--dyeing-row-hover-bg) !important;
+}
+
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:focus,
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:focus > .list-row,
+body.dyeing-finishing-ui .frappe-list .result > .list-row-container:focus > .list-row > .level-right {
+    background-color: var(--dyeing-row-selected-bg) !important;
+}
+
+body.dyeing-finishing-ui .dt-scrollable .dt-row:not(.dt-row-header):nth-child(even) .dt-cell {
+    background-color: var(--dyeing-row-alt-bg);
+}
+
+body.dyeing-finishing-ui .dt-scrollable .dt-row:not(.dt-row-header):hover .dt-cell {
+    background-color: var(--dyeing-row-hover-bg);
+}
+
+/* 印染整理列表文字：提高淡蓝背景上的可读性。 */
+body.dyeing-finishing-ui .frappe-list .list-row-head,
+body.dyeing-finishing-ui .dt-header .dt-cell__content {
+    color: #475569;
+    font-weight: 600;
+}
+
+body.dyeing-finishing-ui .frappe-list .list-row-head,
+body.dyeing-finishing-ui .dt-header .dt-cell {
+    background-color: #f8fafc;
+}
+
+body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head),
+body.dyeing-finishing-ui .dt-scrollable .dt-cell__content {
+    color: #374151;
+}
+
+body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head) a:not(.indicator-pill),
+body.dyeing-finishing-ui .dt-scrollable .dt-cell__content a:not(.indicator-pill) {
+    color: #1f2937;
+}
+
+body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head) a:not(.indicator-pill):hover,
+body.dyeing-finishing-ui .dt-scrollable .dt-cell__content a:not(.indicator-pill):hover {
+    color: #2563eb;
+}
+
+body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head) .list-subject a,
+body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head) .list-subject .ellipsis {
+    color: #1f2937;
+    font-weight: 500;
+}
+
+body.dyeing-finishing-ui .frappe-list .text-muted:not(.indicator-pill),
+body.dyeing-finishing-ui .dt-scrollable .text-muted:not(.indicator-pill) {
+    color: #64748b !important;
+}
+
+[data-theme="dark"] body.dyeing-finishing-ui .frappe-list .list-row-head,
+[data-theme="dark"] body.dyeing-finishing-ui .dt-header .dt-cell__content {
+    color: #dbeafe;
+}
+
+[data-theme="dark"] body.dyeing-finishing-ui .frappe-list .list-row-head,
+[data-theme="dark"] body.dyeing-finishing-ui .dt-header .dt-cell {
+    background-color: #172033;
+}
+
+[data-theme="dark"] body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head),
+[data-theme="dark"] body.dyeing-finishing-ui .dt-scrollable .dt-cell__content {
+    color: #e5e7eb;
+}
+
+[data-theme="dark"] body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head) .list-subject a,
+[data-theme="dark"] body.dyeing-finishing-ui .frappe-list .list-row:not(.list-row-head) .list-subject .ellipsis {
+    color: #f3f4f6;
+}

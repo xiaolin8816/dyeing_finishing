@@ -1,5 +1,6 @@
 const DYEING_RECEIPT_TYPE = "染料/助剂入库";
-const DYEING_WAREHOUSE = "染料仓库 - 沅泰";
+const SHARED_ROUTE_CONTEXT_KEY = "dyeing_finishing.shared_route_owner";
+const DYEING_WAREHOUSE = frappe.boot.dyeing_system_settings?.dye_material_warehouse || "染料仓库 - 沅泰";
 const dyeingReceiptMethod = "dyeing_finishing.dyeing_finishing.purchase_receipt.get_dyeing_material_items";
 const dyeingReceiptHiddenFields = [
     "section_break_42",
@@ -72,6 +73,12 @@ function isDyeingReceipt(frm) {
     return frm.doc.custom_dyeing_receipt_type === DYEING_RECEIPT_TYPE;
 }
 
+function rememberDyeingReceiptEntry(frm) {
+    if (isDyeingReceipt(frm)) {
+        window.sessionStorage.setItem(SHARED_ROUTE_CONTEXT_KEY, "purchase receipt");
+    }
+}
+
 function toggleDyeingReceiptType(frm) {
     frm.toggle_display("custom_dyeing_receipt_type", isDyeingReceipt(frm));
 }
@@ -84,8 +91,8 @@ function toggleDyeingReceiptAdditionalFields(frm) {
 function setPurchaseReceiptTitle(frm) {
     const title = isDyeingReceipt(frm)
         ? frm.is_new()
-            ? __("新建染料入库")
-            : __("染料入库")
+            ? __("新建染料采购入库单")
+            : __("染料采购入库单")
         : __("采购收货单");
     frm.page.set_title(title);
     frm.page.set_title_sub(frm.is_new() ? "" : frm.doc.name);
@@ -117,9 +124,11 @@ function setDyeingReceiptQuery(frm) {
 
 frappe.ui.form.on("Purchase Receipt", {
     setup(frm) {
+        rememberDyeingReceiptEntry(frm);
         setDyeingReceiptQuery(frm);
     },
     refresh(frm) {
+        rememberDyeingReceiptEntry(frm);
         setDyeingReceiptQuery(frm);
         toggleDyeingReceiptType(frm);
         toggleDyeingReceiptAdditionalFields(frm);
@@ -127,6 +136,7 @@ frappe.ui.form.on("Purchase Receipt", {
         setDyeingReceiptWarehouseDefaults(frm);
     },
     custom_dyeing_receipt_type(frm) {
+        rememberDyeingReceiptEntry(frm);
         setDyeingReceiptQuery(frm);
         toggleDyeingReceiptType(frm);
         toggleDyeingReceiptAdditionalFields(frm);

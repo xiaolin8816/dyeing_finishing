@@ -1,7 +1,7 @@
 dyeing_finishing_report_layout.register({
     report_name: "Dye Material Stock",
     filters: [
-        { fieldname: "warehouse", label: "仓库", fieldtype: "Link", options: "Warehouse", default: "染料仓库 - 沅泰", reqd: 1 },
+        { fieldname: "warehouse", label: "仓库", fieldtype: "Link", options: "Warehouse", default: frappe.boot.dyeing_system_settings?.dye_material_warehouse || "染料仓库 - 沅泰", reqd: 1 },
         { fieldname: "material_category", label: "类别", fieldtype: "Select", options: "\n染料\n助剂" },
         { fieldname: "item_code", label: "物料编码", fieldtype: "Link", options: "Item" },
         { fieldname: "include_zero_stock", label: "显示零库存", fieldtype: "Check", default: 0 },

@@ -2,12 +2,9 @@ import frappe
 from frappe import _
 from frappe.model.naming import make_autoname
 from frappe.utils import getdate, nowdate
+from dyeing_finishing.dyeing_finishing.settings import get_dye_material_groups, get_setting
 
 DYEING_RECEIPT_TYPE = "染料/助剂入库"
-DYEING_MATERIAL_GROUPS = ("染料", "助剂")
-DYEING_WAREHOUSE = "染料仓库 - 沅泰"
-
-
 def _get_dyeing_material_category(item_code):
     item_group = frappe.db.get_value("Item", item_code, "item_group")
     if not item_group:
@@ -23,7 +20,7 @@ def _get_dyeing_material_category(item_code):
         WHERE item_group.name = %(item_group)s
         LIMIT 1
         """,
-        {"groups": DYEING_MATERIAL_GROUPS, "item_group": item_group},
+        {"groups": get_dye_material_groups(), "item_group": item_group},
     )
     return category[0][0] if category else ""
 
@@ -39,7 +36,8 @@ def autoname(doc, method=None):
 def validate(doc, method=None):
     if doc.get("custom_dyeing_receipt_type") != DYEING_RECEIPT_TYPE:
         return
-    doc.set_warehouse = doc.set_warehouse or DYEING_WAREHOUSE
+    dye_warehouse = get_setting("dye_material_warehouse")
+    doc.set_warehouse = doc.set_warehouse or dye_warehouse
     for row in doc.get("items") or []:
         category = _get_dyeing_material_category(row.item_code)
         if not category:
@@ -48,7 +46,7 @@ def validate(doc, method=None):
         row.custom_dyeing_packaging_specification = (
             frappe.db.get_value("Item", row.item_code, "custom_dyeing_packing_specification") or ""
         )
-        row.warehouse = row.warehouse or DYEING_WAREHOUSE
+        row.warehouse = row.warehouse or dye_warehouse
 
 
 @frappe.whitelist()
@@ -69,7 +67,7 @@ def get_dyeing_material_items(doctype, txt, searchfield, start, page_len, filter
         LIMIT %(page_len)s OFFSET %(start)s
         """,
         {
-            "groups": DYEING_MATERIAL_GROUPS,
+            "groups": get_dye_material_groups(),
             "txt": f"%{txt}%",
             "page_len": page_len,
             "start": start,

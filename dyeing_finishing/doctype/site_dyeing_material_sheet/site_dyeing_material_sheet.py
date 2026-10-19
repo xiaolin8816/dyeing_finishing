@@ -1,11 +1,11 @@
 import frappe
+from dyeing_finishing.dyeing_finishing.settings import get_dye_material_groups
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import flt, getdate, nowdate
 from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import ensure_flow_card_open, record_production_progress, remove_production_progress
 
-ALLOWED_ITEM_GROUPS = ("染料", "助剂")
 MANUAL_SOURCE = "手动新增"
 RECIPE_SOURCE = "配方带出"
 MANUAL_ITEM_FIELDS = ("item_code", "item_name", "material_category", "uom", "dosage_basis", "formula_qty", "site_ratio", "temporary_qty", "actual_qty", "issued_qty", "issue_status", "remark", "source")
@@ -18,7 +18,7 @@ class SiteDyeingMaterialSheet(Document):
  def before_insert(self):
   self.material_sheet_no=self.name; self.material_sheet_status=self.material_sheet_status or "保存"; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate())
  def validate(self):
-  self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._validate_followup_items(); self._set_recipe(); self._validate_manual_items(); self._calculate()
+  self.material_sheet_no=self.name; self.planned_dyeing_date=self.planned_dyeing_date or getdate(nowdate()); self._set_card(); self._set_issue(); self._set_production_resource(); self._validate_followup_items(); self._set_recipe(); self._validate_manual_items(); self._calculate()
  def _initialize_followup(self):
   source=frappe.get_doc("Site Dyeing Material Sheet",self.previous_material_sheet)
   if source.docstatus!=1:
@@ -35,7 +35,7 @@ class SiteDyeingMaterialSheet(Document):
   self.grey_fabric_issue=source.grey_fabric_issue
   self.grey_fabric_batch=source.grey_fabric_batch
   self.grey_fabric_issue_qty=source.grey_fabric_issue_qty
-  self.dyeing_machine=self.dyeing_machine or source.dyeing_machine
+  self.production_resource=self.production_resource or source.production_resource
   self.dyeing_sequence=frappe.db.count("Site Dyeing Material Sheet",{"production_flow_card":source.production_flow_card,"docstatus":["!=",2]})+1
   if not self.laboratory_recipe:
    self.laboratory_recipe=_get_default_confirmed_recipe(source.color_no) or ""
@@ -58,7 +58,7 @@ class SiteDyeingMaterialSheet(Document):
   record_production_progress(
    self.production_flow_card, "染色", "待领料", "Site Dyeing Material Sheet", self.name,
    batch_no=self.grey_fabric_batch, quantity=self.grey_fabric_issue_qty, uom=self.grey_fabric_uom,
-   dyeing_machine=self.dyeing_machine, material_sheet_type=self.material_sheet_type,
+   production_resource=self.production_resource, material_sheet_type=self.material_sheet_type,
    dyeing_sequence=self.dyeing_sequence, description="现场染色料单已提交",
   )
  def on_cancel(self):
@@ -77,7 +77,7 @@ class SiteDyeingMaterialSheet(Document):
   record_production_progress(
    self.production_flow_card, "染色", "染色料单已撤销", "Site Dyeing Material Sheet", self.name,
    batch_no=self.grey_fabric_batch, quantity=self.grey_fabric_issue_qty, uom=self.grey_fabric_uom,
-   dyeing_machine=self.dyeing_machine, material_sheet_type=self.material_sheet_type,
+   production_resource=self.production_resource, material_sheet_type=self.material_sheet_type,
    dyeing_sequence=self.dyeing_sequence, description="未发生领料，料单已恢复草稿",
   )
   self.add_comment("Edit",_("未发生领料，料单已恢复为草稿，可修改后重新提交。"))
@@ -99,6 +99,15 @@ class SiteDyeingMaterialSheet(Document):
   maximum=flt(row.issue_qty)
   if not flt(self.grey_fabric_issue_qty): self.grey_fabric_issue_qty=maximum
   if flt(self.grey_fabric_issue_qty)<0 or flt(self.grey_fabric_issue_qty)>maximum: frappe.throw(_("胚布出库数量应在 0 至关联胚布出库单的本次出库数量 {0} 之间").format(maximum))
+ def _set_production_resource(self):
+  if not self.production_resource:
+   frappe.throw(_("请选择生产机台"))
+  resource=frappe.db.get_value("Production Resource",self.production_resource,
+   ["resource_type","resource_mode","status"],as_dict=True)
+  if not resource or resource.resource_type!="染缸" or resource.resource_mode!="设备":
+   frappe.throw(_("现场染色料单只能选择资源类型为染缸的生产机台"))
+  if resource.status in ("停用","维修","停机"):
+   frappe.throw(_("所选生产机台当前不可用"))
  def _set_recipe(self):
   if not self.laboratory_recipe: frappe.throw(_("请选择已确认的化验室配方"))
   recipe=frappe.get_doc("Laboratory Recipe",self.laboratory_recipe)
@@ -123,7 +132,7 @@ class SiteDyeingMaterialSheet(Document):
    if row.source not in (RECIPE_SOURCE,MANUAL_SOURCE): frappe.throw(_("第 {0} 行来源无效").format(row.idx))
    if row.source!=MANUAL_SOURCE: continue
    item=frappe.db.get_value("Item",row.item_code,["item_name","item_group","stock_uom","disabled"],as_dict=True)
-   if not item or item.disabled or item.item_group not in ALLOWED_ITEM_GROUPS:
+   if not item or item.disabled or item.item_group not in get_dye_material_groups():
     frappe.throw(_("第 {0} 行手动新增物料只能选择启用的染料或助剂").format(row.idx))
    row.item_name=item.item_name; row.material_category=item.item_group; row.uom=item.stock_uom; row.dosage_basis=row.dosage_basis or "g/kg"; row.formula_qty=flt(row.formula_qty)
  def _calculate(self):
@@ -187,7 +196,7 @@ def get_followup_material_sheet_defaults(source_name, sheet_type, rework_reason=
   "grey_fabric_name":source.grey_fabric_name,
   "grey_fabric_issue_qty":source.grey_fabric_issue_qty,
   "grey_fabric_uom":source.grey_fabric_uom,
-  "dyeing_machine":source.dyeing_machine,
+  "production_resource":source.production_resource,
   "laboratory_recipe":_get_default_confirmed_recipe(source.color_no) or "",
   "recipe_snapshot_source":"",
   "recipe_version":"",

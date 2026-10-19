@@ -7,7 +7,7 @@ def execute(filters=None):
     columns = [
         {"label": _("退货单号"), "fieldname": "dye_material_return", "fieldtype": "Link", "options": "Dye Material Return", "width": 145},
         {"label": _("退货日期"), "fieldname": "return_date", "fieldtype": "Date", "width": 100},
-        {"label": _("供应商"), "fieldname": "supplier", "fieldtype": "Link", "options": "Supplier", "width": 160},
+        {"label": _("供应商名称"), "fieldname": "supplier_name", "fieldtype": "Data", "width": 160},
         {"label": _("物料编码"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 125},
         {"label": _("物料名称"), "fieldname": "item_name", "fieldtype": "Data", "width": 180},
         {"label": _("退货数量(kg)"), "fieldname": "return_qty_kg", "fieldtype": "Float", "precision": 4, "width": 120},
@@ -39,7 +39,7 @@ def execute(filters=None):
         SELECT
             return_doc.name AS dye_material_return,
             return_doc.return_date,
-            return_doc.supplier,
+            COALESCE(supplier.supplier_name, return_doc.supplier) AS supplier_name,
             return_item.item_code,
             return_item.item_name,
             return_item.return_qty_kg,
@@ -55,6 +55,7 @@ def execute(filters=None):
             END AS status
         FROM `tabDye Material Return` return_doc
         INNER JOIN `tabDye Material Return Item` return_item ON return_item.parent = return_doc.name
+        LEFT JOIN `tabSupplier` supplier ON supplier.name = return_doc.supplier
         WHERE {' AND '.join(conditions)}
         ORDER BY return_doc.return_date DESC, return_doc.creation DESC, return_item.idx
         """,

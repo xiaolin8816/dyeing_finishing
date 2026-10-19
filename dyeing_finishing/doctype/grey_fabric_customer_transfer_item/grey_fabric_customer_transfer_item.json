@@ -1,0 +1,19 @@
+{
+ "actions":[],"allow_rename":0,"creation":"2026-10-11 00:00:00.000000","doctype":"DocType","editable_grid":1,"engine":"InnoDB","istable":1,"module":"dyeing_finishing","name":"Grey Fabric Customer Transfer Item","owner":"Administrator",
+ "field_order":["source_batch_no","item_name","stock_roll_count","stock_qty","transfer_roll_count","transfer_qty","remaining_roll_count","remaining_qty","target_batch_no","source_warehouse","location","item_code","color"],
+ "fields":[
+  {"fieldname":"source_batch_no","label":"原胚布批次","fieldtype":"Link","options":"Batch","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"item_name","label":"胚布名称","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"stock_roll_count","label":"库存匹数","fieldtype":"Float","precision":"2","read_only":1},
+  {"fieldname":"stock_qty","label":"库存重量(Kg)","fieldtype":"Float","precision":"3","read_only":1},
+  {"fieldname":"transfer_roll_count","label":"过户匹数","fieldtype":"Int","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"transfer_qty","label":"过户重量(Kg)","fieldtype":"Float","precision":"3","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"remaining_roll_count","label":"剩余匹数","fieldtype":"Float","precision":"2","read_only":1},
+  {"fieldname":"remaining_qty","label":"剩余重量(Kg)","fieldtype":"Float","precision":"3","read_only":1},
+  {"fieldname":"target_batch_no","label":"新过户批次","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2,"no_copy":1},
+  {"fieldname":"source_warehouse","label":"仓库/货位","fieldtype":"Link","options":"Warehouse","read_only":1},
+  {"fieldname":"location","label":"货位","fieldtype":"Data","read_only":1},
+  {"fieldname":"item_code","label":"胚布物料编码","fieldtype":"Link","options":"Item","read_only":1},
+  {"fieldname":"color","label":"颜色","fieldtype":"Data","read_only":1}
+ ],"permissions":[]
+}

@@ -1,9 +1,7 @@
 import frappe
+from dyeing_finishing.dyeing_finishing.settings import get_dye_material_groups
 from frappe import _
 from frappe.model.document import Document
-
-
-ALLOWED_ITEM_GROUPS = ("染料", "助剂")
 
 
 class LaboratoryRecipeItem(Document):
@@ -16,5 +14,5 @@ class LaboratoryRecipeItem(Document):
         )
         if not item or item.disabled:
             frappe.throw(_("只能选择启用的染料或助剂物料"))
-        if item.item_group not in ALLOWED_ITEM_GROUPS:
+        if item.item_group not in get_dye_material_groups():
             frappe.throw(_("配方明细只能选择物料组为“染料”或“助剂”的物料"))

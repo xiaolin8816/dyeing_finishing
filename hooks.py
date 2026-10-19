@@ -10,7 +10,7 @@ app_logo_url = "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg"
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["erpnext", "crispy_print"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -27,13 +27,19 @@ app_logo_url = "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg"
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
+app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css?v=20261017-5"
 app_include_js = [
-    "/assets/dyeing_finishing/js/report_layout.js",
-    "/assets/dyeing_finishing/js/list_layout.js",
-    "/assets/dyeing_finishing/js/dyeing_workspace_breadcrumbs.js",
+    "/assets/dyeing_finishing/js/report_layout.js?v=20261017-2",
+    "/assets/dyeing_finishing/js/list_layout.js?v=20261017-2",
+    "/assets/dyeing_finishing/js/dyeing_workspace_breadcrumbs.js?v=20261018-4",
     "/assets/dyeing_finishing/js/stock_ledger_handling_unit.js",
+    "/assets/dyeing_finishing/js/stock_balance_finished_product.js",
+    "/assets/dyeing_finishing/js/license.js",
+    "/assets/dyeing_finishing/js/crispy_print_preview_close.js?v=20261019-2",
+    "/assets/dyeing_finishing/js/document_report_print.js?v=20261019-4",
 ]
+
+extend_bootinfo = "dyeing_finishing.dyeing_finishing.settings.add_dyeing_settings_to_boot"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css"
@@ -93,7 +99,7 @@ app_include_js = [
 # ------------
 
 # before_install = "dyeing_finishing.install.before_install"
-# after_install = "dyeing_finishing.install.after_install"
+after_install = "dyeing_finishing.dyeing_finishing.report_engine.initialize_report_engine"
 
 # Uninstallation
 # ------------
@@ -274,6 +280,7 @@ doctype_list_js = {
     "Item": "public/js/item_list.js",
     "Sales Order": "public/js/sales_order_list.js",
     "Laboratory Recipe": "public/js/laboratory_recipe_list.js",
+    "Production Flow Card": "public/js/production_flow_card_list.js",
     "Purchase Receipt": "public/js/purchase_receipt_list.js",
 }
 
@@ -290,7 +297,13 @@ doctype_js = {
     "Purchase Receipt": "public/js/purchase_receipt.js",
 }
 doc_events = {
+    "*": {
+        "before_save": "dyeing_finishing.license.enforce_document_write",
+        "before_submit": "dyeing_finishing.license.enforce_document_write",
+        "on_trash": "dyeing_finishing.license.enforce_document_write",
+    },
     "Item": {
+        "autoname": "dyeing_finishing.dyeing_finishing.item.autoname",
         "validate": "dyeing_finishing.dyeing_finishing.item.validate",
     },
     "Sales Order": {
@@ -301,14 +314,27 @@ doc_events = {
         "validate": "dyeing_finishing.dyeing_finishing.purchase_receipt.validate",
     },
     "Stock Entry": {
-        "before_cancel": "dyeing_finishing.dyeing_finishing.doctype.dye_material_other_issue.dye_material_other_issue.clear_other_issue_link_before_stock_entry_cancel",
+        "before_cancel": [
+            "dyeing_finishing.dyeing_finishing.doctype.dye_material_other_issue.dye_material_other_issue.clear_other_issue_link_before_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.finished_product_packing_receipt.finished_product_packing_receipt.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.finished_product_delivery.finished_product_delivery.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.finished_product_return.finished_product_return.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.finished_product_return_to_grey_fabric.finished_product_return_to_grey_fabric.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.finished_product_to_grey_fabric.finished_product_to_grey_fabric.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.finished_product_customer_transfer.finished_product_customer_transfer.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.grey_fabric_customer_transfer.grey_fabric_customer_transfer.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.customer_grey_fabric_return.customer_grey_fabric_return.handle_stock_entry_cancel",
+        ],
     },
 }
 
 # 胚布出库匹数历史数据补齐
 after_migrate = [
+    "dyeing_finishing.license.initialize_license_transition",
+    "dyeing_finishing.dyeing_finishing.settings.initialize_dyeing_system_settings",
     "dyeing_finishing.patches.v1_0.backfill_grey_fabric_issue_roll_counts.execute",
     "dyeing_finishing.patches.v1_0.delete_child_workspace_desktop_icons.execute",
     "dyeing_finishing.patches.v1_0.consolidate_dyeing_workspace_sidebar.execute",
     "dyeing_finishing.patches.v1_0.normalize_production_flow_card_layout.execute",
+    "dyeing_finishing.dyeing_finishing.report_engine.initialize_report_engine",
 ]

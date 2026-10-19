@@ -1,0 +1,28 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:work_center_code",
+ "creation": "2026-10-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["details_section", "work_center_code", "details_col_2", "work_center_name", "details_col_3", "work_center_type", "capacity_section", "capacity_uom", "capacity_col_2", "default_shift", "capacity_col_3", "status", "remarks_section", "remarks"],
+ "fields": [
+  {"fieldname":"details_section","label":"生产工段资料","fieldtype":"Section Break"},
+  {"fieldname":"work_center_code","label":"生产工段编码","fieldtype":"Data","reqd":1,"unique":1,"in_list_view":1},
+  {"fieldname":"details_col_2","fieldtype":"Column Break"},
+  {"fieldname":"work_center_name","label":"生产工段名称","fieldtype":"Data","reqd":1,"in_list_view":1},
+  {"fieldname":"details_col_3","fieldtype":"Column Break"},
+  {"fieldname":"work_center_type","label":"生产工段类型","fieldtype":"Select","options":"设备中心\n人工中心\n委外中心","default":"设备中心","reqd":1,"in_list_view":1},
+  {"fieldname":"capacity_section","label":"排程设置","fieldtype":"Section Break"},
+  {"fieldname":"capacity_uom","label":"默认产能单位","fieldtype":"Link","options":"UOM"},
+  {"fieldname":"capacity_col_2","fieldtype":"Column Break"},
+  {"fieldname":"default_shift","label":"默认生产班次","fieldtype":"Link","options":"Production Shift"},
+  {"fieldname":"capacity_col_3","fieldtype":"Column Break"},
+  {"fieldname":"status","label":"状态","fieldtype":"Select","options":"启用\n停用","default":"启用","reqd":1,"in_list_view":1},
+  {"fieldname":"remarks_section","label":"备注","fieldtype":"Section Break"},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],
+ "modified":"2026-10-12 00:00:00.000000","modified_by":"Administrator","module":"dyeing_finishing","name":"Production Work Center","owner":"Administrator",
+ "permissions":[{"role":"System Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1},{"role":"Manufacturing Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1}],
+ "show_title_field_in_link":1,"title_field":"work_center_name","search_fields":"work_center_code,work_center_name","sort_field":"work_center_code","sort_order":"ASC","track_changes":1
+}

@@ -40,7 +40,7 @@
   "fabric_column_2",
   "grey_fabric_name",
   "fabric_column_3",
-  "dyeing_machine",
+  "production_resource",
   "formula_tab",
   "formula_section",
   "laboratory_recipe",
@@ -105,9 +105,9 @@
   },
   {
    "fieldname": "sales_order",
-   "label": "销售订单",
+   "label": "染整销售订单",
    "fieldtype": "Link",
-   "options": "Sales Order",
+   "options": "Dyeing Sales Order",
    "read_only": 1,
    "in_list_view": 1
   },
@@ -255,10 +255,10 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "dyeing_machine",
-   "label": "染色机台",
+   "fieldname": "production_resource",
+   "label": "生产机台",
    "fieldtype": "Link",
-   "options": "Dyeing Machine",
+   "options": "Production Resource",
    "in_list_view": 1
   },
   {

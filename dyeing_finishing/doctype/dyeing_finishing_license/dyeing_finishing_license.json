@@ -1,0 +1,35 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "issingle": 1,
+ "module": "dyeing_finishing",
+ "name": "Dyeing Finishing License",
+ "owner": "Administrator",
+ "field_order": ["status_section", "license_status", "license_id", "status_column_2", "licensed_customer", "licensed_site", "status_column_3", "valid_from", "expires_on", "remaining_days", "message_section", "status_message", "install_section", "license_file", "license_token"],
+ "fields": [
+  {"fieldname":"status_section","fieldtype":"Section Break","label":"授权状态"},
+  {"fieldname":"license_status","fieldtype":"Data","label":"许可证状态","read_only":1},
+  {"fieldname":"license_id","fieldtype":"Data","label":"许可证编号","read_only":1},
+  {"fieldname":"status_column_2","fieldtype":"Column Break"},
+  {"fieldname":"licensed_customer","fieldtype":"Data","label":"授权客户","read_only":1},
+  {"fieldname":"licensed_site","fieldtype":"Data","label":"授权站点","read_only":1},
+  {"fieldname":"status_column_3","fieldtype":"Column Break"},
+  {"fieldname":"valid_from","fieldtype":"Date","label":"生效日期","read_only":1},
+  {"fieldname":"expires_on","fieldtype":"Date","label":"到期日期","read_only":1},
+  {"fieldname":"remaining_days","fieldtype":"Int","label":"剩余天数","read_only":1},
+  {"fieldname":"message_section","fieldtype":"Section Break","label":"状态说明"},
+  {"fieldname":"status_message","fieldtype":"Small Text","label":"授权说明","read_only":1},
+  {"fieldname":"install_section","fieldtype":"Section Break","label":"安装许可证"},
+  {"fieldname":"license_file","fieldtype":"Attach","label":"许可证文件","description":"上传 .license 或 .json 许可证文件后保存"},
+  {"fieldname":"license_token","fieldtype":"Code","label":"许可证内容","options":"JSON","hidden":1}
+ ],
+ "permissions": [
+  {"role":"System Manager","read":1,"write":1,"create":1,"delete":0,"print":0,"email":0,"share":0,"export":0}
+ ],
+ "sort_field":"modified",
+ "sort_order":"DESC",
+ "states": []
+}

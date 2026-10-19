@@ -1,0 +1,27 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-11 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "module": "dyeing_finishing",
+ "name": "Finished Product Customer Transfer Item",
+ "owner": "Administrator",
+ "field_order": ["piece_no", "weight", "yard_qty", "finished_grade", "quality_flag", "grey_fabric_batch", "source_packing_receipt", "finished_batch_no", "source_finished_item_code", "roll_no", "packing_receipt_item"],
+ "fields": [
+  {"fieldname":"piece_no","label":"匹号","fieldtype":"Int","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"weight","label":"重量(Kg)","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"yard_qty","label":"码数(Y)","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"finished_grade","label":"成品等级","fieldtype":"Data","read_only":1},
+  {"fieldname":"quality_flag","label":"质量结果","fieldtype":"Data","read_only":1},
+  {"fieldname":"grey_fabric_batch","label":"胚布批次","fieldtype":"Link","options":"Batch","read_only":1},
+  {"fieldname":"source_packing_receipt","label":"来源包装入库单","fieldtype":"Link","options":"Finished Product Packing Receipt","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"finished_batch_no","label":"成品批次","fieldtype":"Link","options":"Batch","read_only":1},
+  {"fieldname":"source_finished_item_code","label":"转移前成品物料","fieldtype":"Link","options":"Item","read_only":1,"hidden":1},
+  {"fieldname":"roll_no","label":"成品卷号","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"packing_receipt_item","label":"包装明细记录","fieldtype":"Data","read_only":1,"hidden":1,"no_copy":1}
+ ],
+ "permissions": []
+}

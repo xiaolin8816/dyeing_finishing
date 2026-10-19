@@ -1,8 +1,6 @@
 import frappe
 from frappe import _
-
-
-TARGET_WAREHOUSE = "生产中转仓 - 沅泰"
+from dyeing_finishing.dyeing_finishing.settings import get_setting
 
 
 def execute(filters=None):
@@ -47,15 +45,15 @@ def execute(filters=None):
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) != ''
           AND item.item_group IN (
             SELECT name FROM `tabItem Group`
-            WHERE lft >= (SELECT lft FROM `tabItem Group` WHERE name = '胚布')
-              AND rgt <= (SELECT rgt FROM `tabItem Group` WHERE name = '胚布')
+            WHERE lft >= (SELECT lft FROM `tabItem Group` WHERE name = %(grey_group)s)
+              AND rgt <= (SELECT rgt FROM `tabItem Group` WHERE name = %(grey_group)s)
           )
         GROUP BY detail.custom_grey_fabric_issue, detail.custom_production_flow_card,
             sle.item_code, item.item_name, COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no), sle.warehouse
         HAVING SUM(sle.actual_qty) > 0
         ORDER BY transit_date DESC, batch_no DESC
         """,
-        {"warehouse": TARGET_WAREHOUSE},
+        {"warehouse": get_setting("production_transit_warehouse"), "grey_group": get_setting("grey_fabric_item_group")},
         as_dict=True,
     )
     return columns, data

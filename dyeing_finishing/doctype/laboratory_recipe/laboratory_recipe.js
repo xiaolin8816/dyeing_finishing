@@ -22,9 +22,36 @@ function unlock_recipe(frm) {
  frm.enable_save();
 }
 
+function confirm_recipe(frm) {
+ frappe.confirm("确认后将作为该色号的当前化验配方。是否继续？", () => {
+  frappe.call({
+   method: "dyeing_finishing.dyeing_finishing.doctype.laboratory_recipe.laboratory_recipe.confirm_recipe",
+   args: {name: frm.doc.name},
+   freeze: true,
+   freeze_message: "正在确认配方…",
+   callback: () => frm.reload_doc()
+  });
+ });
+}
+
+function cancel_recipe_confirmation(frm) {
+ frappe.confirm("取消确认后，配方将恢复为草稿。是否继续？", () => {
+  frappe.call({
+   method: "dyeing_finishing.dyeing_finishing.doctype.laboratory_recipe.laboratory_recipe.cancel_recipe_confirmation",
+   args: {name: frm.doc.name},
+   freeze: true,
+   freeze_message: "正在取消确认…",
+   callback: () => frm.reload_doc()
+  });
+ });
+}
+
 frappe.ui.form.on("Laboratory Recipe", {
  setup(frm) {
-  frm.set_query("color_no", () => ({filters:{status:"启用"}}));
+  frm.set_query("color_no", () => ({
+   query: "dyeing_finishing.dyeing_finishing.doctype.laboratory_recipe.laboratory_recipe.get_available_color_numbers",
+   filters: {current_recipe: frm.is_new() ? "" : frm.doc.name}
+  }));
   frm.set_query("process_parameter_template", () => ({filters:{status:"启用"}}));
   frm.set_query("grey_fabric_batch", () => ({
    query: "dyeing_finishing.dyeing_finishing.doctype.color_master.color_master.get_grey_fabric_batches",
@@ -32,7 +59,7 @@ frappe.ui.form.on("Laboratory Recipe", {
   }));
   frm.set_query("item_code", "recipe_items", () => ({
    filters: {
-    item_group: ["in", ["染料", "助剂"]],
+    item_group: ["in", [frappe.boot.dyeing_system_settings?.dye_item_group || "染料", frappe.boot.dyeing_system_settings?.auxiliary_item_group || "助剂"]],
     disabled: 0
    }
   }));
@@ -41,34 +68,14 @@ frappe.ui.form.on("Laboratory Recipe", {
   if (frm.is_new()) return;
 
   if (frm.doc.recipe_status === "已确认") {
-   frm.add_custom_button("取消确认", () => {
-    frappe.confirm("取消确认后，配方将恢复为草稿。是否继续？", () => {
-     frappe.call({
-      method: "dyeing_finishing.dyeing_finishing.doctype.laboratory_recipe.laboratory_recipe.cancel_recipe_confirmation",
-      args: {name: frm.doc.name},
-      freeze: true,
-      freeze_message: "正在取消确认…",
-      callback: () => frm.reload_doc()
-     });
-    });
-   }, "操作");
    lock_confirmed_recipe(frm);
+   frm.page.set_primary_action("取消确认", () => cancel_recipe_confirmation(frm));
   } else {
    unlock_recipe(frm);
   }
 
-  if (frm.doc.recipe_status !== "已确认" && frm.doc.recipe_status !== "停用") {
-   frm.add_custom_button("确认配方", () => {
-    frappe.confirm("确认后将作为该色号的当前化验配方。是否继续？", () => {
-     frappe.call({
-      method: "dyeing_finishing.dyeing_finishing.doctype.laboratory_recipe.laboratory_recipe.confirm_recipe",
-      args: {name: frm.doc.name},
-      freeze: true,
-      freeze_message: "正在确认配方…",
-      callback: () => frm.reload_doc()
-     });
-    });
-   }, "操作");
+  if (frm.doc.recipe_status !== "已确认" && frm.doc.recipe_status !== "停用" && !frm.is_dirty()) {
+   frm.page.set_primary_action("确认配方", () => confirm_recipe(frm));
   }
  },
  color_no(frm) {

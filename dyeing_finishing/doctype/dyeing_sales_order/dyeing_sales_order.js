@@ -76,23 +76,39 @@ function set_dyeing_requirement_tab(frm, active) {
     };
     Object.entries(tables).forEach(([tab, fieldname]) => {
         const field = frm.get_field(fieldname);
+        const submitted_locked = frm.doc.docstatus === 1 && frm._dyeing_requirement_change_mode !== tab;
+        frm.set_df_property(fieldname, "read_only", frm.doc.docstatus === 2 || submitted_locked ? 1 : 0);
         if (field?.$wrapper) field.$wrapper.toggle(tab === active);
     });
     const field = frm.get_field("requirements_html");
     if (!field?.$wrapper) return;
     const editable = frm.doc.docstatus !== 2;
+    const submitted = frm.doc.docstatus === 1;
+    const action_label = submitted
+        ? `变更${active === "process" ? "加工要求" : "包装要求"}`
+        : `选择${active === "process" ? "加工要求" : "包装要求"}`;
     field.$wrapper.html(`
         <div class="dyeing-requirement-tabs">
             <button type="button" class="btn btn-sm ${active === "process" ? "btn-primary" : "btn-default"}" data-requirement-tab="process">加工要求</button>
             <button type="button" class="btn btn-sm ${active === "packaging" ? "btn-primary" : "btn-default"}" data-requirement-tab="packaging">包装要求</button>
-            <button type="button" class="btn btn-sm btn-default" data-requirement-select="${active}" ${editable ? "" : "disabled"}>选择${active === "process" ? "加工要求" : "包装要求"}</button>
+            <button type="button" class="btn btn-sm btn-default" data-requirement-select="${active}" ${editable ? "" : "disabled"}>${action_label}</button>
         </div>`);
     field.$wrapper.off("click.dyeingOrderTabs")
         .on("click.dyeingOrderTabs", "[data-requirement-tab]", function () {
             set_dyeing_requirement_tab(frm, $(this).data("requirement-tab"));
         })
         .on("click.dyeingOrderTabs", "[data-requirement-select]", function () {
-            if (editable) select_dyeing_requirements(frm, $(this).data("requirement-select"));
+            if (!editable) return;
+            const type = $(this).data("requirement-select");
+            if (submitted) {
+                frm._dyeing_requirement_change_mode = type;
+                set_dyeing_requirement_tab(frm, type);
+                frappe.show_alert({
+                    message: "已进入要求变更模式：保存时必须选择修改原因，并同步未完成的下游单据。",
+                    indicator: "orange",
+                }, 7);
+            }
+            select_dyeing_requirements(frm, type);
         });
 }
 
@@ -108,7 +124,7 @@ function change_reason_options(frm) {
         return fields.some((fieldname) => String(row[fieldname] || "") !== String(oldRow[fieldname] || ""));
     });
     if (changed(["qty", "uom", "rate"])) suggestions.push("订单数量调整");
-    if (changed(["item_code", "color_no", "color", "finished_product_name", "process_type", "finished_width", "finished_gsm", "finished_gsm_uom"])) suggestions.push("产品资料调整");
+    if (changed(["grey_fabric_batch", "item_code", "color_no", "color", "finished_product_name", "process_type", "finished_width", "finished_gsm", "finished_gsm_uom"])) suggestions.push("产品资料调整");
     if (JSON.stringify(current.process_requirements || []) !== JSON.stringify(oldDoc.process_requirements || [])) suggestions.push("工艺要求调整");
     if (JSON.stringify(current.packaging_requirements || []) !== JSON.stringify(oldDoc.packaging_requirements || [])) suggestions.push("包装要求调整");
     if ((current.order_remark || "") !== (oldDoc.order_remark || "")) suggestions.push("订单备注补充");
@@ -155,10 +171,11 @@ frappe.ui.form.on("Dyeing Sales Order", {
         if (frm.is_new() && !frm.doc.company) {
             frm.set_value("company", frappe.defaults.get_user_default("Company"));
         }
-        frm.set_query("item_code", "items", () => ({
+        frm.set_query("grey_fabric_batch", "items", () => ({
+            query: "dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card.get_available_grey_fabric_batches",
             filters: {
-                item_group: "胚布",
-                disabled: 0,
+                customer: frm.doc.customer || "",
+                order_type: frm.doc.order_type || "",
             },
         }));
         frm.set_query("color_no", "items", () => ({
@@ -166,6 +183,7 @@ frappe.ui.form.on("Dyeing Sales Order", {
         }));
     },
     refresh(frm) {
+        frm._dyeing_requirement_change_mode = null;
         set_dyeing_requirement_tab(frm, frm._dyeing_requirement_tab || "process");
         frm.__dyeing_order_snapshot = JSON.parse(JSON.stringify(frm.doc));
         frm.__change_reason_confirmed = false;
@@ -176,6 +194,7 @@ frappe.ui.form.on("Dyeing Sales Order", {
         }
     },
     after_save(frm) {
+        frm._dyeing_requirement_change_mode = null;
         frm.__dyeing_order_snapshot = JSON.parse(JSON.stringify(frm.doc));
         frm.__change_reason_confirmed = false;
     },
@@ -201,6 +220,30 @@ frappe.ui.form.on("Dyeing Sales Order Item", {
     finished_width: update_dyeing_order_row,
     finished_gsm: update_dyeing_order_row,
     finished_gsm_uom: update_dyeing_order_row,
+    async grey_fabric_batch(frm, cdt, cdn) {
+        const row = locals[cdt][cdn];
+        await frappe.model.set_value(cdt, cdn, "item_code", "");
+        await frappe.model.set_value(cdt, cdn, "item_name", "");
+        if (!row.grey_fabric_batch) return;
+        const response = await frappe.call({
+            method: "dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card.get_batch_stock_details",
+            args: {
+                batch_no: row.grey_fabric_batch,
+                customer: frm.doc.customer || "",
+                order_type: frm.doc.order_type || "",
+            },
+        });
+        const batch = response.message;
+        if (!batch) {
+            await frappe.model.set_value(cdt, cdn, "grey_fabric_batch", "");
+            frappe.msgprint(__("所选胚布批次不属于当前客户或已无可用库存。"));
+            return;
+        }
+        await frappe.model.set_value(cdt, cdn, "item_code", batch.item_code || "");
+        await frappe.model.set_value(cdt, cdn, "item_name", batch.grey_fabric_name || "");
+        await frappe.model.set_value(cdt, cdn, "uom", batch.stock_uom || row.uom || "");
+        if (row.color_no) await frappe.model.set_value(cdt, cdn, "color_no", "");
+    },
     color_no(frm, cdt, cdn) {
         const row = locals[cdt][cdn];
         if (!row.color_no) {

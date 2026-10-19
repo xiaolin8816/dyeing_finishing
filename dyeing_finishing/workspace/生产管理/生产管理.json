@@ -1,81 +1,20 @@
 {
- "app": "dyeing_finishing",
- "charts": [],
- "content": "[{\"id\":\"生产管理-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>生产管理</b></span>\",\"col\":12}},{\"id\":\"生产管理-生产执行-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>生产执行</b></span>\",\"col\":12}},{\"id\":\"生产管理-生产执行-card\",\"type\":\"card\",\"data\":{\"card_name\":\"生产执行\",\"col\":4}}]",
- "creation": "2026-10-03 00:00:00.000000",
- "custom_blocks": [],
- "docstatus": 0,
- "doctype": "Workspace",
- "for_user": "",
- "hide_custom": 0,
- "icon": "manufacturing",
- "idx": 0,
- "is_hidden": 0,
- "label": "生产管理",
- "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "生产执行",
-   "link_count": 4,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "染整销售订单",
-   "link_count": 0,
-   "link_to": "Dyeing Sales Order",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "生产流转卡",
-   "link_count": 0,
-   "link_to": "Production Flow Card",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "现场染色料单",
-   "link_count": 0,
-   "link_to": "Site Dyeing Material Sheet",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "现场染色领料单",
-   "link_count": 0,
-   "link_to": "Site Dyeing Material Issue",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  }
+ "app":"dyeing_finishing","charts":[],"content":"[{\"id\":\"生产管理-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>生产管理</b></span>\",\"col\":12}},{\"id\":\"生产管理-生产执行-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>生产执行</b></span>\",\"col\":12}},{\"id\":\"生产管理-生产执行-card\",\"type\":\"card\",\"data\":{\"card_name\":\"生产执行\",\"col\":4}}]",
+ "creation":"2026-10-03 00:00:00.000000","custom_blocks":[],"docstatus":0,"doctype":"Workspace","for_user":"","hide_custom":0,"icon":"manufacturing","idx":0,"is_hidden":0,"label":"生产管理",
+ "links":[
+  {"hidden":0,"is_query_report":0,"label":"生产执行","link_count":12,"link_type":"DocType","onboard":0,"type":"Card Break"},
+  {"dependencies":"","hidden":0,"is_query_report":1,"label":"生产流转卡进度查询","link_count":0,"link_to":"Production Flow Card Progress Query","link_type":"Report","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"染整销售订单","link_count":0,"link_to":"Dyeing Sales Order","link_type":"DocType","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产流转卡","link_count":0,"link_to":"production-flow-card-normal","link_type":"Page","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产流转卡回修","link_count":0,"link_to":"production-flow-card-rework","link_type":"Page","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产排程操作台","link_count":0,"link_to":"production-schedule-board","link_type":"Page","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产进度大屏","link_count":0,"link_to":"production-progress-screen","link_type":"Page","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产工序扫码报工","link_count":0,"link_to":"shop-floor-reporting","link_type":"Page","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产工序报工记录","link_count":0,"link_to":"Production Operation Report","link_type":"DocType","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"员工工序设置","link_count":0,"link_to":"Employee Operation Permission","link_type":"DocType","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"设备停机记录","link_count":0,"link_to":"Machine Production Calendar","link_type":"DocType","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"现场染色料单","link_count":0,"link_to":"Site Dyeing Material Sheet","link_type":"DocType","onboard":0,"type":"Link"},
+  {"dependencies":"","hidden":0,"is_query_report":0,"label":"现场染色领料单","link_count":0,"link_to":"Site Dyeing Material Issue","link_type":"DocType","onboard":0,"type":"Link"}
  ],
- "module": "dyeing_finishing",
- "number_cards": [],
- "parent_page": "印染整理",
- "public": 1,
- "quick_lists": [],
- "roles": [],
- "sequence_id": 10,
- "shortcuts": [],
- "title": "生产管理",
- "type": "Workspace",
- "name": "生产管理"
+ "module":"dyeing_finishing","number_cards":[],"parent_page":"印染整理","public":1,"quick_lists":[],"roles":[],"sequence_id":10,"shortcuts":[],"title":"生产管理","type":"Workspace","name":"生产管理"
 }

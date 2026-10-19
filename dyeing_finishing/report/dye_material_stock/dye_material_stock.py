@@ -1,9 +1,8 @@
 import frappe
 from frappe import _
+from dyeing_finishing.dyeing_finishing.settings import get_dye_material_groups, get_setting
 
 
-DYEING_WAREHOUSE = "染料仓库 - 沅泰"
-DYEING_MATERIAL_GROUPS = ("染料", "助剂")
 DYEING_RECEIPT_TYPE = "染料/助剂入库"
 
 
@@ -23,7 +22,7 @@ def execute(filters=None):
     ]
 
     conditions = ["warehouse.name = %(warehouse)s"]
-    values = {"warehouse": filters.get("warehouse") or DYEING_WAREHOUSE, "groups": DYEING_MATERIAL_GROUPS}
+    values = {"warehouse": filters.get("warehouse") or get_setting("dye_material_warehouse"), "groups": get_dye_material_groups()}
 
     if not filters.get("include_zero_stock"):
         conditions.append("bin.actual_qty != 0")

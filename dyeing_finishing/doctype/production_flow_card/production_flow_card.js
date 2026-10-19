@@ -4,6 +4,7 @@ function get_flow_card_method(method) {
 
 function clear_flow_card_order_data(frm) {
     ["sales_order_item", "customer", "customer_order_no", "order_date", "delivery_date", "order_type", "process_type", "color_no", "color", "finished_product_name", "finished_width", "finished_gsm", "finished_uom", "finished_specification", "order_qty", "order_remarks"].forEach((fieldname) => frm.set_value(fieldname, ""));
+    frm.set_value("finished_gsm_uom", "g/㎡");
     frm.set_value("production_qty", 0);
     frm.clear_table("process_requirements");
     frm.clear_table("packaging_requirements");
@@ -17,6 +18,13 @@ function copy_requirement_rows(frm, fieldname, rows) {
         Object.assign(row, source);
     });
     frm.refresh_field(fieldname);
+}
+
+function update_finished_specification(frm) {
+    const width = String(frm.doc.finished_width || "").trim();
+    const gsm = String(frm.doc.finished_gsm || "").trim();
+    const gsmValue = gsm ? `${gsm}${frm.doc.finished_gsm_uom || ""}` : "";
+    frm.set_value("finished_specification", [width, gsmValue].filter(Boolean).join("*"));
 }
 
 function load_sales_order_item_details(frm) {
@@ -83,28 +91,19 @@ function load_sales_order_items(frm) {
     });
 }
 
-function keep_empty_read_only_fields_visible(frm) {
-    if (!frm.is_new()) return;
-    Object.values(frm.fields_dict || {}).forEach((field) => {
-        if (!field || !field.df || !field.df.read_only || field.__keep_empty_read_only_visible) return;
-        const original_get_status = field.get_status.bind(field);
-        field.get_status = function (explain) {
-            const status = original_get_status(explain);
-            return frm.is_new() && this.df.read_only && !this.df.hidden && status === "None" ? "Read" : status;
-        };
-        field.__keep_empty_read_only_visible = true;
-        field.refresh();
-    });
-    frm.layout.refresh_sections();
-}
-
 function select_multiple_requirements(frm, config) {
+    const excludedNames = (frm.doc[config.table] || [])
+        .map((row) => row[config.link_field])
+        .filter(Boolean);
     let dialog = new frappe.ui.form.MultiSelectDialog({
         doctype: config.doctype,
         setters: {},
         add_filters_group: 0,
         primary_action_label: "添加",
-        get_query: config.get_query,
+        get_query: () => ({
+            query: config.query,
+            filters: { excluded_names: JSON.stringify(excludedNames) },
+        }),
         columns: config.columns,
         action(selections) {
             const existing = new Set((frm.doc[config.table] || []).map((row) => row[config.link_field]));
@@ -131,13 +130,17 @@ function select_multiple_requirements(frm, config) {
 }
 
 function select_production_operations(frm) {
+    const excludedNames = (frm.doc.operations || []).map((row) => row.operation).filter(Boolean);
     let dialog = new frappe.ui.form.MultiSelectDialog({
         doctype: "Production Operation",
         setters: {},
         add_filters_group: 0,
         primary_action_label: "添加",
-        get_query: () => ({ query: get_flow_card_method("get_production_operations_for_selection") }),
-        columns: ["production_operation_code", "production_operation_name", "sequence_no"],
+        get_query: () => ({
+            query: get_flow_card_method("get_production_operations_for_selection"),
+            filters: { excluded_names: JSON.stringify(excludedNames) },
+        }),
+        columns: ["production_operation_name", "sequence_no"],
         action(selections) {
             const selected = new Map(dialog.get_checked_items().map((item) => [item.name, item]));
             const existing = new Set((frm.doc.operations || []).map((row) => row.operation));
@@ -152,6 +155,7 @@ function select_production_operations(frm) {
                 row.sequence_no = operation.sequence_no || next_sequence;
                 next_sequence += 1;
             });
+            sort_production_operations(frm);
             frm.refresh_field("operations");
             dialog.dialog.hide();
         },
@@ -163,6 +167,32 @@ function select_production_operations(frm) {
         const search_control = dialog.dialog.fields_dict.search_term;
         search_control?.section?.wrapper?.addClass("d-none");
     });
+}
+
+function sort_production_operations(frm) {
+    // Submitted/cancelled documents are historical records. Reordering their
+    // child rows during refresh changes the in-memory document and can leave
+    // the form dirty or visually inconsistent even though the user only
+    // opened it for viewing.
+    if (frm.doc.docstatus !== 0) return;
+    const rows = frm.doc.operations || [];
+    rows.sort((left, right) => {
+        const sequenceDifference = flt(left.sequence_no) - flt(right.sequence_no);
+        if (sequenceDifference) return sequenceDifference;
+        return (left.idx || 0) - (right.idx || 0);
+    });
+    rows.forEach((row, index) => { row.idx = index + 1; });
+}
+
+function sort_production_progress_log(frm) {
+    const rows = frm.doc.progress_records || [];
+    rows.sort((left, right) => {
+        const leftTime = moment(left.progress_time || "1900-01-01").valueOf();
+        const rightTime = moment(right.progress_time || "1900-01-01").valueOf();
+        if (rightTime !== leftTime) return rightTime - leftTime;
+        return String(right.creation || "").localeCompare(String(left.creation || ""));
+    });
+    frm.refresh_field("progress_records");
 }
 
 function setup_requirement_tabs(frm) {
@@ -179,11 +209,10 @@ function setup_requirement_tabs(frm) {
         Object.entries(tabs).forEach(([key, item]) => item.section.wrapper.toggleClass("d-none", key !== tab));
         const active = tabs[tab];
         const can_select_requirements = frm.is_new() || frm.doc.docstatus === 0;
-        const disabled_attribute = can_select_requirements ? "" : "disabled title=\"单据已审核或已取消，不能修改明细\"";
         control.$wrapper.html(`
             <div class="d-flex align-items-center gap-2 mb-3">
                 ${Object.entries(tabs).map(([key, item]) => `<button type="button" class="btn btn-sm ${key === tab ? "btn-primary" : "btn-default"}" data-requirement-tab="${key}">${item.label}</button>`).join("")}
-                <button type="button" class="btn btn-sm btn-default ms-2" data-requirement-add="${tab}" ${disabled_attribute}>选择${active.label}</button>
+                ${can_select_requirements ? `<button type="button" class="btn btn-sm btn-default ms-2" data-requirement-add="${tab}">选择${active.label}</button>` : ""}
             </div>
         `);
         control.$wrapper.find("[data-requirement-tab]").on("click", function () {
@@ -201,7 +230,7 @@ function setup_requirement_tabs(frm) {
                     link_field: "process_requirement",
                     source_name_field: "process_requirement_name",
                     target_name_field: "process_requirement_name",
-                    get_query: () => ({ query: get_flow_card_method("get_process_requirements_for_selection") }),
+                    query: get_flow_card_method("get_process_requirements_for_selection"),
                     columns: ["process_requirement_code", "process_requirement_name"],
                     show_all: true,
                 });
@@ -212,7 +241,7 @@ function setup_requirement_tabs(frm) {
                     link_field: "packaging_requirement",
                     source_name_field: "packaging_requirement_name",
                     target_name_field: "packaging_requirement_name",
-                    get_query: () => ({ query: get_flow_card_method("get_packaging_requirements_for_selection") }),
+                    query: get_flow_card_method("get_packaging_requirements_for_selection"),
                     columns: ["packaging_requirement_code", "packaging_requirement_name"],
                     show_all: true,
                 });
@@ -233,6 +262,79 @@ function set_flow_card_queries(frm) {
         query: get_flow_card_method("get_available_grey_fabric_batches"),
         filters: { customer: frm.doc.customer || "", order_type: frm.doc.order_type || "" },
     }));
+    frm.set_query("source_return_to_grey_fabric", () => ({
+        query: get_flow_card_method("get_available_rework_sources"),
+    }));
+    frm.set_query("original_flow_card", () => ({
+        query: get_flow_card_method("get_available_rework_flow_cards"),
+    }));
+    frm.set_query("color_no", () => ({
+        filters: {
+            customer_name: frm.doc.customer || "__no_customer__",
+            status: "启用",
+        },
+    }));
+}
+
+function choose_rework_source(frm) {
+    if (frm.doc.flow_card_type !== "回修" || !frm.doc.original_flow_card || !frm.is_new()) return;
+    frm.set_value("source_return_to_grey_fabric", "");
+    frappe.call({
+        method: get_flow_card_method("get_rework_sources_for_flow_card"),
+        args: { original_flow_card: frm.doc.original_flow_card },
+        freeze: true,
+        freeze_message: "正在匹配可回修批次…",
+        callback(response) {
+            const rows = response.message || [];
+            if (rows.length === 1) {
+                frm.set_value("source_return_to_grey_fabric", rows[0].name);
+                return;
+            }
+            const summary = rows.map((row) =>
+                `<div class="mb-2"><b>${frappe.utils.escape_html(row.name)}</b> | 批次 ${frappe.utils.escape_html(row.return_batch_no || "")}`
+                + ` | ${row.total_roll_count || 0} 匹 | ${row.total_weight || 0} Kg</div>`
+            ).join("");
+            const dialog = new frappe.ui.Dialog({
+                title: "选择本次回修批次",
+                fields: [{
+                    fieldname: "source_summary",
+                    fieldtype: "HTML",
+                    options: summary,
+                }, {
+                    fieldname: "source",
+                    label: "成品退货转胚布仓单",
+                    fieldtype: "Select",
+                    options: rows.map((row) => row.name).join("\n"),
+                    reqd: 1,
+                }],
+                primary_action_label: "确定",
+                primary_action(values) {
+                    frm.set_value("source_return_to_grey_fabric", values.source);
+                    dialog.hide();
+                },
+            });
+            dialog.show();
+        },
+    });
+}
+
+function load_rework_source(frm) {
+    if (frm.doc.flow_card_type !== "回修" || !frm.doc.source_return_to_grey_fabric) return;
+    frappe.call({
+        method: get_flow_card_method("get_rework_source_details"),
+        args: { source_return_to_grey_fabric: frm.doc.source_return_to_grey_fabric },
+        freeze: true,
+        freeze_message: "正在读取回修来源…",
+        callback(response) {
+            const data = response.message || {};
+            const tables = new Set(["grey_fabric_issues", "process_requirements", "packaging_requirements", "operations"]);
+            Object.entries(data).forEach(([fieldname, value]) => {
+                if (!tables.has(fieldname)) frm.set_value(fieldname, value);
+            });
+            tables.forEach((fieldname) => copy_requirement_rows(frm, fieldname, data[fieldname] || []));
+            frm.set_value("production_requirements", frm.doc.production_requirements || `回修来源：${frm.doc.source_return_to_grey_fabric}`);
+        },
+    });
 }
 
 function setup_production_close_actions(frm) {
@@ -268,8 +370,18 @@ function setup_production_close_actions(frm) {
 }
 
 frappe.ui.form.on("Production Flow Card", {
-    setup(frm) { set_flow_card_queries(frm); },
-    refresh(frm) { set_flow_card_queries(frm); keep_empty_read_only_fields_visible(frm); setup_requirement_tabs(frm); setup_production_close_actions(frm); },
+    setup(frm) {
+        if (frm.is_new() && new URLSearchParams(window.location.search).get("rework") === "1") {
+            frm.set_value("flow_card_type", "回修");
+        }
+        set_flow_card_queries(frm);
+    },
+    refresh(frm) {
+        set_flow_card_queries(frm);
+        setup_requirement_tabs(frm);
+        setup_production_close_actions(frm);
+        sort_production_progress_log(frm);
+    },
     after_cancel(frm) {
         frappe.show_alert({ message: "流转卡已恢复为保存状态，可直接修改后重新提交", indicator: "green" });
         frm.reload_doc();
@@ -280,6 +392,21 @@ frappe.ui.form.on("Production Flow Card", {
         load_sales_order_items(frm);
     },
     sales_order_item(frm) { load_sales_order_item_details(frm); },
+    original_flow_card(frm) { choose_rework_source(frm); },
+    source_return_to_grey_fabric(frm) { load_rework_source(frm); },
+    color_no(frm) {
+        if (frm.doc.flow_card_type !== "回修") return;
+        if (!frm.doc.color_no) {
+            frm.set_value("color", "");
+            return;
+        }
+        frappe.db.get_value("Color Master", frm.doc.color_no, "color_name").then((response) => {
+            frm.set_value("color", response.message?.color_name || "");
+        });
+    },
+    finished_width(frm) { update_finished_specification(frm); },
+    finished_gsm(frm) { update_finished_specification(frm); },
+    finished_gsm_uom(frm) { update_finished_specification(frm); },
 });
 
 frappe.ui.form.on("Production Flow Card Grey Fabric Issue", {
@@ -309,5 +436,9 @@ frappe.ui.form.on("Production Flow Card Operation", {
             frappe.model.set_value(cdt, cdn, "operation_name", operation.production_operation_name || "");
             if (!row.sequence_no) frappe.model.set_value(cdt, cdn, "sequence_no", (frm.doc.operations || []).length);
         });
+    },
+    sequence_no(frm) {
+        sort_production_operations(frm);
+        frm.refresh_field("operations");
     },
 });

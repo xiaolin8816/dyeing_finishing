@@ -16,9 +16,11 @@
   "source_doctype",
   "source_document",
   "batch_no",
+  "roll_count",
   "quantity",
   "uom",
-  "dyeing_machine",
+  "yard_qty",
+  "production_resource",
   "material_sheet_type",
   "dyeing_sequence",
   "operator",
@@ -35,7 +37,7 @@
   },
   {
    "fieldname": "operation",
-   "label": "工序",
+   "label": "工序名称",
    "fieldtype": "Data",
    "read_only": 1,
    "in_list_view": 1,
@@ -83,6 +85,14 @@
    "columns": 1
   },
   {
+   "fieldname": "roll_count",
+   "label": "匹数",
+   "fieldtype": "Int",
+   "read_only": 1,
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
    "fieldname": "uom",
    "label": "单位",
    "fieldtype": "Link",
@@ -92,10 +102,19 @@
    "columns": 1
   },
   {
-   "fieldname": "dyeing_machine",
-   "label": "染色机台",
+   "fieldname": "yard_qty",
+   "label": "码数",
+   "fieldtype": "Float",
+   "precision": "3",
+   "read_only": 1,
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "production_resource",
+   "label": "生产机台",
    "fieldtype": "Link",
-   "options": "Dyeing Machine",
+   "options": "Production Resource",
    "read_only": 1,
    "in_list_view": 0
   },

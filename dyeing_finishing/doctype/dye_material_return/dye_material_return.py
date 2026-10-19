@@ -5,13 +5,10 @@ from frappe.model.naming import make_autoname
 from frappe.utils import flt, getdate, nowdate
 
 from dyeing_finishing.dyeing_finishing.doctype.dye_material_other_issue.dye_material_other_issue import (
-    DYE_MATERIAL_GROUPS,
     _get_material_category,
     get_dye_material_item_details,
 )
-
-DYE_WAREHOUSE = "染料仓库 - 沅泰"
-
+from dyeing_finishing.dyeing_finishing.settings import get_dye_material_groups, get_setting
 
 class DyeMaterialReturn(Document):
     def autoname(self):
@@ -21,13 +18,13 @@ class DyeMaterialReturn(Document):
     def before_insert(self):
         self.return_date = self.return_date or getdate(nowdate())
         self.document_code = self.name
-        self.source_warehouse = self.source_warehouse or DYE_WAREHOUSE
+        self.source_warehouse = self.source_warehouse or get_setting("dye_material_warehouse")
 
     def validate(self):
         self.return_date = self.return_date or getdate(nowdate())
         if not self.is_new():
             self.document_code = self.name
-        self.source_warehouse = self.source_warehouse or DYE_WAREHOUSE
+        self.source_warehouse = self.source_warehouse or get_setting("dye_material_warehouse")
         self.return_item_source = self.return_item_source or "原入库单带出"
         self._set_purchase_receipt_details()
         self._set_item_details()
@@ -208,8 +205,8 @@ def get_dye_material_return_items(doctype, txt, searchfield, start, page_len, fi
         LIMIT %(start)s, %(page_len)s
         """,
         {
-            "groups": DYE_MATERIAL_GROUPS,
-            "warehouse": (filters or {}).get("source_warehouse") or DYE_WAREHOUSE,
+            "groups": get_dye_material_groups(),
+            "warehouse": (filters or {}).get("source_warehouse") or get_setting("dye_material_warehouse"),
             "txt": f"%{txt}%",
             "start": start,
             "page_len": page_len,
@@ -219,7 +216,7 @@ def get_dye_material_return_items(doctype, txt, searchfield, start, page_len, fi
 
 @frappe.whitelist()
 def get_manual_return_item_details(item_code, source_warehouse=None):
-    source_warehouse = source_warehouse or DYE_WAREHOUSE
+    source_warehouse = source_warehouse or get_setting("dye_material_warehouse")
     item = frappe.db.get_value("Item", item_code, ["item_name", "item_group", "stock_uom"], as_dict=True)
     if not item or not _get_material_category(item.item_group):
         frappe.throw(_("只能选择染料或助剂物料"))
@@ -242,7 +239,7 @@ def get_purchase_receipt_return_details(purchase_receipt, source_warehouse=None)
     receipt.check_permission("read")
     if receipt.docstatus != 1:
         frappe.throw(_("原染料入库单必须已提交"))
-    source_warehouse = source_warehouse or DYE_WAREHOUSE
+    source_warehouse = source_warehouse or get_setting("dye_material_warehouse")
     if not frappe.db.exists("Warehouse", source_warehouse):
         frappe.throw(_("未找到退货仓库：{0}").format(source_warehouse))
     data = {"supplier": receipt.supplier, "items": []}

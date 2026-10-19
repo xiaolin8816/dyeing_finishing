@@ -1,0 +1,26 @@
+{
+ "actions": [], "allow_rename": 0, "creation": "2026-10-10 00:00:00.000000", "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1,
+ "module": "dyeing_finishing", "name": "Finished Product Return Item", "owner": "Administrator",
+ "field_order": ["piece_no","original_weight","original_yard_qty","return_weight","return_yard_qty","return_type","difference_reason","source_delivery","source_packing_receipt","finished_batch_no","finished_grade","original_quality_flag","inspection_status","disposal_decision","quality_issue","source_delivery_item","packing_receipt_item","roll_no"],
+ "fields": [
+  {"fieldname":"piece_no","label":"匹号","fieldtype":"Int","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"roll_no","label":"成品卷号","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"original_weight","label":"原出库重量(Kg)","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"original_yard_qty","label":"原出库码数(Y)","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"return_weight","label":"实退重量(Kg)","fieldtype":"Float","precision":"3","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"return_yard_qty","label":"实退码数(Y)","fieldtype":"Float","precision":"3","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"return_type","label":"退货类型","fieldtype":"Select","options":"整卷退货\n部分退货","read_only":1},
+  {"fieldname":"difference_reason","label":"数量差异原因","fieldtype":"Small Text","depends_on":"eval:doc.return_type=='部分退货'"},
+  {"fieldname":"source_delivery","label":"来源成品出库单","fieldtype":"Link","options":"Finished Product Delivery","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"source_packing_receipt","label":"来源包装入库单","fieldtype":"Link","options":"Finished Product Packing Receipt","read_only":1},
+  {"fieldname":"finished_batch_no","label":"成品批次","fieldtype":"Link","options":"Batch","read_only":1},
+  {"fieldname":"finished_grade","label":"原成品等级","fieldtype":"Data","read_only":1},
+  {"fieldname":"original_quality_flag","label":"原质量结果","fieldtype":"Data","read_only":1},
+  {"fieldname":"inspection_status","label":"检验状态","fieldtype":"Select","options":"待检\n已检验","default":"待检","read_only":1},
+  {"fieldname":"disposal_decision","label":"处置结论","fieldtype":"Select","options":"未处理\n合格恢复库存\n转其他客户\n返修\n次品\n报废","default":"未处理","read_only":1},
+  {"fieldname":"quality_issue","label":"质量问题说明","fieldtype":"Small Text"},
+  {"fieldname":"source_delivery_item","label":"原出库明细记录","fieldtype":"Data","read_only":1,"hidden":1,"no_copy":1},
+  {"fieldname":"packing_receipt_item","label":"包装明细记录","fieldtype":"Data","read_only":1,"hidden":1,"no_copy":1}
+ ],
+ "permissions": []
+}

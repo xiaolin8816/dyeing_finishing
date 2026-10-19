@@ -42,6 +42,7 @@ class DyeingSalesOrder(Document):
         if not summary:
             return
         synced = self._sync_production_flow_cards()
+        synced_packings = self._sync_open_packing_receipts(synced)
         row = self.append(
             "change_logs",
             {
@@ -50,10 +51,19 @@ class DyeingSalesOrder(Document):
                 "reason": self.change_reason,
                 "note": self.change_note,
                 "summary": summary,
-                "synced_flow_cards": "、".join(synced) if synced else "无",
+                "synced_flow_cards": self._format_sync_result(synced, synced_packings),
             },
         )
         row.db_insert()
+
+    @staticmethod
+    def _format_sync_result(flow_cards, packing_receipts):
+        parts = []
+        if flow_cards:
+            parts.append("流转卡：" + "、".join(flow_cards))
+        if packing_receipts:
+            parts.append("未入库包装单：" + "、".join(packing_receipts))
+        return "；".join(parts) if parts else "无"
 
     def _build_change_summary(self, old_doc):
         if not old_doc:
@@ -71,7 +81,7 @@ class DyeingSalesOrder(Document):
                 changes.append(f"{label}：{old_value or '空'} → {new_value or '空'}")
 
         item_fields = {
-            "item_code": "物料号", "delivery_date": "出货日期", "color_no": "色号",
+            "grey_fabric_batch": "胚布批次", "item_code": "胚布物料编码", "delivery_date": "出货日期", "color_no": "色号",
             "color": "颜色", "finished_product_name": "成品名称", "process_type": "加工类型",
             "finished_width": "成品门幅", "finished_gsm": "成品克重",
             "finished_gsm_uom": "克重单位", "qty": "数量", "uom": "单位",
@@ -148,19 +158,63 @@ class DyeingSalesOrder(Document):
             card.save(ignore_permissions=True)
         return cards
 
+    def _sync_open_packing_receipts(self, card_names):
+        """Refresh requirement snapshots only on packing documents not yet submitted.
+
+        Submitted packing receipts and their stock entries are historical inventory
+        evidence, so later order changes must not rewrite what was actually packed.
+        """
+        if not card_names:
+            return []
+        names = frappe.get_all(
+            "Finished Product Packing Receipt",
+            filters={"production_flow_card": ["in", card_names], "docstatus": 0},
+            pluck="name",
+        )
+        process_text = "；".join(
+            row.process_requirement_name for row in self.process_requirements
+            if row.process_requirement_name
+        )
+        packaging_text = "；".join(
+            row.packaging_requirement_name for row in self.packaging_requirements
+            if row.packaging_requirement_name
+        )
+        for name in names:
+            frappe.db.set_value(
+                "Finished Product Packing Receipt",
+                name,
+                {
+                    "process_requirements": process_text,
+                    "packaging_requirements": packaging_text,
+                },
+                update_modified=False,
+            )
+        return names
+
     @staticmethod
     def _validate_grey_fabric_item(item):
-        if not item.item_code:
-            return
+        if not item.grey_fabric_batch:
+            frappe.throw(_("请在染整销售订单明细中选择胚布批次"))
+        batch = frappe.db.get_value(
+            "Batch", item.grey_fabric_batch, ["item", "disabled"], as_dict=True
+        )
+        if not batch:
+            frappe.throw(_("胚布批次 {0} 不存在").format(item.grey_fabric_batch))
+        if batch.disabled:
+            frappe.throw(_("胚布批次 {0} 已停用").format(item.grey_fabric_batch))
+        item.item_code = batch.item
         item_data = frappe.db.get_value(
-            "Item", item.item_code, ["item_group", "disabled"], as_dict=True
+            "Item", item.item_code, ["item_name", "stock_uom", "item_group", "disabled"], as_dict=True
         )
         if not item_data:
             frappe.throw(f"物料 {item.item_code} 不存在")
         if item_data.disabled:
             frappe.throw(f"物料 {item.item_code} 已停用，不能用于染整销售订单")
-        if item_data.item_group != "胚布":
+        from dyeing_finishing.dyeing_finishing.settings import get_setting
+        if item_data.item_group != get_setting("grey_fabric_item_group"):
             frappe.throw(f"物料 {item.item_code} 不属于胚布物料组，不能用于染整销售订单")
+        item.item_name = item_data.item_name
+        item.uom = item_data.stock_uom
 
     def _set_list_summary(self):
         item = next(iter(self.items or []), None)

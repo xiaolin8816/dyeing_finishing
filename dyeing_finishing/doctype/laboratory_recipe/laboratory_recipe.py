@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import getdate, nowdate
+from frappe.utils import cint, getdate, nowdate
 from dyeing_finishing.dyeing_finishing.doctype.color_master.color_master import (
     get_grey_fabric_batch_details,
 )
@@ -43,6 +43,17 @@ class LaboratoryRecipe(Document):
     def _set_color_details(self):
         if not self.color_no:
             frappe.throw(_("请选择色号"))
+        existing_recipe = frappe.db.get_value(
+            "Laboratory Recipe",
+            {"color_no": self.color_no, "name": ["!=", self.name or ""]},
+            "name",
+        )
+        if existing_recipe:
+            frappe.throw(
+                _("\u8272\u53f7 {0} \u5df2\u5efa\u7acb\u5316\u9a8c\u5ba4\u914d\u65b9\uff1a{1}\uff0c\u4e0d\u80fd\u91cd\u590d\u5efa\u6863").format(
+                    self.color_no, existing_recipe
+                )
+            )
         color_master = frappe.get_doc("Color Master", self.color_no)
         if color_master.status != "启用":
             frappe.throw(_("只能选择状态为启用的色号"))
@@ -82,6 +93,40 @@ class LaboratoryRecipe(Document):
         template = frappe.get_doc("Process Parameter Template", self.process_parameter_template)
         if template.status != "启用":
             frappe.throw(_("只能选择状态为启用的工艺参数模板"))
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_available_color_numbers(doctype, txt, searchfield, start, page_len, filters=None):
+    """只返回启用且尚未建立化验室配方的色号。"""
+    filters = frappe.parse_json(filters) or {}
+    current_recipe = filters.get("current_recipe") or ""
+    return frappe.db.sql(
+        """
+        SELECT color.name, color.color_name, color.product_name
+        FROM `tabColor Master` color
+        WHERE color.status = '启用'
+          AND (
+              color.name LIKE %(txt)s
+              OR COALESCE(color.color_name, '') LIKE %(txt)s
+              OR COALESCE(color.product_name, '') LIKE %(txt)s
+          )
+          AND NOT EXISTS (
+              SELECT 1
+              FROM `tabLaboratory Recipe` recipe
+              WHERE recipe.color_no = color.name
+                AND recipe.name != %(current_recipe)s
+          )
+        ORDER BY color.modified DESC, color.name
+        LIMIT %(page_len)s OFFSET %(start)s
+        """,
+        {
+            "txt": f"%{txt}%",
+            "current_recipe": current_recipe,
+            "page_len": cint(page_len),
+            "start": cint(start),
+        },
+    )
 
 
 def _get_recipe_for_confirmation(name):

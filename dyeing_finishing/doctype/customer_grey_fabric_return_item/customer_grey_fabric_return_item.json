@@ -1,0 +1,21 @@
+{
+ "actions": [], "allow_rename": 0, "creation": "2026-10-11 00:00:00.000000", "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1, "module": "dyeing_finishing", "name": "Customer Grey Fabric Return Item", "owner": "Administrator",
+ "field_order": ["batch_no", "item_name", "color", "stock_roll_count", "stock_qty", "return_roll_count", "return_qty", "remaining_roll_count", "remaining_qty", "stock_uom", "source_warehouse", "location", "source_receipt", "item_code", "remarks"],
+ "fields": [
+  {"fieldname":"batch_no","label":"胚布批次","fieldtype":"Link","options":"Batch","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"item_name","label":"胚布名称","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"color","label":"颜色","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"stock_roll_count","label":"库存匹数","fieldtype":"Float","precision":"2","read_only":1},
+  {"fieldname":"stock_qty","label":"库存数量","fieldtype":"Float","precision":"3","read_only":1},
+  {"fieldname":"return_roll_count","label":"退货匹数","fieldtype":"Int","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"return_qty","label":"退货数量","fieldtype":"Float","precision":"3","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"remaining_roll_count","label":"退后库存匹数","fieldtype":"Float","precision":"2","read_only":1},
+  {"fieldname":"remaining_qty","label":"退后库存数量","fieldtype":"Float","precision":"3","read_only":1},
+  {"fieldname":"stock_uom","label":"单位","fieldtype":"Data","read_only":1},
+  {"fieldname":"source_warehouse","label":"仓库/货位","fieldtype":"Link","options":"Warehouse","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"location","label":"货位编号","fieldtype":"Data","read_only":1},
+  {"fieldname":"source_receipt","label":"原胚布入库单","fieldtype":"Link","options":"Customer Grey Fabric Receipt","read_only":1},
+  {"fieldname":"item_code","label":"胚布物料编码","fieldtype":"Link","options":"Item","read_only":1},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Data"}
+ ], "permissions": []
+}

@@ -12529,7 +12529,6 @@ Process Parameter Template Item,工艺参数模板项目
 Production Transit Warehouse Stock,生产中转仓库存
 Dyeing Machine,染色机台
 Site Dyeing Material Sheet,现场染色料单
-Dye Material Receipt Register,染料入库记录
 Dye Material Stock,染料库存
 Site Dyeing Material Issue,现场染色领料单
 Site Dyeing Material Issue Item,现场染色领料明细
@@ -12543,9 +12542,59 @@ Dye Material Other Issue Item,染料其他出库明细
 
 Dye Material Return,染料退货单
 Dye Material Return Item,染料退货明细
+Dye Material Return Register,染料退货记录
 New Dye Material Return,新建染料退货单
 Dye Material Return List,染料退货单列表
 Dyeing Sales Order,染整销售订单
 Dyeing Sales Order Item,染整销售订单明细
 New Dyeing Sales Order,新建染整销售订单
 Dyeing Sales Order List,染整销售订单列表
+Finished Product Packing Receipt,成品包装入库单
+Finished Product Packing Receipt Item,成品包装入库明细
+New Finished Product Packing Receipt,新建成品包装入库单
+Finished Product Packing Receipt List,成品包装入库单列表
+Finished Product Stock,成品库存查询
+Finished Product Delivery,成品出库单
+Finished Product Delivery Item,成品出库明细
+Finished Product Customer Transfer,成品转客户单
+Finished Product Customer Transfer Item,成品转客户明细
+New Finished Product Customer Transfer,新建成品转客户单
+Finished Product Customer Transfer List,成品转客户单列表
+Production Flow Card Progress Query,生产流转卡进度查询
+Dyeing Finishing License,印染整理授权管理
+Dyeing System Settings,印染系统设置
+Company Name Change,公司名称变更
+Finished Product Return,成品退货处理单
+Finished Product Return Item,成品退货明细
+Finished Product Return Stock,成品退货库存查询
+Finished Product Return to Grey Fabric,成品退货转胚布仓
+Finished Product Return to Grey Fabric Item,退货转胚布明细
+Customer Grey Fabric Return,客户胚布退货单
+Customer Grey Fabric Return Item,胚布退货明细
+Production Shift,生产班次
+Production Shift List,生产班次列表
+New Production Shift,新建生产班次
+Machine Production Calendar,设备停机记录
+Machine Production Calendar List,设备停机记录列表
+New Machine Production Calendar,新建设备停机记录
+Dyeing Production Schedule,生产排程计划
+New Dyeing Production Schedule,新建生产排程计划
+Dyeing Production Schedule List,排程记录
+Dyeing Production Schedule Item,生产排程明细
+Finished Product to Grey Fabric,成品库存转胚布仓
+Finished Product to Grey Fabric Item,成品转胚布明细
+New Finished Product to Grey Fabric,新建成品库存转胚布仓
+Finished Product to Grey Fabric List,成品库存转胚布仓列表
+Finished Product Blank Label,成品空白标签打印单
+New Finished Product Blank Label,新建成品空白标签打印单
+Finished Product Blank Label List,成品空白标签打印单列表
+Grey Fabric Customer Transfer,胚布过户单
+Grey Fabric Customer Transfer Item,胚布过户明细
+New Grey Fabric Customer Transfer,新建胚布过户单
+Grey Fabric Customer Transfer List,胚布过户单列表
+Production Work Center,生产工段
+Production Work Center List,生产工段列表
+New Production Work Center,新建生产工段
+Production Resource,生产机台
+Production Resource List,生产机台列表
+New Production Resource,新建生产机台

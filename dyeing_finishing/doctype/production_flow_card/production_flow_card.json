@@ -2,7 +2,7 @@
  "actions": [],
  "allow_bulk_edit": 1,
  "allow_rename": 0,
- "autoname": "YY.MM.DD.###",
+ "autoname": "",
  "creation": "2026-09-30 10:00:00.000000",
  "doctype": "DocType",
  "document_type": "Document",
@@ -20,17 +20,32 @@
   "details_tab",
   "document_info_section",
   "flow_card_no",
-  "document_status",
-  "production_status",
   "document_column_2",
-  "sales_order",
-  "customer",
+  "original_flow_card",
   "document_column_3",
-  "color_no",
-  "color",
+  "document_status",
   "document_column_4",
-  "sales_order_item",
+  "flow_card_type",
+  "document_row_2",
+  "production_status",
+  "document_row_2_column_2",
+  "sales_order",
+  "company",
+  "customer",
+  "document_row_2_column_3",
+  "rework_count",
+  "document_row_2_column_4",
   "barcode",
+  "document_row_3",
+  "color_no",
+  "document_row_3_column_2",
+  "color",
+  "document_row_3_column_3",
+  "sales_order_item",
+  "source_return_to_grey_fabric",
+  "source_finished_product_to_grey_fabric",
+  "document_row_3_column_4",
+  "previous_flow_card",
   "closure_info_section",
   "closure_date",
   "closure_reason",
@@ -38,18 +53,19 @@
   "closed_by",
   "closure_remarks",
   "finished_product_section",
-  "finished_width",
   "finished_product_name",
+  "finished_width",
+  "finished_specification",
   "finished_product_column_2",
   "finished_gsm",
+  "finished_gsm_uom",
   "finished_uom",
-  "finished_product_column_3",
-  "finished_specification",
   "production_qty",
-  "current_operation",
-  "finished_product_column_4",
+  "finished_product_column_3",
+  "production_requirements",
   "is_subcontracted",
   "is_completed",
+  "current_operation",
   "grey_fabric_issues_section",
   "grey_fabric_issues",
   "requirements_tabs_section",
@@ -60,6 +76,16 @@
   "packaging_requirements",
   "operations_section",
   "operations",
+  "scheduling_tab",
+  "scheduling_section",
+  "production_priority",
+  "scheduling_col_2",
+  "earliest_start_date",
+  "scheduling_col_3",
+  "planned_completion_date",
+  "scheduling_row_2",
+  "schedule_locked",
+  "scheduling_notes",
   "order_data_tab",
   "order_source_section",
   "customer_order_no",
@@ -74,7 +100,6 @@
   "remarks_section",
   "order_remarks",
   "remarks_column_2",
-  "production_remarks",
   "production_progress_tab",
   "production_progress_section",
   "current_progress_status",
@@ -83,6 +108,21 @@
   "progress_column_3",
   "latest_source_document",
   "latest_source_doctype",
+  "packing_progress_summary_section",
+  "packing_receipt_count",
+  "packing_summary_column_2",
+  "packed_roll_count",
+  "packing_summary_column_3",
+  "packed_weight",
+  "packing_summary_column_4",
+  "packed_yard_qty",
+  "packing_summary_row_2",
+  "packing_in_progress_weight",
+  "packing_summary_row_2_column_2",
+  "packing_remaining_qty",
+  "packing_summary_row_2_column_3",
+  "packing_completion_rate",
+  "packing_summary_row_2_column_4",
   "process_progress_records_section",
   "progress_records",
   "relation_tab",
@@ -123,6 +163,16 @@
    "idx": 4
   },
   {
+   "fieldname": "flow_card_type",
+   "label": "流转卡类型",
+   "fieldtype": "Select",
+   "options": "正常生产\n回修",
+   "default": "正常生产",
+   "read_only_depends_on": "eval:!doc.__islocal",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
    "fieldname": "document_column_2",
    "label": "",
    "fieldtype": "Column Break",
@@ -133,13 +183,23 @@
    "label": "染整销售订单",
    "fieldtype": "Link",
    "options": "Dyeing Sales Order",
-   "reqd": 1,
+   "mandatory_depends_on": "eval:doc.flow_card_type != '回修'",
+   "depends_on": "eval:doc.flow_card_type != '回修'",
    "in_list_view": 1,
    "idx": 6
   },
   {
+   "fieldname": "company",
+   "label": "公司",
+   "fieldtype": "Link",
+   "options": "Company",
+   "read_only": 1,
+   "fetch_from": "sales_order.company",
+   "fetch_if_empty": 1
+  },
+  {
    "fieldname": "customer",
-   "label": "客户",
+   "label": "客户名称",
    "fieldtype": "Link",
    "options": "Customer",
    "read_only": 1,
@@ -157,7 +217,7 @@
    "label": "色号",
    "fieldtype": "Link",
    "options": "Color Master",
-   "read_only": 1,
+   "read_only_depends_on": "eval:doc.flow_card_type != '回修' || doc.docstatus != 0",
    "in_list_view": 1,
    "idx": 9
   },
@@ -179,9 +239,42 @@
    "label": "染整销售订单明细",
    "fieldtype": "Link",
    "options": "Dyeing Sales Order Item",
-   "reqd": 1,
+   "mandatory_depends_on": "eval:doc.flow_card_type != '回修'",
+   "depends_on": "eval:doc.flow_card_type != '回修'",
    "idx": 12,
    "in_list_view": 0
+  },
+  {
+   "fieldname": "document_row_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "document_row_2_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_row_2_column_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_row_2_column_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_row_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "document_row_3_column_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_row_3_column_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_row_3_column_4",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "barcode",
@@ -191,8 +284,59 @@
    "idx": 13
   },
   {
+   "fieldname": "source_return_to_grey_fabric",
+   "label": "成品退货转胚布仓单",
+   "fieldtype": "Link",
+   "options": "Finished Product Return to Grey Fabric",
+   "read_only": 1,
+   "depends_on": "eval:doc.flow_card_type == '回修' && doc.source_return_to_grey_fabric",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "source_finished_product_to_grey_fabric",
+   "label": "成品库存转胚布仓单",
+   "fieldtype": "Link",
+   "options": "Finished Product to Grey Fabric",
+   "read_only": 1,
+   "depends_on": "eval:doc.flow_card_type == '回修' && doc.source_finished_product_to_grey_fabric",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "original_flow_card",
+   "label": "原始生产流转卡",
+   "fieldtype": "Link",
+   "options": "Production Flow Card",
+   "mandatory_depends_on": "eval:doc.flow_card_type == '回修'",
+   "read_only_depends_on": "eval:!doc.__islocal",
+   "depends_on": "eval:doc.flow_card_type == '回修'",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "previous_flow_card",
+   "label": "上一次生产流转卡",
+   "fieldtype": "Link",
+   "options": "Production Flow Card",
+   "read_only": 1,
+   "hidden": 1,
+   "depends_on": "eval:doc.flow_card_type == '回修'"
+  },
+  {
+   "fieldname": "rework_count",
+   "label": "回修次数",
+   "fieldtype": "Int",
+   "read_only": 1,
+   "depends_on": "eval:doc.flow_card_type == '回修'",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "production_requirements",
+   "label": "生产要求",
+   "fieldtype": "Small Text",
+   "read_only_depends_on": "eval:doc.docstatus != 0"
+  },
+  {
    "fieldname": "finished_product_section",
-   "label": "成品资料",
+   "label": "成品资料及生产要求",
    "fieldtype": "Section Break",
    "idx": 14
   },
@@ -200,14 +344,14 @@
    "fieldname": "finished_product_name",
    "label": "成品名称",
    "fieldtype": "Data",
-   "read_only": 1,
+   "read_only_depends_on": "eval:doc.flow_card_type != '回修' || doc.docstatus != 0",
    "idx": 15
   },
   {
    "fieldname": "finished_width",
    "label": "成品门幅",
    "fieldtype": "Data",
-   "read_only": 1,
+   "read_only_depends_on": "eval:doc.flow_card_type != '回修' || doc.docstatus != 0",
    "idx": 16
   },
   {
@@ -219,15 +363,23 @@
    "fieldname": "finished_gsm",
    "label": "成品克重",
    "fieldtype": "Data",
-   "read_only": 1,
+   "read_only_depends_on": "eval:doc.flow_card_type != '回修' || doc.docstatus != 0",
    "idx": 18
+  },
+  {
+   "fieldname": "finished_gsm_uom",
+   "label": "成品克重单位",
+   "fieldtype": "Select",
+   "options": "g/㎡\ng/y",
+   "default": "g/㎡",
+   "read_only_depends_on": "eval:doc.flow_card_type != '回修' || doc.docstatus != 0"
   },
   {
    "fieldname": "finished_uom",
    "label": "成品单位",
    "fieldtype": "Link",
    "options": "UOM",
-   "read_only": 1,
+   "read_only_depends_on": "eval:doc.flow_card_type != '回修' || doc.docstatus != 0",
    "idx": 19
   },
   {
@@ -259,11 +411,6 @@
    "read_only": 1,
    "idx": 23,
    "hidden": 1
-  },
-  {
-   "fieldname": "finished_product_column_4",
-   "fieldtype": "Column Break",
-   "idx": 24
   },
   {
    "fieldname": "is_subcontracted",
@@ -347,6 +494,16 @@
    "idx": 36,
    "reqd": 1
   },
+  {"fieldname":"scheduling_tab","label":"生产排程","fieldtype":"Tab Break"},
+  {"fieldname":"scheduling_section","label":"排程控制","fieldtype":"Section Break"},
+  {"fieldname":"production_priority","label":"生产优先级","fieldtype":"Select","options":"普通\n加急\n特急","default":"普通","in_list_view":1},
+  {"fieldname":"scheduling_col_2","fieldtype":"Column Break"},
+  {"fieldname":"earliest_start_date","label":"最早开工日期","fieldtype":"Date"},
+  {"fieldname":"scheduling_col_3","fieldtype":"Column Break"},
+  {"fieldname":"planned_completion_date","label":"内部计划完工日期","fieldtype":"Date"},
+  {"fieldname":"scheduling_row_2","fieldtype":"Section Break"},
+  {"fieldname":"schedule_locked","label":"锁定排程","fieldtype":"Check","default":"0"},
+  {"fieldname":"scheduling_notes","label":"排程备注","fieldtype":"Small Text"},
   {
    "fieldname": "order_data_tab",
    "fieldtype": "Tab Break",
@@ -439,12 +596,6 @@
    "idx": 50
   },
   {
-   "fieldname": "production_remarks",
-   "label": "生产备注",
-   "fieldtype": "Small Text",
-   "idx": 51
-  },
-  {
    "fieldname": "production_progress_tab",
    "label": "生产进度",
    "fieldtype": "Tab Break"
@@ -484,8 +635,27 @@
    "read_only": 1
   },
   {
+   "fieldname": "packing_progress_summary_section",
+   "label": "成品包装汇总",
+   "fieldtype": "Section Break"
+  },
+  {"fieldname": "packing_receipt_count", "label": "已入库次数", "fieldtype": "Int", "read_only": 1},
+  {"fieldname": "packing_summary_column_2", "fieldtype": "Column Break"},
+  {"fieldname": "packed_roll_count", "label": "已入库匹数", "fieldtype": "Int", "read_only": 1},
+  {"fieldname": "packing_summary_column_3", "fieldtype": "Column Break"},
+  {"fieldname": "packed_weight", "label": "已入库重量", "fieldtype": "Float", "precision": "3", "read_only": 1},
+  {"fieldname": "packing_summary_column_4", "fieldtype": "Column Break"},
+  {"fieldname": "packed_yard_qty", "label": "已入库码数", "fieldtype": "Float", "precision": "3", "read_only": 1},
+  {"fieldname": "packing_summary_row_2", "fieldtype": "Section Break"},
+  {"fieldname": "packing_in_progress_weight", "label": "包装中重量", "fieldtype": "Float", "precision": "3", "read_only": 1},
+  {"fieldname": "packing_summary_row_2_column_2", "fieldtype": "Column Break"},
+  {"fieldname": "packing_remaining_qty", "label": "中转仓剩余量", "fieldtype": "Float", "precision": "3", "read_only": 1},
+  {"fieldname": "packing_summary_row_2_column_3", "fieldtype": "Column Break"},
+  {"fieldname": "packing_completion_rate", "label": "包装完成率", "fieldtype": "Percent", "precision": "2", "read_only": 1},
+  {"fieldname": "packing_summary_row_2_column_4", "fieldtype": "Column Break"},
+  {
    "fieldname": "process_progress_records_section",
-   "label": "工序进度表",
+   "label": "生产进度日志（最新在前）",
    "fieldtype": "Section Break"
   },
   {

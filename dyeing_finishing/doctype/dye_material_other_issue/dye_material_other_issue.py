@@ -8,10 +8,7 @@ from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_f
     ensure_flow_card_open,
     record_production_progress,
 )
-
-DYE_WAREHOUSE = "染料仓库 - 沅泰"
-DYE_MATERIAL_GROUPS = ("染料", "助剂")
-
+from dyeing_finishing.dyeing_finishing.settings import get_dye_material_groups
 
 class DyeMaterialOtherIssue(Document):
     def autoname(self):
@@ -187,7 +184,7 @@ def get_dye_material_items(doctype, txt, searchfield, start, page_len, filters):
         ORDER BY item.name
         LIMIT %(start)s, %(page_len)s
         """,
-        {"groups": DYE_MATERIAL_GROUPS, "txt": f"%{txt}%", "start": start, "page_len": page_len},
+        {"groups": get_dye_material_groups(), "txt": f"%{txt}%", "start": start, "page_len": page_len},
     )
 
 
@@ -195,7 +192,7 @@ def _get_material_category(item_group):
     group = frappe.db.get_value("Item Group", item_group, ["lft", "rgt"], as_dict=True)
     if not group:
         return None
-    for category in DYE_MATERIAL_GROUPS:
+    for category in get_dye_material_groups():
         root = frappe.db.get_value("Item Group", category, ["lft", "rgt"], as_dict=True)
         if root and root.lft <= group.lft and group.rgt <= root.rgt:
             return category

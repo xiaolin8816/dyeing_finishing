@@ -10,11 +10,23 @@
  "name": "Production Flow Card Operation",
  "owner": "Administrator",
  "field_order": [
+  "operation_name",
   "operation",
   "operation_code",
-  "operation_name",
   "sequence_no",
   "operation_status",
+  "completed_qty",
+  "pending_qty",
+  "production_resource",
+  "resource_name",
+  "planned_start",
+  "planned_end",
+  "estimated_hours",
+  "production_shift",
+  "schedule_status",
+  "production_schedule",
+  "actual_start",
+  "actual_end",
   "job_card"
  ],
  "fields": [
@@ -24,14 +36,16 @@
    "fieldtype": "Link",
    "options": "Production Operation",
    "reqd": 1,
-   "in_list_view": 1
+   "in_list_view": 0,
+   "hidden": 1
   },
   {
    "fieldname": "operation_code",
    "label": "工序编码",
    "fieldtype": "Data",
    "read_only": 1,
-   "in_list_view": 0
+   "in_list_view": 0,
+   "hidden": 1
   },
   {
    "fieldname": "operation_name",
@@ -55,12 +69,24 @@
    "default": "待生产",
    "in_list_view": 1
   },
+  {"fieldname":"completed_qty","label":"累计完成数量","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1},
+  {"fieldname":"pending_qty","label":"剩余数量","fieldtype":"Float","precision":"3","read_only":1},
   {
    "fieldname": "job_card",
    "label": "工序作业卡",
    "fieldtype": "Link",
    "options": "Job Card",
    "in_list_view": 1
-  }
+  },
+  {"fieldname":"production_resource","label":"生产机台","fieldtype":"Link","options":"Production Resource","read_only":1,"in_list_view":1},
+  {"fieldname":"resource_name","label":"资源名称","fieldtype":"Data","read_only":1},
+  {"fieldname":"planned_start","label":"计划开始","fieldtype":"Datetime","read_only":1,"in_list_view":1},
+  {"fieldname":"planned_end","label":"计划结束","fieldtype":"Datetime","read_only":1,"in_list_view":1},
+  {"fieldname":"estimated_hours","label":"预计工时","fieldtype":"Float","precision":"2","read_only":1},
+  {"fieldname":"production_shift","label":"生产班次","fieldtype":"Link","options":"Production Shift","read_only":1},
+  {"fieldname":"schedule_status","label":"排程状态","fieldtype":"Select","options":"未排程\n已排程\n生产中\n已完成\n暂停","default":"未排程","read_only":1},
+  {"fieldname":"production_schedule","label":"生产排程计划","fieldtype":"Link","options":"Dyeing Production Schedule","read_only":1},
+  {"fieldname":"actual_start","label":"实际开始","fieldtype":"Datetime","read_only":1},
+  {"fieldname":"actual_end","label":"实际结束","fieldtype":"Datetime","read_only":1}
  ]
 }
