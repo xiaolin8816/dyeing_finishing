@@ -8,8 +8,8 @@ frappe.ui.form.on("Company Name Change", {
       return;
     }
     if (frm.is_new() || frm.doc.status === "已完成") return;
-    frm.add_custom_button("预览影响", () => preview_change(frm), "操作");
-    frm.add_custom_button(frm.doc.status === "失败" ? "重新执行变更" : "确认变更公司资料", () => confirm_change(frm), "操作");
+    frm.page.add_action_item("预览影响", () => preview_change(frm));
+    frm.page.add_action_item(frm.doc.status === "失败" ? "重新执行变更" : "确认变更公司资料", () => confirm_change(frm));
   },
   old_company(frm) {
     if (!frm.doc.old_company) return;

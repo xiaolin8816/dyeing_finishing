@@ -169,7 +169,7 @@ def _available_rows(customer=None):
 		condition = "AND owner.customer=%(customer)s"; values["customer"] = customer
 	return frappe.db.sql(f"""SELECT stock.batch_no, stock.item_code, item.item_name, owner.color,
 		stock.warehouse AS source_warehouse, warehouse.parent_warehouse AS location,
-		stock.stock_qty, GREATEST(COALESCE(receipt_rolls.roll_count,0)+COALESCE(rolls.roll_count,0),0) AS stock_roll_count,
+		stock.stock_qty, GREATEST(COALESCE(receipt_rolls.roll_count,0)+COALESCE(rolls.roll_count,0)+COALESCE(counts.roll_count,0),0) AS stock_roll_count,
 		owner.customer, owner.customer_name
 	FROM (SELECT sle.item_code, COALESCE(NULLIF(sle.batch_no,''), sbe.batch_no) batch_no, sle.warehouse, SUM(sle.actual_qty) stock_qty
 		FROM `tabStock Ledger Entry` sle LEFT JOIN `tabSerial and Batch Entry` sbe ON sbe.parent=sle.serial_and_batch_bundle
@@ -184,6 +184,12 @@ def _available_rows(customer=None):
 		SELECT d.item_code,d.batch_no,d.t_warehouse warehouse,COALESCE(d.custom_roll_count,0) delta FROM `tabStock Entry Detail` d INNER JOIN `tabStock Entry` e ON e.name=d.parent AND e.docstatus=1 WHERE COALESCE(d.t_warehouse,'')!=''
 		UNION ALL SELECT d.item_code,d.batch_no,d.s_warehouse,-COALESCE(d.custom_roll_count,0) FROM `tabStock Entry Detail` d INNER JOIN `tabStock Entry` e ON e.name=d.parent AND e.docstatus=1 WHERE COALESCE(d.s_warehouse,'')!='') movement GROUP BY item_code,batch_no,warehouse) rolls
 		ON rolls.item_code=stock.item_code AND rolls.batch_no=stock.batch_no AND rolls.warehouse=stock.warehouse
+	LEFT JOIN (SELECT item.item_code,item.batch_no,item.stock_warehouse warehouse,SUM(item.difference_roll_count) roll_count
+		FROM `tabGrey Fabric Inventory Count Item` item
+		INNER JOIN `tabGrey Fabric Inventory Count` count_doc ON count_doc.name=item.parent
+			AND count_doc.docstatus=1 AND count_doc.status IN ('已审核', '已盘点')
+		GROUP BY item.item_code,item.batch_no,item.stock_warehouse) counts
+		ON counts.item_code=stock.item_code AND counts.batch_no=stock.batch_no AND counts.warehouse=stock.warehouse
 	WHERE stock.warehouse != %(transit_warehouse)s AND item.item_group IN (SELECT name FROM `tabItem Group` WHERE lft >= (SELECT lft FROM `tabItem Group` WHERE name=%(grey_group)s) AND rgt <= (SELECT rgt FROM `tabItem Group` WHERE name=%(grey_group)s)) {condition}
 	ORDER BY stock.batch_no,stock.warehouse""", {**values, "grey_group":get_setting("grey_fabric_item_group"), "transit_warehouse":get_setting("production_transit_warehouse")}, as_dict=True)
 

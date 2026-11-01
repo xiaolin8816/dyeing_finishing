@@ -22,5 +22,5 @@
   {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产机台","link_count":0,"link_to":"Production Resource","link_type":"DocType","onboard":0,"type":"Link"},
   {"dependencies":"","hidden":0,"is_query_report":0,"label":"生产班次","link_count":0,"link_to":"Production Shift","link_type":"DocType","onboard":0,"type":"Link"}
  ],
- "module":"dyeing_finishing","name":"印染基础资料","number_cards":[],"parent_page":"印染整理","public":1,"quick_lists":[],"roles":[],"sequence_id":10,"shortcuts":[],"title":"基础资料","type":"Workspace"
+ "module":"dyeing_finishing","name":"印染基础资料","number_cards":[],"parent_page":"印染管理","public":1,"quick_lists":[],"roles":[],"sequence_id":10,"shortcuts":[],"title":"基础资料","type":"Workspace"
 }

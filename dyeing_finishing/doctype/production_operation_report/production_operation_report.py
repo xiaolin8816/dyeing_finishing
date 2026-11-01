@@ -46,8 +46,23 @@ class ProductionOperationReport(Document):
 				self.operation_name, self.completed_qty, self.uom or ""
 			),
 		)
+		if (self.operation_name or "").strip() == "染色":
+			from dyeing_finishing.dyeing_finishing.doctype.dyeing_production_actual.dyeing_production_actual import (
+				ensure_dyeing_production_actual,
+			)
+
+			ensure_dyeing_production_actual(self)
 
 	def on_cancel(self):
+		actual = frappe.db.get_value(
+			"Dyeing Production Actual",
+			{"production_operation_report": self.name, "docstatus": ["<", 2]},
+			["name", "docstatus"],
+			as_dict=True,
+		)
+		if actual:
+			action = _("取消") if actual.docstatus == 1 else _("删除")
+			frappe.throw(_("请先{0}关联的染色生产实绩单 {1}，再取消此报工单").format(action, actual.name))
 		self.db_set("report_status", "已取消", update_modified=False)
 		remove_production_progress("Production Operation Report", self.name)
 		_refresh_operation(self.production_flow_card, self.operation_row)

@@ -103,7 +103,7 @@
   {"fieldname":"default_work_center","label":"默认生产工段","fieldtype":"Link","options":"Production Work Center"},
   {"fieldname":"fixed_batch_minutes","label":"每批固定时间(分钟)","fieldtype":"Int","default":"0"},
   {"fieldname":"scheduling_col_3","fieldtype":"Column Break"},
-  {"fieldname":"resource_type","label":"要求资源类型","fieldtype":"Select","options":"染缸\n松布机\n验布机\n定型机\n订边机\n脱水机\n洗水机\n烘干机\n开幅机\n整理机\n包装设备\n人工班组\n委外供应商\n其他"},
+  {"fieldname":"resource_type","label":"要求资源类型","fieldtype":"Select","options":"染缸\n松布机\n验布机\n定型机\n订边机\n脱水机\n洗水机\n烘干机\n开幅机\n整理机\n包装设备\n人工班组\n加工商\n其他"},
   {"fieldname":"minutes_per_kg","label":"每公斤标准分钟数","fieldtype":"Float","precision":"4","default":"0"},
   {"fieldname":"scheduling_row_2","fieldtype":"Section Break"},
   {"fieldname":"setup_minutes","label":"准备时间(分钟)","fieldtype":"Int","default":"0"},

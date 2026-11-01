@@ -1,0 +1,23 @@
+{
+ "doctype":"DocType","name":"Dyeing Energy Allocation Item","module":"dyeing_finishing","istable":1,"editable_grid":1,
+ "field_order":["meter","meter_name","energy_type","production_flow_card","production_actual","production_resource","source_consumption","basis_value","basis_total","allocated_consumption","uom","cost_element","unit_rate","estimated_amount","source_reading_item","period_start","period_end"],
+ "fields":[
+  {"fieldname":"meter","label":"表计编码","fieldtype":"Link","options":"Dyeing Energy Meter","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"meter_name","label":"表计名称","fieldtype":"Data","read_only":1},
+  {"fieldname":"energy_type","label":"能源类型","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"production_flow_card","label":"生产流转卡","fieldtype":"Link","options":"Production Flow Card","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"production_actual","label":"染色生产实绩单","fieldtype":"Link","options":"Dyeing Production Actual","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"production_resource","label":"生产机台","fieldtype":"Link","options":"Production Resource","read_only":1},
+  {"fieldname":"source_consumption","label":"表计用量","fieldtype":"Float","precision":"6","read_only":1},
+  {"fieldname":"basis_value","label":"分摊依据值","fieldtype":"Float","precision":"6","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"basis_total","label":"依据合计","fieldtype":"Float","precision":"6","read_only":1},
+  {"fieldname":"allocated_consumption","label":"分摊用量","fieldtype":"Float","precision":"6","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"uom","label":"单位","fieldtype":"Link","options":"UOM","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"cost_element","label":"成本要素","fieldtype":"Link","options":"Dyeing Cost Element","read_only":1},
+  {"fieldname":"unit_rate","label":"费率单价","fieldtype":"Currency","read_only":1},
+  {"fieldname":"estimated_amount","label":"测算金额","fieldtype":"Currency","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"source_reading_item","label":"来源抄表明细","fieldtype":"Data","read_only":1},
+  {"fieldname":"period_start","label":"区间开始","fieldtype":"Datetime","read_only":1},
+  {"fieldname":"period_end","label":"区间结束","fieldtype":"Datetime","read_only":1}
+ ],"permissions":[]
+}

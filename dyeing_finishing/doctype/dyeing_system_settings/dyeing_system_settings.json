@@ -8,13 +8,15 @@
  "module": "dyeing_finishing",
  "name": "Dyeing System Settings",
  "owner": "Administrator",
- "field_order": ["warehouse_section","production_transit_warehouse","warehouse_column_2","dye_material_warehouse","warehouse_column_3","finished_product_warehouse","return_warehouse_section","finished_product_return_warehouse","return_warehouse_column_2","return_rework_warehouse","uom_section","weight_uom","uom_column_2","yard_uom","group_section","grey_fabric_item_group","dye_item_group","group_column_2","auxiliary_item_group","finished_product_item_group","rule_section","allow_partial_packing","allow_partial_delivery","rule_column_2","packing_weight_tolerance_percent","license_reminder_days"],
+ "field_order": ["warehouse_section","grey_fabric_warehouse","warehouse_column_2","production_transit_warehouse","warehouse_column_3","dye_material_warehouse","warehouse_column_4","finished_product_warehouse","return_warehouse_section","finished_product_return_warehouse","return_warehouse_column_2","return_rework_warehouse","uom_section","weight_uom","uom_column_2","yard_uom","group_section","grey_fabric_item_group","dye_item_group","group_column_2","auxiliary_item_group","finished_product_item_group","rule_section","allow_partial_packing","allow_partial_delivery","rule_column_2","packing_weight_tolerance_percent"],
  "fields": [
   {"fieldname":"warehouse_section","fieldtype":"Section Break","label":"默认仓库"},
-  {"fieldname":"production_transit_warehouse","fieldtype":"Link","label":"生产中转仓","options":"Warehouse","reqd":1,"default":"生产中转仓 - 沅泰"},
+  {"fieldname":"grey_fabric_warehouse","fieldtype":"Link","label":"胚布仓库","options":"Warehouse","reqd":1,"default":"胚布仓库 - 沅泰"},
   {"fieldname":"warehouse_column_2","fieldtype":"Column Break"},
-  {"fieldname":"dye_material_warehouse","fieldtype":"Link","label":"染化料仓库","options":"Warehouse","reqd":1,"default":"染料仓库 - 沅泰"},
+  {"fieldname":"production_transit_warehouse","fieldtype":"Link","label":"生产中转仓","options":"Warehouse","reqd":1,"default":"生产中转仓 - 沅泰"},
   {"fieldname":"warehouse_column_3","fieldtype":"Column Break"},
+  {"fieldname":"dye_material_warehouse","fieldtype":"Link","label":"染化料仓库","options":"Warehouse","reqd":1,"default":"染料仓库 - 沅泰"},
+  {"fieldname":"warehouse_column_4","fieldtype":"Column Break"},
   {"fieldname":"finished_product_warehouse","fieldtype":"Link","label":"成品仓库","options":"Warehouse","reqd":1,"default":"成品仓库 - 沅泰"},
   {"fieldname":"return_warehouse_section","fieldtype":"Section Break","label":"退货管理"},
   {"fieldname":"finished_product_return_warehouse","fieldtype":"Link","label":"成品退货待检仓","options":"Warehouse","reqd":1,"default":"成品退货待检仓 - 沅泰"},
@@ -34,8 +36,7 @@
   {"fieldname":"allow_partial_packing","fieldtype":"Check","label":"允许分批包装入库","default":"1"},
   {"fieldname":"allow_partial_delivery","fieldtype":"Check","label":"允许分批成品出库","default":"1"},
   {"fieldname":"rule_column_2","fieldtype":"Column Break"},
-  {"fieldname":"packing_weight_tolerance_percent","fieldtype":"Percent","label":"包装重量差异预警范围(%)","default":"5"},
-  {"fieldname":"license_reminder_days","fieldtype":"Int","label":"授权到期提醒天数","default":"30"}
+  {"fieldname":"packing_weight_tolerance_percent","fieldtype":"Percent","label":"包装重量差异预警范围(%)","default":"5"}
  ],
  "permissions": [{"role":"System Manager","read":1,"write":1,"create":1,"delete":0}],
  "sort_field":"modified","sort_order":"DESC","states":[]

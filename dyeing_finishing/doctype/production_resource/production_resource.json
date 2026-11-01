@@ -16,7 +16,7 @@
   {"fieldname":"classification_section","label":"资源分类","fieldtype":"Section Break"},
   {"fieldname":"work_center","label":"所属工段","fieldtype":"Link","options":"Production Work Center","reqd":1,"in_list_view":1},
   {"fieldname":"classification_col_2","fieldtype":"Column Break"},
-  {"fieldname":"resource_type","label":"资源类型","fieldtype":"Select","options":"染缸\n松布机\n验布机\n定型机\n订边机\n脱水机\n洗水机\n烘干机\n开幅机\n整理机\n包装设备\n人工班组\n委外供应商\n其他","reqd":1,"in_list_view":1},
+  {"fieldname":"resource_type","label":"资源类型","fieldtype":"Select","options":"染缸\n松布机\n验布机\n定型机\n订边机\n脱水机\n洗水机\n烘干机\n开幅机\n整理机\n包装设备\n人工班组\n加工商\n其他","reqd":1,"in_list_view":1},
   {"fieldname":"classification_col_3","fieldtype":"Column Break"},
   {"fieldname":"resource_mode","label":"资源方式","fieldtype":"Select","options":"设备\n人工\n委外","default":"设备","reqd":1},
   {"fieldname":"capacity_section","label":"生产能力","fieldtype":"Section Break"},

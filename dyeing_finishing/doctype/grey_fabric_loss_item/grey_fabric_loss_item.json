@@ -1,0 +1,38 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-24 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "batch_no", "item_name", "color", "stock_roll_count", "stock_qty", "loss_method",
+  "loss_roll_count", "loss_qty", "remaining_roll_count", "remaining_qty", "stock_uom",
+  "source_warehouse", "location", "source_receipt", "item_code", "remarks"
+ ],
+ "fields": [
+  {"fieldname":"batch_no","fieldtype":"Link","label":"批次","options":"Batch","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"item_name","fieldtype":"Data","label":"胚布名称","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"color","fieldtype":"Data","label":"颜色","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"stock_roll_count","fieldtype":"Float","label":"库存匹数","precision":"2","read_only":1},
+  {"fieldname":"stock_qty","fieldtype":"Float","label":"库存重量","precision":"3","read_only":1},
+  {"fieldname":"loss_method","fieldtype":"Select","label":"报损方式","options":"整匹报损\n部分重量损耗","default":"整匹报损","reqd":1,"in_list_view":1,"columns":2},
+  {"fieldname":"loss_roll_count","fieldtype":"Int","label":"报损匹数","mandatory_depends_on":"eval:doc.loss_method == '整匹报损'","read_only_depends_on":"eval:doc.loss_method == '部分重量损耗'","in_list_view":1,"columns":1},
+  {"fieldname":"loss_qty","fieldtype":"Float","label":"报损重量","precision":"3","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"remaining_roll_count","fieldtype":"Float","label":"报损后匹数","precision":"2","read_only":1},
+  {"fieldname":"remaining_qty","fieldtype":"Float","label":"报损后重量","precision":"3","read_only":1},
+  {"fieldname":"stock_uom","fieldtype":"Data","label":"单位","read_only":1},
+  {"fieldname":"source_warehouse","fieldtype":"Link","label":"仓库","options":"Warehouse","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"location","fieldtype":"Data","label":"货位编号","read_only":1},
+  {"fieldname":"source_receipt","fieldtype":"Link","label":"原胚布入库单","options":"Customer Grey Fabric Receipt","read_only":1},
+  {"fieldname":"item_code","fieldtype":"Link","label":"胚布物料编码","options":"Item","read_only":1},
+  {"fieldname":"remarks","fieldtype":"Data","label":"明细备注"}
+ ],
+ "istable": 1,
+ "modified": "2026-10-24 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Grey Fabric Loss Item",
+ "owner": "Administrator",
+ "permissions": []
+}

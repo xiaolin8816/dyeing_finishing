@@ -5,7 +5,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, getdate, nowdate
 
-from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, ensure_flow_card_open, record_production_progress, remove_production_progress
+from dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card import _batch_stock_query, ensure_flow_card_open, lock_grey_fabric_batches, record_production_progress, remove_production_progress
 from dyeing_finishing.dyeing_finishing.settings import get_setting
 
 class GreyFabricIssue(Document):
@@ -25,8 +25,22 @@ class GreyFabricIssue(Document):
         self._set_totals()
 
     def on_submit(self):
+        self._validate_available_after_issue()
         self._create_stock_entry()
         self._record_progress("胚布已出库")
+
+    def _validate_available_after_issue(self):
+        lock_grey_fabric_batches(row.batch_no for row in self.items)
+        self._validate_items()
+        by_stock = defaultdict(lambda: {"rolls": 0.0, "qty": 0.0})
+        for row in self.items:
+            values = by_stock[(row.batch_no, row.location)]
+            values["rolls"] += flt(row.issue_roll_count)
+            values["qty"] += flt(row.issue_qty)
+        for (batch_no, location), values in by_stock.items():
+            detail = get_batch_stock_details(batch_no, self.customer, location)
+            if not detail or values["rolls"] > flt(detail.available_roll_count) or values["qty"] > flt(detail.available_qty):
+                frappe.throw(_("批次 {0} 的本次出库超过扣除其他流转卡预留后的可用匹数或数量").format(batch_no))
 
     def on_cancel(self):
         stock_entry = self.stock_entry

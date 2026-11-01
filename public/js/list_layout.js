@@ -6,12 +6,14 @@
     const SET_GLOBAL_LAYOUT_METHOD = "dyeing_finishing.dyeing_finishing.list_layout.set_global_list_layout";
     const MIN_WIDTH = 20;
     const MAX_WIDTH = 600;
-    const ROOT_WORKSPACE = "印染整理";
+    const LIST_ROW_GUTTER = 32;
+    const ROOT_WORKSPACE = "印染管理";
+    const CUSTOM_APP_MODULE = "dyeing_finishing";
     const SHARED_ROUTE_CONTEXT_KEY = "dyeing_finishing.shared_route_owner";
     const SUPPORTED_DOCTYPES = new Set([
         "Process Requirement", "Packaging Requirement", "Production Operation", "Process Parameter Template",
         "Production Work Center", "Production Resource", "Grey Fabric Master", "Item Group", "Color Master", "Laboratory Recipe",
-        "Customer Grey Fabric Receipt", "Grey Fabric Issue", "Grey Fabric Customer Transfer", "Customer Grey Fabric Return", "Dyeing Sales Order", "Production Flow Card", "Production Operation Report", "Employee Operation Permission", "Production Shift", "Machine Production Calendar", "Dyeing Production Schedule",
+        "Customer Grey Fabric Receipt", "Grey Fabric Issue", "Grey Fabric Customer Transfer", "Grey Fabric Inventory Count", "Customer Grey Fabric Return", "Grey Fabric Loss", "Dyeing Sales Order", "Production Flow Card", "Production Operation Report", "Employee Operation Permission", "Production Shift", "Machine Production Calendar", "Dyeing Production Schedule",
         "Site Dyeing Material Sheet", "Site Dyeing Material Issue", "Dye Material Other Issue",
         "Dye Material Return", "Finished Product Packing Receipt", "Finished Product Delivery", "Finished Product Customer Transfer", "Finished Product Return", "Finished Product Return to Grey Fabric", "Finished Product to Grey Fabric", "Finished Product Blank Label", "Item", "Company", "Customer", "Supplier", "Employee", "UOM", "Purchase Receipt",
     ]);
@@ -21,6 +23,14 @@
         "Default Unit of Measure": "单位",
         "Item Type": "条目类型",
     };
+
+    function is_custom_app_doctype(doctype) {
+        return frappe.get_meta(doctype)?.module === CUSTOM_APP_MODULE;
+    }
+
+    function is_supported_doctype(doctype) {
+        return SUPPORTED_DOCTYPES.has(doctype) || is_custom_app_doctype(doctype);
+    }
 
     function item_list_profile(listview) {
         if (listview.doctype !== "Item") return false;
@@ -61,7 +71,7 @@
                 || window.sessionStorage.getItem(SHARED_ROUTE_CONTEXT_KEY) === target;
             return entered_from_dyeing ? shared_profiles[listview.doctype] : null;
         }
-        return SUPPORTED_DOCTYPES.has(listview.doctype) ? listview.doctype : null;
+        return is_supported_doctype(listview.doctype) ? listview.doctype : null;
     }
 
     function mark_dyeing_list(listview, enabled) {
@@ -79,7 +89,22 @@
 
     function base_columns(listview) {
         if (!listview.__dyeing_finishing_base_columns && (listview.columns || []).length) {
-            listview.__dyeing_finishing_base_columns = (listview.columns || []).filter((column) => ["Status", "Subject", "Field"].includes(column.type) && fieldname_of(column));
+            let columns = (listview.columns || []).filter((column) => ["Status", "Subject", "Field"].includes(column.type) && fieldname_of(column));
+            if (listview.doctype === "Grey Fabric Loss") {
+                const subject_index = columns.findIndex((column) => column.type === "Subject");
+                if (subject_index >= 0) {
+                    columns[subject_index] = {
+                        ...columns[subject_index],
+                        df: {
+                            ...(columns[subject_index].df || {}),
+                            fieldname: "name",
+                            label: "编号",
+                        },
+                    };
+                    columns = columns.filter((column, index) => index === subject_index || !["name", "loss_no"].includes(fieldname_of(column)));
+                }
+            }
+            listview.__dyeing_finishing_base_columns = columns;
         }
         return listview.__dyeing_finishing_base_columns || [];
     }
@@ -88,22 +113,38 @@
         return base_columns(listview).map((column) => ({ fieldname: fieldname_of(column), label: column_label(column), column }));
     }
 
+    function ensure_layout_columns(listview, layout) {
+        const columns = base_columns(listview);
+        const existing = new Set(columns.map(fieldname_of).filter(Boolean));
+        const meta = frappe.get_meta(listview.doctype);
+        (layout.order || []).forEach((fieldname) => {
+            if (existing.has(fieldname) || ["name", "__status"].includes(fieldname)) return;
+            const df = meta?.fields?.find((field) => field.fieldname === fieldname);
+            if (!df || df.is_virtual || !frappe.model.is_value_type(df.fieldtype)
+                || !frappe.perm.has_perm(listview.doctype, df.permlevel, "read")) return;
+            columns.push({ type: "Field", df });
+            existing.add(fieldname);
+        });
+    }
+
     function ordered_columns(listview, layout) {
         const positions = new Map((layout.order || []).map((fieldname, index) => [fieldname, index]));
         const hidden = new Set(layout.hidden || []);
         return base_columns(listview).map((column, original_index) => ({ column, original_index, fieldname: fieldname_of(column) }))
-            .filter((item) => !hidden.has(item.fieldname))
-            .sort((left, right) => (positions.has(left.fieldname) ? positions.get(left.fieldname) : 10000 + left.original_index) - (positions.has(right.fieldname) ? positions.get(right.fieldname) : 10000 + right.original_index))
+            .filter((item) => item.column.type === "Subject" || !hidden.has(item.fieldname))
+            .sort((left, right) => left.column.type === "Subject" ? -1 : right.column.type === "Subject" ? 1
+                : (positions.has(left.fieldname) ? positions.get(left.fieldname) : 10000 + left.original_index) - (positions.has(right.fieldname) ? positions.get(right.fieldname) : 10000 + right.original_index))
             .map((item) => item.column);
     }
 
     function same_columns(left, right) {
-        return left.length === right.length && left.every((column, index) => fieldname_of(column) === fieldname_of(right[index]));
+        return left.length === right.length && left.every((column, index) => column.type === right[index].type && fieldname_of(column) === fieldname_of(right[index]));
     }
 
     function status_elements(listview) {
         const status_index = (listview.columns || []).findIndex((column) => column.type === "Status");
-        const $body = listview.$result.find(".list-row:not(.list-row-head) .list-row-col").filter((_, element) => $(element).find(".indicator-pill, .indicator").length).first();
+        if (status_index < 0) return $();
+        const $body = listview.$result.find(".list-row:not(.list-row-head) > .level-left").map((_, row) => $(row).children(".list-row-col").get(status_index));
         const $header = listview.$result.find(".list-row-head .list-header-subject > .list-row-col").eq(status_index);
         return $body.add($header);
     }
@@ -114,6 +155,36 @@
 
     function set_fixed_width($columns, width) {
         $columns.css({ width, minWidth: width, maxWidth: width, flex: `0 0 ${width}px` });
+    }
+
+    function sync_list_widths(listview) {
+        const $rows = listview.$result.find(".list-row");
+        let left_width = 0;
+        let right_width = 0;
+        $rows.each((_, row) => {
+            const $row = $(row);
+            const current_left_width = $row.children(".level-left:not(.checkbox-actions)").children(":visible").toArray()
+                .reduce((total, column) => total + ($(column).outerWidth(true) || 0), 0);
+            left_width = Math.max(left_width, current_left_width);
+            right_width = Math.max(right_width, $row.children(".level-right").outerWidth(true) || 0);
+        });
+        if (!left_width) return;
+
+        const reserved_right_width = Math.max(130, right_width);
+        const row_width = Math.ceil(left_width + reserved_right_width + LIST_ROW_GUTTER);
+        $rows.children(".level-left:not(.checkbox-actions)").css({
+            width: left_width,
+            minWidth: left_width,
+            flex: `0 0 ${left_width}px`,
+        });
+        listview.$result.find(".list-row-container").css({
+            minWidth: `max(100%, ${row_width}px)`,
+        });
+    }
+
+    function reset_list_widths(listview) {
+        listview.$result.find(".list-row > .level-left:not(.checkbox-actions)").css({ width: "", minWidth: "", flex: "" });
+        listview.$result.find(".list-row-container").css({ minWidth: "" });
     }
 
     function sync_header_widths(listview) {
@@ -131,22 +202,25 @@
     }
 
     function apply_sticky_columns(listview, layout) {
-        listview.$result.find(".list-row-col").css({ position: "", left: "", zIndex: "", background: "" });
+        listview.$result.find(".list-row-col").removeClass("dyeing-sticky-col").css({ position: "", left: "", zIndex: "", background: "" });
         let left = 0;
         const sticky = new Set(layout.sticky || []);
-        get_columns(listview).forEach(({ fieldname }) => {
-            if (!sticky.has(fieldname)) return;
-            const $columns = elements_for(listview, fieldname);
-            const width = $columns.filter(".list-row:not(.list-row-head) .list-row-col").first().outerWidth();
-            if (!width) return;
-            $columns.css({ position: "sticky", left: `${left}px`, zIndex: 2, background: "inherit" });
-            listview.$result.find(".list-row-head .list-row-col").filter((_, element) => $(element).is($columns)).css({ zIndex: 3, background: "var(--card-bg, #fff)" });
-            left += width;
-        });
+        (listview.columns || []).map((column) => ({ fieldname: fieldname_of(column), column }))
+            .filter(({ fieldname }) => fieldname)
+            .forEach(({ fieldname }) => {
+                if (!sticky.has(fieldname)) return;
+                const $columns = elements_for(listview, fieldname);
+                const width = $columns.filter(".list-row:not(.list-row-head) .list-row-col").first().outerWidth(true);
+                if (!width) return;
+                $columns.addClass("dyeing-sticky-col").css({ position: "sticky", left: `${left}px`, zIndex: 2 });
+                listview.$result.find(".list-row-head .list-row-col").filter((_, element) => $(element).is($columns)).css({ zIndex: 3 });
+                left += width;
+            });
     }
 
     function apply_layout(listview) {
         const layout = listview.__dyeing_finishing_list_layout || { widths: {}, order: [], hidden: [], sticky: [] };
+        ensure_layout_columns(listview, layout);
         const expected = ordered_columns(listview, layout);
         if (!same_columns(listview.columns || [], expected)) {
             listview.columns = expected;
@@ -157,14 +231,19 @@
             const value = Number(width);
             if (Number.isFinite(value) && value >= MIN_WIDTH) set_fixed_width(elements_for(listview, fieldname), value);
         });
-        window.setTimeout(() => { sync_header_widths(listview); apply_sticky_columns(listview, layout); }, 0);
+        window.setTimeout(() => {
+            sync_header_widths(listview);
+            sync_list_widths(listview);
+            apply_sticky_columns(listview, layout);
+        }, 0);
     }
 
     function reset_layout(listview) {
         const original = base_columns(listview);
         listview.__dyeing_finishing_list_layout_profile = null;
         listview.__dyeing_finishing_list_layout = null;
-        listview.$result.find(".list-row-col").css({ width: "", minWidth: "", maxWidth: "", flex: "", position: "", left: "", zIndex: "", background: "" });
+        listview.$result.find(".list-row-col").removeClass("dyeing-sticky-col").css({ width: "", minWidth: "", maxWidth: "", flex: "", position: "", left: "", zIndex: "", background: "" });
+        reset_list_widths(listview);
         if (!same_columns(listview.columns || [], original)) {
             listview.columns = [...original];
             listview.refresh();
@@ -300,7 +379,7 @@
     if (UnifiedListView && !UnifiedListView.prototype.__dyeing_finishing_setup_defaults_override) {
         const original_setup_defaults = UnifiedListView.prototype.setup_defaults;
         UnifiedListView.prototype.setup_defaults = function() {
-            if (SUPPORTED_DOCTYPES.has(this.doctype)) setup_list_layout(this.doctype);
+            if (is_supported_doctype(this.doctype)) setup_list_layout(this.doctype);
             return original_setup_defaults.apply(this, arguments);
         };
         UnifiedListView.prototype.__dyeing_finishing_setup_defaults_override = true;

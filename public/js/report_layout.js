@@ -25,8 +25,36 @@
         }).map((item) => item.column);
     }
 
+    function configured_columns(columns, layout) {
+        const ordered = ordered_columns(columns, layout);
+        const visible = ordered.map((column) => column.fieldname).filter(Boolean);
+        const sticky = new Set(get_sticky_fields(visible, get_sticky_end(visible, layout.sticky || [])));
+        return ordered.map((column) => {
+            const width = Number(layout.widths?.[column.fieldname]);
+            return {
+                ...column,
+                sticky: sticky.has(column.fieldname),
+                ...(Number.isFinite(width) && width >= MIN_WIDTH ? { width } : {}),
+            };
+        });
+    }
+
     function same_column_order(current, expected) {
         return current.length === expected.length && current.every((column, index) => column.fieldname === expected[index].fieldname);
+    }
+
+    function get_sticky_end(visible, sticky) {
+        const sticky_fields = new Set(sticky || []);
+        let sticky_end = "";
+        visible.forEach((fieldname) => {
+            if (sticky_fields.has(fieldname)) sticky_end = fieldname;
+        });
+        return sticky_end;
+    }
+
+    function get_sticky_fields(visible, sticky_end) {
+        const sticky_index = visible.indexOf(sticky_end);
+        return sticky_index >= 0 ? visible.slice(0, sticky_index + 1) : [];
     }
 
     function apply_layout(report, datatable = report.datatable) {
@@ -36,12 +64,14 @@
         if (!same_column_order(datatable.options.columns || [], expected_columns)) {
             datatable.refresh(datatable.options.data, expected_columns);
         }
-        const sticky = new Set(layout.sticky || []);
+        const visible = expected_columns.map((column) => column.fieldname).filter(Boolean);
+        const sticky = new Set(get_sticky_fields(visible, get_sticky_end(visible, layout.sticky || [])));
         datatable.getColumns().forEach((column) => {
             const width = Number(layout.widths?.[column.fieldname]);
-            const updates = { sticky: sticky.has(column.fieldname) };
+            const updates = {};
             if (Number.isFinite(width) && width >= MIN_WIDTH) updates.width = width;
             datatable.datamanager.updateColumn(column.colIndex, updates);
+            datatable.setColumnSticky(column.colIndex, sticky.has(column.fieldname));
         });
         datatable.style.refreshColumnWidth();
     }
@@ -59,21 +89,21 @@
             return `<div class="sortable report-layout-row border rounded mb-2 px-2 py-1" data-fieldname="${fieldname}">
                 <div class="row align-items-center">
                     <div class="col-1 d-flex justify-content-center sortable-handle" style="cursor: grab;">${frappe.utils.icon("drag", "xs")}</div>
-                    <div class="col-5">${escape_html(column.label)}</div>
+                    <div class="col-4">${escape_html(column.label)}</div>
                     <div class="col-2"><input class="form-control form-control-sm report-layout-width" type="number" min="${MIN_WIDTH}" max="${MAX_WIDTH}" value="${state.widths[fieldname] || ""}" data-fieldname="${fieldname}"></div>
-                    <div class="col-2 text-center"><input class="report-layout-sticky" type="checkbox" data-fieldname="${fieldname}" ${state.sticky.has(fieldname) ? "checked" : ""}></div>
+                    <div class="col-3 text-center"><input class="report-layout-sticky-end" type="radio" name="report-layout-sticky-end" value="${fieldname}" aria-label="固定至${escape_html(column.label)}" title="从左侧第一列固定至${escape_html(column.label)}" ${state.sticky_end === fieldname ? "checked" : ""}></div>
                     <div class="col-2 text-center"><a class="text-muted report-layout-remove" data-fieldname="${fieldname}" title="隐藏字段">${frappe.utils.icon("trash", "xs")}</a></div>
                 </div>
             </div>`;
         }).join("");
         const wrapper = dialog.get_field("columns_html").$wrapper;
-        wrapper.html(`<div class="row text-muted mb-2"><div class="col-1"></div><div class="col-5">字段名</div><div class="col-2">宽度</div><div class="col-2 text-center">置顶</div><div class="col-2"></div></div><div class="report-layout-rows">${rows}</div><a class="text-muted report-layout-select-fields">+ 添加/移除列</a>`);
+        wrapper.html(`<div class="row text-muted mb-2"><div class="col-1"></div><div class="col-4">字段名</div><div class="col-2">宽度</div><div class="col-3 text-center">固定至</div><div class="col-2"></div></div><div class="row mb-2"><div class="col-7"></div><div class="col-3 text-center"><label class="mb-0"><input class="report-layout-sticky-end" type="radio" name="report-layout-sticky-end" value="" ${state.sticky_end ? "" : "checked"}> 不固定任何列</label></div></div><div class="report-layout-rows">${rows}</div><div class="small text-muted mb-2">从左侧第一列起，连续固定至所选列。</div><a class="text-muted report-layout-select-fields">+ 添加/移除列</a>`);
         new Sortable(wrapper.find(".report-layout-rows")[0], { handle: ".sortable-handle", draggable: ".sortable", animation: 150, onUpdate: () => {
             state.visible = wrapper.find(".report-layout-row").map((_, row) => row.dataset.fieldname).get();
         }});
         wrapper.find(".report-layout-width").on("change", (event) => { state.widths[event.target.dataset.fieldname] = Number(event.target.value) || ""; });
-        wrapper.find(".report-layout-sticky").on("change", (event) => { event.target.checked ? state.sticky.add(event.target.dataset.fieldname) : state.sticky.delete(event.target.dataset.fieldname); });
-        wrapper.find(".report-layout-remove").on("click", (event) => { const fieldname = event.currentTarget.dataset.fieldname; state.visible = state.visible.filter((item) => item !== fieldname); state.sticky.delete(fieldname); render_rows(dialog, columns, state); });
+        wrapper.find(".report-layout-sticky-end").on("change", (event) => { if (event.target.checked) state.sticky_end = event.target.value; });
+        wrapper.find(".report-layout-remove").on("click", (event) => { const fieldname = event.currentTarget.dataset.fieldname; state.visible = state.visible.filter((item) => item !== fieldname); if (state.sticky_end === fieldname) state.sticky_end = ""; render_rows(dialog, columns, state); });
         wrapper.find(".report-layout-select-fields").on("click", () => show_column_selector(dialog, columns, state));
     }
 
@@ -88,7 +118,7 @@
                 if (!next_visible.length) { frappe.msgprint("请至少保留一个字段。"); return; }
                 state.visible = state.visible.filter((fieldname) => next_visible.includes(fieldname));
                 next_visible.forEach((fieldname) => { if (!state.visible.includes(fieldname)) state.visible.push(fieldname); });
-                state.sticky = new Set([...state.sticky].filter((fieldname) => state.visible.includes(fieldname)));
+                if (!state.visible.includes(state.sticky_end)) state.sticky_end = "";
                 selector.hide();
                 render_rows(parent_dialog, columns, state);
             },
@@ -102,11 +132,21 @@
         const layout = report._dyeing_finishing_report_layout || { widths: {}, order: [], hidden: [], sticky: [] };
         const ordered = ordered_columns(columns, { ...layout, hidden: [] }).map((column) => column.fieldname);
         const hidden = new Set(layout.hidden || []);
-        const state = { visible: ordered.filter((fieldname) => !hidden.has(fieldname)), widths: { ...(layout.widths || {}) }, sticky: new Set(layout.sticky || []) };
-        const dialog = new frappe.ui.Dialog({ title: "列设置", fields: [{ fieldname: "columns_html", fieldtype: "HTML" }, ...(can_set_global ? [{ label: "设为全员默认布局", fieldname: "apply_to_all", fieldtype: "Check", description: "勾选后，未设置个人布局的用户将使用此布局。" }] : [])], primary_action_label: "保存", primary_action(values) {
-            const next_layout = { widths: state.widths, order: state.visible, hidden: columns.map((column) => column.fieldname).filter((fieldname) => !state.visible.includes(fieldname)), sticky: [...state.sticky] };
-            const method = values.apply_to_all ? SET_GLOBAL_LAYOUT_METHOD : SET_MY_LAYOUT_METHOD;
-            frappe.call({ method, args: { report_name, layout: next_layout } }).then((response) => { report._dyeing_finishing_report_layout = response.message || next_layout; dialog.hide(); report.refresh(); frappe.show_alert({ message: values.apply_to_all ? "已设为全员默认布局" : "我的列设置已保存", indicator: "green" }); });
+        const visible = ordered.filter((fieldname) => !hidden.has(fieldname));
+        const state = { visible, widths: { ...(layout.widths || {}) }, sticky_end: get_sticky_end(visible, layout.sticky || []) };
+        const dialog = new frappe.ui.Dialog({ title: "列设置", fields: [{ fieldname: "columns_html", fieldtype: "HTML" }, ...(can_set_global ? [{ label: "设为全员默认布局", fieldname: "apply_to_all", fieldtype: "Check", description: "勾选后保存为全员默认，并立即应用到当前用户。" }] : [])], primary_action_label: "保存", primary_action(values) {
+            const next_layout = { widths: state.widths, order: state.visible, hidden: columns.map((column) => column.fieldname).filter((fieldname) => !state.visible.includes(fieldname)), sticky: get_sticky_fields(state.visible, state.sticky_end) };
+            const apply_to_all = Boolean(values?.apply_to_all || dialog.get_value("apply_to_all"));
+            const method = apply_to_all ? SET_GLOBAL_LAYOUT_METHOD : SET_MY_LAYOUT_METHOD;
+            frappe.call({ method, args: { report_name, layout: next_layout } }).then((response) => {
+                if (response.exc) throw new Error(response.exc);
+                report._dyeing_finishing_report_layout = response.message || next_layout;
+                dialog.hide();
+                report.refresh();
+                frappe.show_alert({ message: apply_to_all ? "全员默认布局已保存，并已应用到当前用户" : "我的列设置已保存", indicator: "green" });
+            }).catch((error) => {
+                frappe.msgprint({ title: "列设置保存失败", message: error.message || "无法保存列设置。", indicator: "red" });
+            });
         }});
         dialog.set_secondary_action_label("恢复我的默认布局");
         dialog.set_secondary_action(() => { frappe.call({ method: CLEAR_MY_LAYOUT_METHOD, args: { report_name } }).then((response) => { report._dyeing_finishing_report_layout = response.message || { widths: {}, order: [], hidden: [], sticky: [] }; dialog.hide(); report.refresh(); frappe.show_alert({ message: "已恢复默认布局", indicator: "green" }); }); });
@@ -118,17 +158,40 @@
         let current_report;
         frappe.query_reports[report_name] = { filters, onload(report) {
             current_report = report;
+            // ERPNext reuses the query-report Desk page. Remove custom report
+            // extensions owned by a different report before rendering this one.
+            const page_main = $(report.page?.main || []);
+            page_main.find("[data-dyeing-report-owner]").filter((_, element) =>
+                element.dataset.dyeingReportOwner !== report_name
+            ).remove();
+            page_main.find(".report-wrapper").off(".production-progress-master");
             $(report.page?.wrapper || []).addClass("dyeing-finishing-striped-report");
             if (onload) onload(report);
-            frappe.call({ method: GET_LAYOUT_METHOD, args: { report_name } }).then((response) => { const result = response.message || {}; report._dyeing_finishing_report_layout = result.layout || { widths: {}, order: [], hidden: [], sticky: [] }; report._dyeing_finishing_can_set_global_layout = result.can_set_global; report.refresh(); });
             report.page.add_menu_item("列设置", () => show_layout_dialog(report, report_name, report._dyeing_finishing_can_set_global_layout));
+            // Frappe waits for onload before its first refresh; loading the layout here
+            // avoids a second refresh and applies columns on the initial render.
+            return frappe.call({ method: GET_LAYOUT_METHOD, args: { report_name } }).then((response) => {
+                const result = response.message || {};
+                report._dyeing_finishing_report_layout = result.layout || { widths: {}, order: [], hidden: [], sticky: [] };
+                report._dyeing_finishing_can_set_global_layout = result.can_set_global;
+            });
         }, get_datatable_options(options) {
             Object.assign(options, datatable_options);
             const layout = current_report?._dyeing_finishing_report_layout;
-            if (layout) options.columns = ordered_columns(options.columns || [], layout);
+            if (layout) options.columns = configured_columns(options.columns || [], layout);
             return options;
         }, after_datatable_render(datatable) {
             $(datatable?.wrapper || []).addClass("dyeing-finishing-striped-report");
+            // Frappe refreshes an existing DataTable with raw report columns. Apply
+            // the saved layout to that single refresh instead of rendering twice.
+            if (datatable && !datatable._dyeing_finishing_layout_refresh) {
+                const original_refresh = datatable.refresh;
+                datatable.refresh = function (data, columns) {
+                    const layout = current_report?._dyeing_finishing_report_layout;
+                    return original_refresh.call(this, data, columns && layout ? configured_columns(columns, layout) : columns);
+                };
+                datatable._dyeing_finishing_layout_refresh = true;
+            }
             if (current_report) apply_layout(current_report, datatable);
             if (after_datatable_render && current_report) after_datatable_render(current_report, datatable);
         } };

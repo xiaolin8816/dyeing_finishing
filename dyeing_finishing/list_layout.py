@@ -25,11 +25,18 @@ LIST_CONFIGS = {
     "Customer Grey Fabric Receipt": {"doctype": "Customer Grey Fabric Receipt", "key": "customer_grey_fabric_receipt_list_layout", "user_key": "dyeing_finishing_customer_grey_fabric_receipt_list_layout"},
     "Grey Fabric Issue": {"doctype": "Grey Fabric Issue", "key": "grey_fabric_issue_list_layout", "user_key": "dyeing_finishing_grey_fabric_issue_list_layout"},
     "Grey Fabric Customer Transfer": {"doctype": "Grey Fabric Customer Transfer", "key": "grey_fabric_customer_transfer_list_layout", "user_key": "dyeing_finishing_grey_fabric_customer_transfer_list_layout"},
+    "Grey Fabric Inventory Count": {"doctype": "Grey Fabric Inventory Count", "key": "grey_fabric_inventory_count_list_layout", "user_key": "dyeing_finishing_grey_fabric_inventory_count_list_layout"},
     "Production Shift": {"doctype": "Production Shift", "key": "production_shift_list_layout", "user_key": "dyeing_finishing_production_shift_list_layout"},
     "Machine Production Calendar": {"doctype": "Machine Production Calendar", "key": "machine_production_calendar_list_layout", "user_key": "dyeing_finishing_machine_production_calendar_list_layout"},
     "Dyeing Production Schedule": {"doctype": "Dyeing Production Schedule", "key": "dyeing_production_schedule_list_layout", "user_key": "dyeing_finishing_production_schedule_list_layout"},
     "Customer Grey Fabric Return": {"doctype": "Customer Grey Fabric Return", "key": "customer_grey_fabric_return_list_layout", "user_key": "dyeing_finishing_customer_grey_fabric_return_list_layout"},
+    "Grey Fabric Loss": {"doctype": "Grey Fabric Loss", "key": "grey_fabric_loss_list_layout", "user_key": "dyeing_finishing_grey_fabric_loss_list_layout"},
     "Dyeing Sales Order": {"doctype": "Dyeing Sales Order", "key": "dyeing_sales_order_list_layout", "user_key": "dyeing_finishing_dyeing_sales_order_list_layout"},
+    "Outsourcing Processing Order": {"doctype": "Outsourcing Processing Order", "key": "outsourcing_processing_order_list_layout", "user_key": "dyeing_finishing_outsourcing_processing_order_list_layout"},
+    "Processing Contractor": {"doctype": "Processing Contractor", "key": "processing_contractor_list_layout", "user_key": "dyeing_finishing_processing_contractor_list_layout"},
+    "Dyeing Cost Estimate": {"doctype": "Dyeing Cost Estimate", "key": "dyeing_cost_estimate_list_layout", "user_key": "dyeing_finishing_dyeing_cost_estimate_list_layout"},
+    "Dyeing Cost Rate Standard": {"doctype": "Dyeing Cost Rate Standard", "key": "dyeing_cost_rate_standard_list_layout", "user_key": "dyeing_finishing_dyeing_cost_rate_standard_list_layout"},
+    "Dyeing Cost Element": {"doctype": "Dyeing Cost Element", "key": "dyeing_cost_element_list_layout", "user_key": "dyeing_finishing_dyeing_cost_element_list_layout"},
     "Site Dyeing Material Sheet": {"doctype": "Site Dyeing Material Sheet", "key": "site_dyeing_material_sheet_list_layout", "user_key": "dyeing_finishing_site_dyeing_material_sheet_list_layout"},
     "Site Dyeing Material Issue": {"doctype": "Site Dyeing Material Issue", "key": "site_dyeing_material_issue_list_layout", "user_key": "dyeing_finishing_site_dyeing_material_issue_list_layout"},
     "Dye Material Return": {"doctype": "Dye Material Return", "key": "dye_material_return_list_layout", "user_key": "dyeing_finishing_dye_material_return_list_layout"},
@@ -75,9 +82,18 @@ LIST_CONFIGS = {
 
 def _get_config(doctype):
     config = LIST_CONFIGS.get(doctype)
-    if not config:
-        frappe.throw(_("不支持该列表的字段布局设置"))
-    return config
+    if config:
+        return config
+
+    if frappe.db.get_value("DocType", doctype, "module") == "dyeing_finishing":
+        key = frappe.scrub(doctype)
+        return {
+            "doctype": doctype,
+            "key": f"{key}_list_layout",
+            "user_key": f"dyeing_finishing_{key}_list_layout",
+        }
+
+    frappe.throw(_("不支持该列表的字段布局设置"))
 
 
 def _allowed_fields(layout_name):

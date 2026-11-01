@@ -1,7 +1,7 @@
 (() => {
     const CONTEXT_KEY = "dyeing_finishing.shared_route_owner";
     const PROFILE_KEY = "dyeing_finishing.item_profile";
-    const ROOT_WORKSPACE = "印染整理";
+    const ROOT_WORKSPACE = "印染管理";
     const settings = frappe.listview_settings["Item"] || {};
     const original_onload = settings.onload;
     const original_refresh = settings.refresh;

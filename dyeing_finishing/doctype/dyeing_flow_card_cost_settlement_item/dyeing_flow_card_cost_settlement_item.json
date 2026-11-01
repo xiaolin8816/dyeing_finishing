@@ -1,0 +1,22 @@
+{
+ "doctype":"DocType","name":"Dyeing Flow Card Cost Settlement Item","module":"dyeing_finishing","istable":1,"editable_grid":1,
+ "field_order":["cost_category","cost_bucket","exception_disposition","cost_element","source_doctype","source_name","source_detail","item_code","description","quantity","uom","manual_unit_rate","manual_price_basis","amount","pricing_status","remarks"],
+ "fields":[
+  {"fieldname":"cost_category","label":"成本类别","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"cost_bucket","label":"成本归属","fieldtype":"Select","options":"正常\n异常","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"exception_disposition","label":"异常处置单","fieldtype":"Link","options":"Production Exception Disposition","read_only":1},
+  {"fieldname":"cost_element","label":"成本要素","fieldtype":"Link","options":"Dyeing Cost Element","read_only":1},
+  {"fieldname":"source_doctype","label":"来源单据类型","fieldtype":"Link","options":"DocType","read_only":1},
+  {"fieldname":"source_name","label":"来源单据","fieldtype":"Dynamic Link","options":"source_doctype","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"source_detail","label":"来源明细编号","fieldtype":"Data","read_only":1},
+  {"fieldname":"item_code","label":"物料编码","fieldtype":"Link","options":"Item","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"description","label":"项目","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"quantity","label":"数量","fieldtype":"Float","precision":"6","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"uom","label":"单位","fieldtype":"Link","options":"UOM","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"manual_unit_rate","label":"人工补录单价","fieldtype":"Currency","description":"仅用于零估值材料或已提交分摊的零价能源；单位与本行数量单位一致，不改写来源凭证。"},
+  {"fieldname":"manual_price_basis","label":"补录依据","fieldtype":"Small Text","description":"记录价格提供人及依据，供财务复核。"},
+  {"fieldname":"amount","label":"归集金额","fieldtype":"Currency","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"pricing_status","label":"计价状态","fieldtype":"Select","options":"已计价\n费率测算\n人工补录\n待计价\n客户来料不计价","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"remarks","label":"说明","fieldtype":"Small Text","read_only":1}
+ ],"permissions":[]
+}

@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "field:element_code",
+ "creation": "2026-10-25 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "basic_section", "element_code", "basic_column_2", "element_name", "basic_column_3", "cost_category", "basic_column_4", "is_active",
+  "attribute_section", "cost_nature", "attribute_column_2", "cost_behavior", "attribute_column_3", "default_uom", "attribute_column_4", "default_calculation_basis",
+  "usage_section", "enable_estimate", "usage_column_2", "enable_actual", "usage_column_3", "enable_allocation", "company",
+  "mapping_section", "item_group", "mapping_column_2", "expense_account",
+  "remarks_tab", "remarks_section", "description", "remarks"
+ ],
+ "fields": [
+  {"fieldname":"details_tab","label":"详细信息","fieldtype":"Tab Break"},
+  {"fieldname":"basic_section","label":"基本信息","fieldtype":"Section Break"},
+  {"fieldname":"element_code","label":"要素编码","fieldtype":"Data","reqd":1,"unique":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"basic_column_2","fieldtype":"Column Break"},
+  {"fieldname":"element_name","label":"成本要素名称","fieldtype":"Data","reqd":1,"unique":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"basic_column_3","fieldtype":"Column Break"},
+  {"fieldname":"cost_category","label":"成本类别","fieldtype":"Select","options":"胚布\n染料\n助剂\n水\n电\n蒸汽\n天然气\n污水处理\n人工\n机台\n包装\n委外\n间接费用\n其他","reqd":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"basic_column_4","fieldtype":"Column Break"},
+  {"fieldname":"is_active","label":"启用","fieldtype":"Check","default":"1","in_list_view":1,"in_standard_filter":1},
+
+  {"fieldname":"attribute_section","label":"成本属性","fieldtype":"Section Break"},
+  {"fieldname":"cost_nature","label":"成本性质","fieldtype":"Select","options":"直接成本\n间接成本","default":"直接成本","reqd":1,"in_list_view":1},
+  {"fieldname":"attribute_column_2","fieldtype":"Column Break"},
+  {"fieldname":"cost_behavior","label":"成本习性","fieldtype":"Select","options":"变动成本\n固定成本\n混合成本","default":"变动成本","reqd":1,"in_list_view":1},
+  {"fieldname":"attribute_column_3","fieldtype":"Column Break"},
+  {"fieldname":"default_uom","label":"默认单位","fieldtype":"Link","options":"UOM","in_list_view":1},
+  {"fieldname":"attribute_column_4","fieldtype":"Column Break"},
+  {"fieldname":"default_calculation_basis","label":"默认计费方式","fieldtype":"Select","options":"按实际用量\n每公斤\n每批\n每小时\n固定金额\n按分摊结果","default":"按实际用量","reqd":1,"in_list_view":1},
+
+  {"fieldname":"usage_section","label":"使用范围","fieldtype":"Section Break"},
+  {"fieldname":"enable_estimate","label":"参与预计成本","fieldtype":"Check","default":"1"},
+  {"fieldname":"usage_column_2","fieldtype":"Column Break"},
+  {"fieldname":"enable_actual","label":"参与实际成本","fieldtype":"Check","default":"1"},
+  {"fieldname":"usage_column_3","fieldtype":"Column Break"},
+  {"fieldname":"enable_allocation","label":"参与费用分摊","fieldtype":"Check","default":"0"},
+  {"fieldname":"company","label":"公司","fieldtype":"Link","options":"Company","reqd":1,"hidden":1},
+
+  {"fieldname":"mapping_section","label":"ERPNext资料对应","fieldtype":"Section Break"},
+  {"fieldname":"item_group","label":"对应物料组","fieldtype":"Link","options":"Item Group"},
+  {"fieldname":"mapping_column_2","fieldtype":"Column Break"},
+  {"fieldname":"expense_account","label":"对应费用科目","fieldtype":"Link","options":"Account"},
+
+  {"fieldname":"remarks_tab","label":"说明","fieldtype":"Tab Break"},
+  {"fieldname":"remarks_section","label":"要素说明","fieldtype":"Section Break"},
+  {"fieldname":"description","label":"成本口径说明","fieldtype":"Small Text"},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],
+ "modified": "2026-10-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Dyeing Cost Element",
+ "owner": "Administrator",
+ "permissions": [
+  {"role":"System Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1,"email":1,"share":1},
+  {"role":"Accounts Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1,"email":1,"share":1},
+  {"role":"Manufacturing Manager","read":1,"write":1,"create":1,"report":1,"export":1,"print":1,"email":1,"share":1},
+  {"role":"Sales Manager","read":1,"report":1,"export":1,"print":1,"email":1,"share":1},
+  {"role":"Sales User","read":1,"report":1,"print":1}
+ ],
+ "search_fields": "element_code,element_name,cost_category",
+ "sort_field": "element_code",
+ "sort_order": "ASC",
+ "title_field": "element_name",
+ "track_changes": 1
+}

@@ -19,6 +19,32 @@ const progress_detail_columns = {
   delivery: ["成品出库单", "出库日期", "出库状态", "匹数", "重量(Kg)", "码数(Y)", "库存凭证"],
 };
 
+const PROGRESS_REPORT_NAME = "Production Flow Card Progress Query";
+const PROGRESS_EVENT_NAMESPACE = ".production-progress-master";
+
+function progress_report_is_active(report) {
+  const route = frappe.get_route();
+  return Boolean(report) && route?.[0] === "query-report" && route?.[1] === PROGRESS_REPORT_NAME;
+}
+
+function cleanup_progress_report_page(root = $(document)) {
+  root.find(".production-progress-detail-panel").remove();
+  root.find(".report-wrapper").off(PROGRESS_EVENT_NAMESPACE);
+}
+
+// Query reports share the same Desk page.  Remove this report's custom panel
+// and delegated row events as soon as the route changes, otherwise they leak
+// into the next query report opened by the user.
+if (!window.__dyeing_progress_report_cleanup_bound) {
+  window.__dyeing_progress_report_cleanup_bound = true;
+  frappe.router.on("change", () => {
+    const route = frappe.get_route();
+    if (route?.[0] !== "query-report" || route?.[1] !== PROGRESS_REPORT_NAME) {
+      cleanup_progress_report_page();
+    }
+  });
+}
+
 const escape_progress_value = (value) => frappe.utils.escape_html(String(value ?? ""));
 function document_link(value, doctype) {
   if (!value) return "";
@@ -32,10 +58,11 @@ function render_empty_details(panel, message) {
 }
 
 function detail_panel(report) {
+  if (!progress_report_is_active(report)) return $();
   let panel = report.page.main.find(".production-progress-detail-panel");
   if (panel.length) return panel;
   report.page.main.append(`
-    <div class="production-progress-detail-panel mt-4">
+    <div class="production-progress-detail-panel mt-4" data-dyeing-report-owner="${PROGRESS_REPORT_NAME}">
       <style>
         .production-progress-detail-panel{border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg)}
         .production-progress-detail-header{padding:12px 16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
@@ -96,16 +123,18 @@ function render_progress_details(panel, result) {
 }
 
 function load_progress_details(report, flow_card) {
-  if (!flow_card || (report._selected_progress_flow_card === flow_card && report._progress_detail_loaded)) return;
+  if (!progress_report_is_active(report) || !flow_card || (report._selected_progress_flow_card === flow_card && report._progress_detail_loaded)) return;
   const panel = detail_panel(report); report._selected_progress_flow_card = flow_card; report._progress_detail_loaded = false;
+  if (!panel.length) return;
   panel.find(".selected-flow-card").text(flow_card); panel.find(".open-flow-card").show(); render_empty_details(panel, "正在加载进度明细…");
   frappe.call({method: "dyeing_finishing.dyeing_finishing.report.production_flow_card_progress_query.production_flow_card_progress_query.get_progress_details", args: {flow_card}, callback(response) {
-    if (report._selected_progress_flow_card !== flow_card) return;
+    if (!progress_report_is_active(report) || report._selected_progress_flow_card !== flow_card) return;
     report._progress_detail_loaded = true; render_progress_details(panel, response.message || {});
   }});
 }
 
 function bind_master_rows(report) {
+  if (!progress_report_is_active(report)) return;
   const wrapper = report.$report || report.page.main.find(".report-wrapper");
   wrapper.off("click.production-progress-master").on("click.production-progress-master", ".dt-row[data-row-index]", function () {
     const index = Number(this.dataset.rowIndex); let row = report.data?.[index];
@@ -121,6 +150,7 @@ dyeing_finishing_report_layout.register({
   report_name: "Production Flow Card Progress Query", filters: progress_query_filters,
   datatable_options: {cellHeight: 44},
   onload(report) {
+    cleanup_progress_report_page(report.page.main);
     detail_panel(report);
     // Bind directly as well as through after_datatable_render.  This keeps the
     // master/detail interaction working when a browser still has an older

@@ -1,0 +1,28 @@
+{
+ "doctype": "DocType",
+ "name": "Outsourcing Processing Order Item",
+ "module": "dyeing_finishing",
+ "istable": 1,
+ "editable_grid": 1,
+ "field_order": [
+  "batch_no", "item_code", "grey_fabric_name", "color", "source_warehouse",
+  "planned_roll_count", "planned_weight", "planned_yard_qty",
+  "dispatched_roll_count", "dispatched_weight", "completed_roll_count", "completed_weight", "remarks"
+ ],
+ "fields": [
+  {"fieldname":"batch_no","label":"胚布批次","fieldtype":"Link","options":"Batch","reqd":1,"in_list_view":1,"columns":2},
+  {"fieldname":"item_code","label":"物料编码","fieldtype":"Link","options":"Item","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"grey_fabric_name","label":"胚布名称","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"color","label":"颜色","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"source_warehouse","label":"来源仓库","fieldtype":"Link","options":"Warehouse","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"planned_roll_count","label":"计划匹数","fieldtype":"Int","default":"0","non_negative":1,"in_list_view":1,"columns":1},
+  {"fieldname":"planned_weight","label":"计划重量(Kg)","fieldtype":"Float","precision":"3","default":"0","non_negative":1,"in_list_view":1,"columns":1},
+  {"fieldname":"planned_yard_qty","label":"计划码数(Y)","fieldtype":"Float","precision":"3","default":"0","non_negative":1,"in_list_view":1,"columns":1},
+  {"fieldname":"dispatched_roll_count","label":"已外发匹数","fieldtype":"Int","default":"0","read_only":1,"non_negative":1},
+  {"fieldname":"dispatched_weight","label":"已外发重量(Kg)","fieldtype":"Float","precision":"3","default":"0","read_only":1,"non_negative":1},
+  {"fieldname":"completed_roll_count","label":"已完工匹数","fieldtype":"Int","default":"0","read_only":1,"non_negative":1},
+  {"fieldname":"completed_weight","label":"已完工重量(Kg)","fieldtype":"Float","precision":"3","default":"0","read_only":1,"non_negative":1},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],
+ "permissions": []
+}

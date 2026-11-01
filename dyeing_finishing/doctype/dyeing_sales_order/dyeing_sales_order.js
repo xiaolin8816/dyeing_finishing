@@ -187,6 +187,12 @@ frappe.ui.form.on("Dyeing Sales Order", {
         set_dyeing_requirement_tab(frm, frm._dyeing_requirement_tab || "process");
         frm.__dyeing_order_snapshot = JSON.parse(JSON.stringify(frm.doc));
         frm.__change_reason_confirmed = false;
+        if (!frm.is_new() && frm.doc.docstatus < 2 && (frm.doc.items || []).length) {
+            frm.add_custom_button("新建成本测算", () => {
+                frappe.route_options = {sales_order: frm.doc.name};
+                frappe.new_doc("Dyeing Cost Estimate");
+            }, "创建");
+        }
     },
     before_save(frm) {
         if (frm.doc.docstatus === 1 && !frm.__change_reason_confirmed) {

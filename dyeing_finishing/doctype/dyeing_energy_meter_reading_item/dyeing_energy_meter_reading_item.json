@@ -1,0 +1,21 @@
+{
+ "doctype":"DocType","name":"Dyeing Energy Meter Reading Item","module":"dyeing_finishing","istable":1,"editable_grid":1,
+ "field_order":["meter","meter_name","energy_type","scope_type","work_center","production_resource","previous_reading","current_reading","reading_method","multiplier","consumption","uom","previous_source","rollover_capacity","remarks"],
+ "fields":[
+  {"fieldname":"meter","label":"表计编码","fieldtype":"Link","options":"Dyeing Energy Meter","reqd":1,"read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"meter_name","label":"表计名称","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"energy_type","label":"能源类型","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"scope_type","label":"计量范围","fieldtype":"Data","read_only":1},
+  {"fieldname":"work_center","label":"生产工段","fieldtype":"Link","options":"Production Work Center","read_only":1},
+  {"fieldname":"production_resource","label":"生产机台","fieldtype":"Link","options":"Production Resource","read_only":1},
+  {"fieldname":"previous_reading","label":"上次读数","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"current_reading","label":"本次读数","fieldtype":"Float","precision":"3","in_list_view":1,"columns":2},
+  {"fieldname":"reading_method","label":"抄表方式","fieldtype":"Select","options":"正常\n翻表","default":"正常","in_list_view":1,"columns":1},
+  {"fieldname":"multiplier","label":"倍率","fieldtype":"Float","precision":"6","read_only":1},
+  {"fieldname":"consumption","label":"本次用量","fieldtype":"Float","precision":"6","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"uom","label":"单位","fieldtype":"Link","options":"UOM","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"previous_source","label":"上次抄表单","fieldtype":"Link","options":"Dyeing Energy Meter Reading","read_only":1},
+  {"fieldname":"rollover_capacity","label":"翻表容量","fieldtype":"Float","precision":"3","read_only":1,"hidden":1},
+  {"fieldname":"remarks","label":"异常原因","fieldtype":"Small Text"}
+ ],"permissions":[]
+}

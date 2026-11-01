@@ -1,0 +1,84 @@
+{
+ "app": "dyeing_finishing",
+ "charts": [],
+ "content": "[{\"id\":\"cost-management-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>成本管理</b></span>\",\"col\":12}},{\"id\":\"cost-standards-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>成本基础与测算</b></span>\",\"col\":12}},{\"id\":\"cost-standards-dyeing-cost-element\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"成本要素档案\",\"col\":4}},{\"id\":\"cost-standards-dyeing-cost-rate-standard\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"染整成本费率标准\",\"col\":4}},{\"id\":\"cost-standards-dyeing-cost-estimate\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"染整成本测算单\",\"col\":4}},{\"id\":\"cost-execution-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>生产实绩、能源与结算</b></span>\",\"col\":12}},{\"id\":\"cost-execution-dyeing-production-actual\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"染色生产实绩单\",\"col\":4}},{\"id\":\"cost-execution-dyeing-energy-meter\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"能源表计档案\",\"col\":4}},{\"id\":\"cost-execution-dyeing-energy-meter-reading\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"能源抄表单\",\"col\":4}},{\"id\":\"cost-execution-dyeing-energy-allocation\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"生产能源分摊单\",\"col\":4}},{\"id\":\"cost-execution-dyeing-flow-card-cost-settlement\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"流转卡成本结算单\",\"col\":4}}]",
+ "creation": "2026-10-28 00:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "accounting",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "成本管理",
+ "links": [],
+ "module": "dyeing_finishing",
+ "name": "成本管理",
+ "number_cards": [],
+ "parent_page": "印染管理",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 50,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "成本要素档案",
+   "link_to": "Dyeing Cost Element",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "染整成本费率标准",
+   "link_to": "Dyeing Cost Rate Standard",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "染整成本测算单",
+   "link_to": "Dyeing Cost Estimate",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "染色生产实绩单",
+   "link_to": "Dyeing Production Actual",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "能源表计档案",
+   "link_to": "Dyeing Energy Meter",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "能源抄表单",
+   "link_to": "Dyeing Energy Meter Reading",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "doc_view": "List",
+   "label": "生产能源分摊单",
+   "link_to": "Dyeing Energy Allocation",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "流转卡成本结算单",
+   "link_to": "Dyeing Flow Card Cost Settlement",
+   "type": "DocType"
+  }
+ ],
+ "title": "成本管理",
+ "type": "Workspace"
+}

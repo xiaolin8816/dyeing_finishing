@@ -1,0 +1,32 @@
+{
+ "actions": [],
+ "creation": "2026-10-25 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["cost_element","cost_category","cost_item","calculation_basis","standard_consumption","uom","unit_rate","standard_cost","scope_section","production_operation","scope_column_2","work_center","scope_column_3","production_resource","remarks"],
+ "fields": [
+  {"fieldname":"cost_element","label":"成本要素","fieldtype":"Link","options":"Dyeing Cost Element","reqd":1,"in_list_view":1,"columns":2},
+  {"fieldname":"cost_category","label":"成本类别","fieldtype":"Select","options":"胚布\n染料\n助剂\n水\n电\n蒸汽\n天然气\n污水处理\n人工\n机台\n包装\n委外\n间接费用\n其他","reqd":1,"read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"cost_item","label":"成本项目","fieldtype":"Data","reqd":1,"in_list_view":1,"columns":2},
+  {"fieldname":"calculation_basis","label":"计费方式","fieldtype":"Select","options":"每公斤\n每批\n每小时\n固定金额","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"standard_consumption","label":"标准用量","fieldtype":"Float","precision":"6","default":"1","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"uom","label":"费用单位","fieldtype":"Link","options":"UOM","in_list_view":1,"columns":1},
+  {"fieldname":"unit_rate","label":"费用单价","fieldtype":"Currency","options":"currency","default":"0","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"standard_cost","label":"标准成本","fieldtype":"Currency","options":"currency","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"scope_section","label":"适用范围","fieldtype":"Section Break"},
+  {"fieldname":"production_operation","label":"生产工序","fieldtype":"Link","options":"Production Operation"},
+  {"fieldname":"scope_column_2","fieldtype":"Column Break"},
+  {"fieldname":"work_center","label":"生产工段","fieldtype":"Link","options":"Production Work Center"},
+  {"fieldname":"scope_column_3","fieldtype":"Column Break"},
+  {"fieldname":"production_resource","label":"生产机台","fieldtype":"Link","options":"Production Resource"},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],
+ "istable": 1,
+ "modified": "2026-10-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Dyeing Cost Rate Standard Item",
+ "owner": "Administrator",
+ "permissions": []
+}

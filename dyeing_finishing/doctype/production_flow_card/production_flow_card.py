@@ -1,4 +1,5 @@
 import frappe
+from collections import defaultdict
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
@@ -36,12 +37,21 @@ class ProductionFlowCard(Document):
     def _set_company(self):
         if self.sales_order:
             self.company = frappe.db.get_value("Dyeing Sales Order", self.sales_order, "company") or self.company
+        elif self.original_flow_card:
+            self.company = frappe.db.get_value("Production Flow Card", self.original_flow_card, "company") or self.company
         self.company = self.company or frappe.defaults.get_user_default("Company") or frappe.db.get_single_value(
             "Global Defaults", "default_company"
         )
 
     def before_submit(self):
+        lock_grey_fabric_batches(row.batch_no for row in self.get("grey_fabric_issues") or [])
+        self._refresh_grey_fabric_stock()
+        self._validate_grey_fabric_reservation()
         self._set_document_status("已审核")
+
+    def on_submit(self):
+        if self.get("grey_fabric_issues"):
+            self.add_comment("Info", _("胚布领用计划已预留；实际库存将在胚布出库单提交时变动。"))
 
     def on_cancel(self):
         downstream_documents = _get_submitted_downstream_documents(self.name)
@@ -81,7 +91,7 @@ class ProductionFlowCard(Document):
         for table_field in ("grey_fabric_issues", "process_requirements", "packaging_requirements", "operations", "progress_records"):
             for row in self.get(table_field) or []:
                 row.docstatus = 0
-        self.add_comment("Edit", _("未关联已提交下游单据，流转卡已恢复为草稿，可修改后重新提交。"))
+        self.add_comment("Edit", _("未关联已提交下游单据，流转卡已恢复为草稿，未出库胚布预留已释放。"))
 
     def _set_document_status(self, value=None):
         self.document_status = value or ("已审核" if self.docstatus == 1 else "保存")
@@ -151,19 +161,42 @@ class ProductionFlowCard(Document):
         for row in self.get("grey_fabric_issues") or []:
             if not row.batch_no:
                 continue
-            detail = get_batch_stock_details(row.batch_no, self.customer, self.order_type)
+            detail = get_batch_stock_details(
+                row.batch_no, self.customer, self.order_type, row.location or None,
+                exclude_card=self.name if self.docstatus == 1 else None,
+            )
             if not detail:
                 frappe.throw(_("批次 {0} 没有符合条件的可用胚布库存").format(row.batch_no))
             row.grey_fabric_name = detail.grey_fabric_name
             row.color = self.color if self.flow_card_type == "回修" else detail.color
             row.stock_roll_count = detail.stock_roll_count
             row.stock_qty = detail.stock_qty
+            row.reserved_roll_count = detail.reserved_roll_count
+            row.reserved_qty = detail.reserved_qty
+            row.reserved_by = detail.reserved_by
+            row.available_roll_count = detail.available_roll_count
+            row.available_qty = detail.available_qty
             row.warehouse = detail.warehouse
             row.location = detail.location
-            if flt(row.planned_roll_count) > flt(row.stock_roll_count):
-                frappe.throw(_("批次 {0} 的计划领用匹数不能大于库存匹数").format(row.batch_no))
-            if flt(row.planned_qty) > flt(row.stock_qty):
-                frappe.throw(_("批次 {0} 的计划领用数量不能大于库存数量").format(row.batch_no))
+            if flt(row.planned_roll_count) < 0 or flt(row.planned_qty) < 0:
+                frappe.throw(_("批次 {0} 的计划领用匹数和数量不能小于零").format(row.batch_no))
+            if flt(row.planned_roll_count) > flt(row.available_roll_count):
+                frappe.throw(_("批次 {0} 的计划领用匹数不能大于可开卡匹数").format(row.batch_no))
+            if flt(row.planned_qty) > flt(row.available_qty):
+                frappe.throw(_("批次 {0} 的计划领用数量不能大于可开卡数量").format(row.batch_no))
+
+    def _validate_grey_fabric_reservation(self):
+        planned = defaultdict(lambda: {"rolls": 0.0, "qty": 0.0, "available_rolls": 0.0, "available_qty": 0.0})
+        for row in self.get("grey_fabric_issues") or []:
+            key = (row.batch_no, row.location)
+            values = planned[key]
+            values["rolls"] += flt(row.planned_roll_count)
+            values["qty"] += flt(row.planned_qty)
+            values["available_rolls"] = flt(row.available_roll_count)
+            values["available_qty"] = flt(row.available_qty)
+        for (batch_no, location), values in planned.items():
+            if values["rolls"] > values["available_rolls"] or values["qty"] > values["available_qty"]:
+                frappe.throw(_("批次 {0} 的计划领用合计超过可开卡匹数或数量").format(batch_no))
 
     def _validate_rework_source(self):
         if self.flow_card_type != "回修":
@@ -489,7 +522,7 @@ def close_production_flow_card(flow_card, closure_reason, closure_remarks=None):
         description="关闭原因：{0}{1}".format(closure_reason, "；" + (closure_remarks or "").strip() if (closure_remarks or "").strip() else ""),
     )
     frappe.get_doc("Production Flow Card", card.name).add_comment(
-        "Info", _("已关闭生产。原因：{0}").format(closure_reason)
+        "Info", _("已关闭生产，未出库胚布预留已释放。原因：{0}").format(closure_reason)
     )
     return {"production_status": "已关闭", "closure_date": closed_at}
 
@@ -502,6 +535,9 @@ def reopen_production_flow_card(flow_card):
         frappe.throw(_("只有已提交的生产流转卡才能重新开启生产"))
     if (card.production_status or "进行中") != "已关闭":
         frappe.throw(_("当前生产流转卡未处于已关闭状态"))
+
+    lock_grey_fabric_batches(row.batch_no for row in card.get("grey_fabric_issues") or [])
+    validate_reopened_card_reservations(card)
 
     frappe.db.set_value(
         "Production Flow Card",
@@ -523,8 +559,89 @@ def reopen_production_flow_card(flow_card):
         card.name,
         description="生产已重新开启",
     )
-    frappe.get_doc("Production Flow Card", card.name).add_comment("Info", _("已重新开启生产"))
+    frappe.get_doc("Production Flow Card", card.name).add_comment("Info", _("已重新开启生产，未出库胚布重新预留"))
     return {"production_status": "进行中"}
+
+
+def lock_grey_fabric_batches(batch_nos):
+    for batch_no in sorted(set(batch_no for batch_no in batch_nos if batch_no)):
+        frappe.db.sql("SELECT name FROM `tabBatch` WHERE name = %s FOR UPDATE", batch_no)
+
+
+def get_grey_fabric_reservations(batch_nos, exclude_card=None):
+    batch_nos = tuple(sorted(set(batch_no for batch_no in batch_nos if batch_no)))
+    if not batch_nos:
+        return {}
+    rows = frappe.db.sql(
+        """
+        SELECT plan.batch_no, plan.location,
+            SUM(GREATEST(plan.planned_roll_count - COALESCE(issued.rolls, 0), 0)) AS rolls,
+            SUM(GREATEST(plan.planned_qty - COALESCE(issued.qty, 0), 0)) AS qty,
+            GROUP_CONCAT(DISTINCT CASE
+                WHEN plan.planned_roll_count > COALESCE(issued.rolls, 0)
+                    OR plan.planned_qty > COALESCE(issued.qty, 0)
+                THEN card.name END ORDER BY card.name SEPARATOR '、') AS flow_cards
+        FROM `tabProduction Flow Card Grey Fabric Issue` plan
+        INNER JOIN `tabProduction Flow Card` card
+            ON card.name = plan.parent AND card.docstatus = 1
+        LEFT JOIN (
+            SELECT item.flow_card_grey_fabric_issue AS plan_row, item.batch_no, item.location,
+                SUM(item.issue_roll_count) AS rolls, SUM(item.issue_qty) AS qty
+            FROM `tabGrey Fabric Issue Item` item
+            INNER JOIN `tabGrey Fabric Issue` issue
+                ON issue.name = item.parent AND issue.docstatus = 1
+            WHERE item.batch_no IN %(batch_nos)s
+            GROUP BY item.flow_card_grey_fabric_issue, item.batch_no, item.location
+        ) issued ON issued.plan_row = plan.name
+            AND issued.batch_no = plan.batch_no AND issued.location = plan.location
+        WHERE plan.batch_no IN %(batch_nos)s
+            AND COALESCE(card.production_status, '') != '已关闭'
+            AND (%(exclude_card)s = '' OR card.name != %(exclude_card)s)
+        GROUP BY plan.batch_no, plan.location
+        """,
+        {"batch_nos": batch_nos, "exclude_card": exclude_card or ""},
+        as_dict=True,
+    )
+    return {(row.batch_no, row.location): row for row in rows}
+
+
+def add_grey_fabric_availability(rows, exclude_card=None):
+    reserved = get_grey_fabric_reservations((row.batch_no for row in rows), exclude_card)
+    for row in rows:
+        totals = reserved.get((row.batch_no, row.location))
+        row.reserved_roll_count = flt(totals.rolls) if totals else 0
+        row.reserved_qty = flt(totals.qty) if totals else 0
+        row.reserved_by = (totals.flow_cards or "") if totals else ""
+        row.available_roll_count = max(flt(row.stock_roll_count) - row.reserved_roll_count, 0)
+        row.available_qty = max(flt(row.stock_qty) - row.reserved_qty, 0)
+    return rows
+
+
+def validate_reopened_card_reservations(card):
+    remaining = defaultdict(lambda: {"rolls": 0.0, "qty": 0.0})
+    for row in card.get("grey_fabric_issues") or []:
+        issued = frappe.db.sql(
+            """
+            SELECT COALESCE(SUM(item.issue_roll_count), 0) AS rolls,
+                COALESCE(SUM(item.issue_qty), 0) AS qty
+            FROM `tabGrey Fabric Issue Item` item
+            INNER JOIN `tabGrey Fabric Issue` issue
+                ON issue.name = item.parent AND issue.docstatus = 1
+            WHERE issue.flow_card = %s AND item.flow_card_grey_fabric_issue = %s
+                AND item.batch_no = %s AND item.location = %s
+            """,
+            (card.name, row.name, row.batch_no, row.location),
+            as_dict=True,
+        )[0]
+        values = remaining[(row.batch_no, row.location)]
+        values["rolls"] += max(flt(row.planned_roll_count) - flt(issued.rolls), 0)
+        values["qty"] += max(flt(row.planned_qty) - flt(issued.qty), 0)
+    for (batch_no, location), values in remaining.items():
+        if not values["rolls"] and not values["qty"]:
+            continue
+        detail = get_batch_stock_details(batch_no, card.customer, card.order_type, location, card.name)
+        if not detail or values["rolls"] > flt(detail.available_roll_count) or values["qty"] > flt(detail.available_qty):
+            frappe.throw(_("批次 {0} 的未出库计划超过当前可开卡匹数或数量，不能重新开启").format(batch_no))
 
 
 def _batch_stock_query(customer=None, order_type=None, batch_no=None, location=None):
@@ -535,7 +652,7 @@ def _batch_stock_query(customer=None, order_type=None, batch_no=None, location=N
     )
     batch_condition = "AND stock.batch_no = %(batch_no)s" if batch_no else ""
     location_condition = "AND stock.location = %(location)s" if location else ""
-    return frappe.db.sql(
+    rows = frappe.db.sql(
         f"""
         SELECT stock.batch_no, stock.item_code, stock.item_name AS grey_fabric_name, stock.color,
             COALESCE(master.specification, '') AS specification, stock.stock_roll_count, stock.stock_qty, stock.location AS warehouse,
@@ -602,6 +719,7 @@ def _batch_stock_query(customer=None, order_type=None, batch_no=None, location=N
         {"customer": customer or "", "batch_no": batch_no or "", "location": location or "", "grey_group": get_setting("grey_fabric_item_group")},
         as_dict=True,
     )
+    return add_grey_fabric_availability(rows)
 
 
 @frappe.whitelist()
@@ -609,12 +727,18 @@ def _batch_stock_query(customer=None, order_type=None, batch_no=None, location=N
 def get_available_grey_fabric_batches(doctype, txt, searchfield, start, page_len, filters):
     filters = frappe.parse_json(filters) or {}
     rows = _batch_stock_query(filters.get("customer"), filters.get("order_type"))
-    return [(row.batch_no, row.grey_fabric_name, row.color, row.location) for row in rows if txt.lower() in row.batch_no.lower()][start : start + page_len]
+    return [
+        (row.batch_no, row.grey_fabric_name, row.color, row.location)
+        for row in rows
+        if row.available_roll_count > 0 and row.available_qty > 0 and txt.lower() in row.batch_no.lower()
+    ][start : start + page_len]
 
 
 @frappe.whitelist()
-def get_batch_stock_details(batch_no, customer=None, order_type=None, location=None):
+def get_batch_stock_details(batch_no, customer=None, order_type=None, location=None, exclude_card=None):
     rows = _batch_stock_query(customer, order_type, batch_no, location)
+    if exclude_card:
+        add_grey_fabric_availability(rows, exclude_card)
     return rows[0] if rows else None
 
 

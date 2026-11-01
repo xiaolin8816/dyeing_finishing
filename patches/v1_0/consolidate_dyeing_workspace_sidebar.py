@@ -3,13 +3,16 @@ import frappe
 from dyeing_finishing.patches.v1_0.configure_dyeing_workspace_sidebar import ITEMS
 
 
-SIDEBAR = "印染整理"
+SIDEBAR = "印染管理"
+DESKTOP_ICON = "印染整理"
 LEGACY_SIDEBAR = "dyeing_finishing"
 GENERATED_CHILD_SIDEBARS = (
 	"印染基础资料",
 	"配方与工艺",
 	"胚布管理",
 	"生产管理",
+	"委外管理",
+	"成本管理",
 	"染料管理",
 	"成品管理",
 	"系统管理",
@@ -17,7 +20,7 @@ GENERATED_CHILD_SIDEBARS = (
 
 
 def execute():
-	"""只保留一套“印染整理”侧栏，避免子工作区选中自动侧栏。"""
+	"""只保留一套“印染管理”侧栏，避免子工作区选中自动侧栏。"""
 	if frappe.db.exists("Workspace Sidebar", SIDEBAR):
 		sidebar = frappe.get_doc("Workspace Sidebar", SIDEBAR)
 	else:
@@ -41,11 +44,11 @@ def execute():
 	for name in (*GENERATED_CHILD_SIDEBARS, LEGACY_SIDEBAR):
 		frappe.delete_doc_if_exists("Workspace Sidebar", name, force=True)
 
-	if frappe.db.exists("Desktop Icon", SIDEBAR):
+	if frappe.db.exists("Desktop Icon", DESKTOP_ICON):
 		frappe.db.set_value(
 			"Desktop Icon",
-			SIDEBAR,
-			{"link_type": "Workspace Sidebar", "link_to": SIDEBAR, "sidebar": SIDEBAR},
+			DESKTOP_ICON,
+			{"label": SIDEBAR, "link_type": "Workspace Sidebar", "link_to": SIDEBAR, "sidebar": SIDEBAR},
 			update_modified=False,
 		)
 

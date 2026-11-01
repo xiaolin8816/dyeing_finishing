@@ -4,13 +4,13 @@
  "doctype": "Desktop Icon",
  "hidden": 0,
  "icon_type": "Link",
- "label": "印染整理",
- "link_to": "印染整理",
+ "label": "印染管理",
+ "link_to": "印染管理",
  "link_type": "Workspace Sidebar",
  "logo_url": "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg",
  "name": "印染整理",
  "restrict_removal": 0,
  "roles": [],
- "sidebar": "印染整理",
+ "sidebar": "印染管理",
  "standard": 1
 }

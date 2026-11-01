@@ -66,7 +66,7 @@ All Pages,所有页面
 View Documentation,查看文档
 No folders yet,暂无文件夹
 Default Wiki Space,默认知识库空间
-dyeing_finishing,印染整理
+dyeing_finishing,印染管理
 Process Requirement,加工要求
 Packaging Requirement,包装要求
 Production Operation,生产工序
@@ -12561,7 +12561,6 @@ Finished Product Customer Transfer Item,成品转客户明细
 New Finished Product Customer Transfer,新建成品转客户单
 Finished Product Customer Transfer List,成品转客户单列表
 Production Flow Card Progress Query,生产流转卡进度查询
-Dyeing Finishing License,印染整理授权管理
 Dyeing System Settings,印染系统设置
 Company Name Change,公司名称变更
 Finished Product Return,成品退货处理单
@@ -12598,3 +12597,55 @@ New Production Work Center,新建生产工段
 Production Resource,生产机台
 Production Resource List,生产机台列表
 New Production Resource,新建生产机台
+Grey Fabric Inventory Count,胚布盘点表
+Grey Fabric Inventory Count Item,胚布盘点明细
+Grey Fabric Inventory Count Difference,胚布盘点差异
+New Grey Fabric Inventory Count,新建胚布盘点表
+Grey Fabric Inventory Count List,胚布盘点表列表
+Grey Fabric Stock Ledger,胚布收发存流水
+Grey Fabric Loss,胚布报损单
+Grey Fabric Loss Item,胚布报损明细
+New Grey Fabric Loss,新建胚布报损单
+Grey Fabric Loss List,胚布报损单列表
+Dyeing Cost Element,成本要素档案
+Dyeing Cost Element List,成本要素档案列表
+New Dyeing Cost Element,新建成本要素档案
+Dyeing Cost Estimate,染整成本测算单
+Dyeing Cost Estimate Item,染整成本测算明细
+Dyeing Cost Estimate List,染整成本测算单列表
+New Dyeing Cost Estimate,新建染整成本测算单
+Dyeing Cost Rate Standard,染整成本费率标准
+Dyeing Cost Rate Standard Item,染整成本费率明细
+Dyeing Cost Rate Standard List,染整成本费率标准列表
+New Dyeing Cost Rate Standard,新建染整成本费率标准
+Dyeing Production Actual,染色生产实绩单
+Dyeing Production Actual Stage,染色生产实绩工艺阶段
+Dyeing Production Actual List,染色生产实绩单列表
+New Dyeing Production Actual,新建染色生产实绩单
+Dyeing Energy Meter,能源表计档案
+Dyeing Energy Meter List,能源表计档案列表
+New Dyeing Energy Meter,新建能源表计档案
+Dyeing Energy Meter Reading,能源抄表单
+Dyeing Energy Meter Reading Item,能源抄表明细
+Dyeing Energy Meter Reading List,能源抄表单列表
+New Dyeing Energy Meter Reading,新建能源抄表单
+Dyeing Energy Allocation,生产能源分摊单
+Dyeing Energy Allocation Item,生产能源分摊明细
+Dyeing Energy Allocation List,生产能源分摊单列表
+New Dyeing Energy Allocation,新建生产能源分摊单
+Dyeing Flow Card Cost Settlement,流转卡成本结算单
+Dyeing Flow Card Cost Settlement Item,流转卡成本结算明细
+Dyeing Flow Card Cost Settlement List,流转卡成本结算单列表
+New Dyeing Flow Card Cost Settlement,新建流转卡成本结算单
+Production Exception Disposition,生产异常处置单
+Production Exception Affected Item,生产异常受影响批次匹号明细
+Production Exception Disposition List,生产异常处置单列表
+New Production Exception Disposition,新建生产异常处置单
+Dyeing Flow Card Cost Exception,流转卡成本异常处置明细
+Outsourcing Processing Order,委外加工单
+Outsourcing Processing Order Item,委外加工明细
+Outsourcing Processing Order List,委外加工单列表
+New Outsourcing Processing Order,新建委外加工单
+Processing Contractor,加工商档案
+Processing Contractor List,加工商档案列表
+New Processing Contractor,新建加工商档案

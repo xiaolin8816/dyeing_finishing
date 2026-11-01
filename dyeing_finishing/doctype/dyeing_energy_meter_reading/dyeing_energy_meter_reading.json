@@ -1,0 +1,29 @@
+{
+ "doctype":"DocType","name":"Dyeing Energy Meter Reading","module":"dyeing_finishing","autoname":"NYCB.YY.MM.DD.###","is_submittable":1,"track_changes":1,"title_field":"reading_no","sort_field":"reading_time","sort_order":"DESC","search_fields":"reading_no,remarks",
+ "field_order":["details_tab","document_section","reading_no","document_col_2","reading_time","document_col_3","reading_status","document_col_4","meter_count","company","amended_from","items_tab","items_section","items","remarks_tab","remarks_section","remarks"],
+ "fields":[
+  {"fieldname":"details_tab","label":"详细信息","fieldtype":"Tab Break"},
+  {"fieldname":"document_section","label":"单据信息","fieldtype":"Section Break"},
+  {"fieldname":"reading_no","label":"抄表编号","fieldtype":"Data","read_only":1,"in_list_view":1},
+  {"fieldname":"document_col_2","fieldtype":"Column Break"},
+  {"fieldname":"reading_time","label":"抄表时间","fieldtype":"Datetime","default":"Now","reqd":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"document_col_3","fieldtype":"Column Break"},
+  {"fieldname":"reading_status","label":"状态","fieldtype":"Select","options":"草稿\n已提交\n已取消","default":"草稿","read_only":1,"in_list_view":1},
+  {"fieldname":"document_col_4","fieldtype":"Column Break"},
+  {"fieldname":"meter_count","label":"表计数量","fieldtype":"Int","read_only":1,"in_list_view":1},
+  {"fieldname":"company","label":"公司","fieldtype":"Link","options":"Company","reqd":1,"hidden":1},
+  {"fieldname":"amended_from","label":"修订自","fieldtype":"Link","options":"Dyeing Energy Meter Reading","read_only":1,"no_copy":1,"hidden":1},
+  {"fieldname":"items_tab","label":"抄表明细","fieldtype":"Tab Break"},
+  {"fieldname":"items_section","label":"能源抄表明细","fieldtype":"Section Break"},
+  {"fieldname":"items","label":"能源抄表明细","fieldtype":"Table","options":"Dyeing Energy Meter Reading Item"},
+  {"fieldname":"remarks_tab","label":"备注","fieldtype":"Tab Break"},
+  {"fieldname":"remarks_section","label":"备注资料","fieldtype":"Section Break"},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],"grid_page_length":50,
+ "permissions":[
+  {"role":"System Manager","read":1,"write":1,"create":1,"delete":1,"submit":1,"cancel":1,"amend":1,"report":1,"export":1,"print":1},
+  {"role":"Manufacturing Manager","read":1,"write":1,"create":1,"delete":1,"submit":1,"cancel":1,"amend":1,"report":1,"export":1,"print":1},
+  {"role":"Manufacturing User","read":1,"write":1,"create":1,"submit":1,"report":1,"print":1},
+  {"role":"Accounts Manager","read":1,"report":1,"export":1,"print":1}
+ ]
+}

@@ -1,7 +1,9 @@
 /* eslint-disable */
 (() => {
-    const ROOT_WORKSPACE = "印染整理";
-    const CHILD_WORKSPACES = new Set(["印染基础资料", "配方与工艺", "胚布管理", "生产管理", "染料管理", "成品管理", "系统管理"]);
+    const ROOT_WORKSPACE = "印染管理";
+    const ROOT_SIDEBAR = "印染管理";
+    const ROOT_LABEL = "印染管理";
+    const CHILD_WORKSPACES = new Set(["印染基础资料", "配方与工艺", "胚布管理", "生产管理", "委外管理", "成本管理", "染料管理", "成品管理", "系统管理"]);
     const WORKSPACE_LABELS = { "印染基础资料": "基础资料" };
     const WORKSPACE_ROUTES = { "基础资料": "印染基础资料" };
     const SHARED_ROUTE_CONTEXT_KEY = "dyeing_finishing.shared_route_owner";
@@ -20,10 +22,12 @@
     };
     const ROUTES = {
         "Process Requirement": ["基础资料", "加工要求"], "Packaging Requirement": ["基础资料", "包装要求"], "Production Operation": ["基础资料", "生产工序"], "Process Parameter Template": ["基础资料", "工艺参数模板"], "Grey Fabric Master": ["基础资料", "胚布档案"],
-        "Dyeing System Settings": ["系统管理", "系统设置"], "Dyeing Finishing License": ["系统管理", "授权管理"], "Company Name Change": ["系统管理", "公司名称变更"], "Dyeing Paper Format": ["系统管理", "纸张规格"], "dyeing-report-engine-diagnostics": ["系统管理", "报表引擎诊断"], "dyeing-print-template-manager": ["系统管理", "报表设计中心"], "dyeing-visual-report-designer": ["系统管理", "可视化报表设计"], "crispy-format-builder": ["系统管理", "高级模板设置"], "crispy-print-preview": ["系统管理", "报表预览"],
+        "Dyeing System Settings": ["系统管理", "系统设置"], "Software License": ["系统管理", "软件许可证"], "Company Name Change": ["系统管理", "公司名称变更"], "Visual Print Paper Format": ["系统管理", "纸张规格"], "visual-print-diagnostics": ["系统管理", "打印引擎诊断"], "visual-print-template-manager": ["系统管理", "可视化打印设计"], "visual-print-designer": ["系统管理", "可视化打印设计"], "visual-print-preview": ["系统管理", "报表预览"],
         "Color Master": ["配方与工艺", "色号档案"], "Laboratory Recipe": ["配方与工艺", "化验室配方档案"],
-        "Customer Grey Fabric Receipt": ["胚布管理", "客户胚布入库"], "Grey Fabric Issue": ["胚布管理", "胚布出库单"], "Grey Fabric Customer Transfer": ["胚布管理", "胚布过户单"], "Customer Grey Fabric Return": ["胚布管理", "客户胚布退货单"], "Grey Fabric Stock": ["胚布管理", "胚布库存"], "Production Transit Warehouse Stock": ["胚布管理", "生产中转仓库存"],
-        "Dyeing Sales Order": ["生产管理", "染整销售订单"], "Production Flow Card": ["生产管理", "生产流转卡"], "Production Flow Card Rework": ["生产管理", "生产流转卡回修"], "Production Flow Card Progress Query": ["生产管理", "生产流转卡进度查询"], "Production Operation Report": ["生产管理", "生产工序报工记录"], "Employee Operation Permission": ["生产管理", "员工工序设置"], "shop-floor-reporting": ["生产管理", "生产工序扫码报工"], "Production Work Center": ["基础资料", "生产工段"], "Production Resource": ["基础资料", "生产机台"], "Production Shift": ["基础资料", "生产班次"], "Machine Production Calendar": ["生产管理", "设备停机记录"], "Dyeing Production Schedule": ["生产管理", "排程记录"], "production-schedule-board": ["生产管理", "生产排程操作台"], "production-progress-screen": ["生产管理", "生产进度大屏"], "Site Dyeing Material Sheet": ["生产管理", "现场染色料单"],
+        "Customer Grey Fabric Receipt": ["胚布管理", "客户胚布入库"], "Grey Fabric Issue": ["胚布管理", "胚布出库单"], "Grey Fabric Customer Transfer": ["胚布管理", "胚布过户单"], "Customer Grey Fabric Return": ["胚布管理", "客户胚布退货单"], "Grey Fabric Loss": ["胚布管理", "胚布报损单"], "Grey Fabric Inventory Count": ["胚布管理", "胚布盘点表"], "Grey Fabric Inventory Count Difference": ["胚布管理", "胚布盘点差异"], "Grey Fabric Stock": ["胚布管理", "胚布库存"], "Production Transit Warehouse Stock": ["胚布管理", "生产中转仓库存"],
+        "Dyeing Sales Order": ["生产管理", "染整销售订单"], "Production Flow Card": ["生产管理", "生产流转卡"], "Production Flow Card Rework": ["生产管理", "生产流转卡回修"], "Production Flow Card Progress Query": ["生产管理", "生产流转卡进度查询"], "Production Operation Report": ["生产管理", "生产工序报工记录"], "Production Exception Disposition": ["生产管理", "生产异常处置单"], "Employee Operation Permission": ["生产管理", "员工工序设置"], "shop-floor-reporting": ["生产管理", "生产工序扫码报工"], "Production Work Center": ["基础资料", "生产工段"], "Production Resource": ["基础资料", "生产机台"], "Production Shift": ["基础资料", "生产班次"], "Machine Production Calendar": ["生产管理", "设备停机记录"], "Dyeing Production Schedule": ["生产管理", "排程记录"], "production-schedule-board": ["生产管理", "生产排程操作台"], "production-progress-screen": ["生产管理", "生产进度大屏"], "Site Dyeing Material Sheet": ["生产管理", "现场染色料单"],
+        "Outsourcing Processing Order": ["委外管理", "委外加工单"], "Processing Contractor": ["委外管理", "加工商档案"],
+        "Dyeing Cost Element": ["成本管理", "成本要素档案"], "Dyeing Cost Estimate": ["成本管理", "染整成本测算单"], "Dyeing Cost Rate Standard": ["成本管理", "染整成本费率标准"], "Dyeing Production Actual": ["成本管理", "染色生产实绩单"], "Dyeing Energy Meter": ["成本管理", "能源表计档案"], "Dyeing Energy Meter Reading": ["成本管理", "能源抄表单"], "Dyeing Energy Allocation": ["成本管理", "生产能源分摊单"], "Dyeing Flow Card Cost Settlement": ["成本管理", "流转卡成本结算单"],
         "Site Dyeing Material Issue": ["染料管理", "现场染色领料单"], "Dye Material Stock": ["染料管理", "染料库存"], "Dye Material Other Issue": ["染料管理", "染料其他出库单"], "Dye Material Return": ["染料管理", "染料退货单"], "Dye Material Return Register": ["染料管理", "染料退货记录"],
         "Finished Product Packing Receipt": ["成品管理", "成品包装入库单"], "Finished Product Delivery": ["成品管理", "成品出库单"], "Finished Product Customer Transfer": ["成品管理", "成品转客户单"], "Finished Product Return": ["成品管理", "成品退货处理单"], "Finished Product Stock": ["成品管理", "成品库存查询"], "Finished Product Return Stock": ["成品管理", "成品退货库存查询"], "Finished Product Return to Grey Fabric": ["成品管理", "成品退货转胚布仓"], "Finished Product to Grey Fabric": ["成品管理", "成品库存转胚布仓"], "Finished Product Blank Label": ["成品管理", "成品空白标签打印单"],
     };
@@ -45,18 +49,18 @@
             const sidebars = original_get_sidebars.call(this, link_to);
             const target = normalized(link_to);
             const belongs_to_dyeing = shared_route_config(target)
-                && (this.sidebar_title === ROOT_WORKSPACE || stored_shared_route() === target);
-            if (belongs_to_dyeing && !sidebars.includes(ROOT_WORKSPACE)) sidebars.push(ROOT_WORKSPACE);
+                && (this.sidebar_title === ROOT_SIDEBAR || stored_shared_route() === target);
+            if (belongs_to_dyeing && !sidebars.includes(ROOT_SIDEBAR)) sidebars.push(ROOT_SIDEBAR);
             return sidebars;
         };
 
         Sidebar.prototype.resolve_sidebar = function (entity, module) {
             const target = normalized(entity);
             if (shared_route_config(target)) {
-                if (this.sidebar_title === ROOT_WORKSPACE) remember_shared_route(target);
-                if (this.sidebar_title === ROOT_WORKSPACE || stored_shared_route() === target) {
+                if (this.sidebar_title === ROOT_SIDEBAR) remember_shared_route(target);
+                if (this.sidebar_title === ROOT_SIDEBAR || stored_shared_route() === target) {
                     this.preferred_sidebars = this.get_workspace_sidebars(entity);
-                    return ROOT_WORKSPACE;
+                    return ROOT_SIDEBAR;
                 }
             }
             return original_resolve_sidebar.call(this, entity, module);
@@ -75,7 +79,7 @@
         const target = normalized(route_target());
         const shared = shared_route_config(target);
         if (shared) {
-            const belongs_to_dyeing = frappe.app?.sidebar?.sidebar_title === ROOT_WORKSPACE
+            const belongs_to_dyeing = frappe.app?.sidebar?.sidebar_title === ROOT_SIDEBAR
                 || stored_shared_route() === target;
             if (!belongs_to_dyeing) return null;
             if (target === "item" && window.sessionStorage.getItem(ITEM_PROFILE_KEY) === "finished_product") {
@@ -128,16 +132,25 @@
         if (!$breadcrumbs.length) return;
         $breadcrumbs.empty();
         append($breadcrumbs, "/desk", frappe.utils.icon("home"), false, true);
-        append($breadcrumbs, workspace_route(ROOT_WORKSPACE), ROOT_WORKSPACE);
+        append($breadcrumbs, workspace_route(ROOT_WORKSPACE), ROOT_LABEL);
         if (workspace) {
             append($breadcrumbs, "", workspace, true);
             return;
         }
         append($breadcrumbs, workspace_route(item[0]), item[0]);
         if (view === "form") {
-            append($breadcrumbs, `/desk/${frappe.router.slug(route_target())}`, item[1]);
+            let listHref = `/desk/${frappe.router.slug(route_target())}`;
+            if (normalized(route_target()) === normalized("Production Flow Card")) {
+                const isRework = item[1] === "生产流转卡回修";
+                const filter = encodeURIComponent(JSON.stringify([isRework ? "=" : "!=", "回修"]));
+                listHref += `?mode=${isRework ? "rework" : "normal"}&flow_card_type=${filter}`;
+            }
+            append($breadcrumbs, listHref, item[1]);
             const documentName = route.slice(2).join("/");
-            const displayName = documentName.startsWith("new-") ? `新建${item[1]}` : documentName;
+            const isSingleDocument = normalized(documentName) === normalized(route_target());
+            const displayName = documentName.startsWith("new-")
+                ? `新建${item[1]}`
+                : (isSingleDocument ? item[1] : documentName);
             append($breadcrumbs, "", displayName, true);
         } else {
             append($breadcrumbs, "", item[1], true);
@@ -148,7 +161,7 @@
         if (!shared_route_config(target)) forget_shared_route();
     }
     function mark_dyeing_ui_context() {
-        const active = frappe.app?.sidebar?.sidebar_title === ROOT_WORKSPACE
+        const active = frappe.app?.sidebar?.sidebar_title === ROOT_SIDEBAR
             || Boolean(workspace_config())
             || Boolean(document_config());
         document.body.classList.toggle("dyeing-finishing-ui", active);
@@ -172,7 +185,7 @@
         breadcrumb_observer = new MutationObserver(() => {
             if (restoring_breadcrumbs || !document_config()) return;
             const text = breadcrumbs.textContent || "";
-            if (text.includes(ROOT_WORKSPACE) && text.includes(document_config()[0])) return;
+            if (text.includes(ROOT_LABEL) && text.includes(document_config()[0])) return;
             restoring_breadcrumbs = true;
             window.setTimeout(() => {
                 render();

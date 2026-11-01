@@ -1,5 +1,5 @@
 const DYEING_RECEIPT_TYPE = "染料/助剂入库";
-const ROOT_WORKSPACE = "印染整理";
+const ROOT_WORKSPACE = "印染管理";
 const SHARED_ROUTE_CONTEXT_KEY = "dyeing_finishing.shared_route_owner";
 const purchaseReceiptListSettings = frappe.listview_settings["Purchase Receipt"] || {};
 const originalOnload = purchaseReceiptListSettings.onload;

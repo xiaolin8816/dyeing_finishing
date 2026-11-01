@@ -15,6 +15,11 @@
     "color",
     "stock_roll_count",
     "stock_qty",
+    "reserved_roll_count",
+    "reserved_qty",
+    "reserved_by",
+    "available_roll_count",
+    "available_qty",
     "planned_roll_count",
     "planned_qty",
     "warehouse",
@@ -45,18 +50,56 @@
     },
     {
       "fieldname": "stock_roll_count",
-      "label": "库存匹数",
+      "label": "账面库存匹数",
       "fieldtype": "Float",
       "precision": "2",
       "read_only": 1,
-      "in_list_view": 1
+      "in_list_view": 0
     },
     {
       "fieldname": "stock_qty",
-      "label": "库存数量",
+      "label": "账面库存数量",
       "fieldtype": "Float",
       "precision": "2",
       "read_only": 1,
+      "in_list_view": 0
+    },
+    {
+      "fieldname": "reserved_roll_count",
+      "label": "其他卡预留匹数",
+      "fieldtype": "Float",
+      "precision": "2",
+      "read_only": 1
+    },
+    {
+      "fieldname": "reserved_qty",
+      "label": "其他卡预留数量",
+      "fieldtype": "Float",
+      "precision": "2",
+      "read_only": 1
+    },
+    {
+      "fieldname": "reserved_by",
+      "label": "预留流转卡",
+      "fieldtype": "Small Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "available_roll_count",
+      "label": "可开卡匹数",
+      "fieldtype": "Float",
+      "precision": "2",
+      "read_only": 1,
+      "description": "选批或保存时的快照；审核时会重新校验。",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "available_qty",
+      "label": "可开卡数量",
+      "fieldtype": "Float",
+      "precision": "2",
+      "read_only": 1,
+      "description": "选批或保存时的快照；审核时会重新校验。",
       "in_list_view": 1
     },
     {

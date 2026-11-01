@@ -1,0 +1,8 @@
+{
+ "doctype":"DocType","name":"Production Exception Affected Item","module":"dyeing_finishing","istable":1,"editable_grid":1,
+ "field_order":["batch_no","roll_no"],
+ "fields":[
+  {"fieldname":"batch_no","label":"胚布批次","fieldtype":"Link","options":"Batch","reqd":1,"in_list_view":1,"columns":3},
+  {"fieldname":"roll_no","label":"匹号","fieldtype":"Data","description":"仅填现场确认的匹号；留空表示该批次整体受影响。","in_list_view":1,"columns":3}
+ ],"permissions":[]
+}

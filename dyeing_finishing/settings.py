@@ -2,6 +2,7 @@ import frappe
 
 
 DEFAULTS = {
+	"grey_fabric_warehouse": "胚布仓库 - 沅泰",
 	"production_transit_warehouse": "生产中转仓 - 沅泰",
 	"dye_material_warehouse": "染料仓库 - 沅泰",
 	"finished_product_warehouse": "成品仓库 - 沅泰",
@@ -16,7 +17,6 @@ DEFAULTS = {
 	"allow_partial_packing": 1,
 	"allow_partial_delivery": 1,
 	"packing_weight_tolerance_percent": 5,
-	"license_reminder_days": 30,
 }
 
 

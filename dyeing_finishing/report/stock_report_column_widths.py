@@ -6,6 +6,16 @@ from frappe.utils import flt
 MIN_WIDTH = 20
 MAX_WIDTH = 600
 REPORT_CONFIGS = {
+    "Grey Fabric Inventory Count Difference": {
+        "key": "grey_fabric_inventory_count_difference_report_layout",
+        "user_key": "dyeing_finishing_grey_fabric_inventory_count_difference_layout",
+        "fields": {
+            "inventory_count", "count_date", "status", "stock_reconciliation", "reviewed_by",
+            "reviewed_at", "customer_name", "batch_no", "item_name", "stock_warehouse",
+            "system_roll_count", "actual_roll_count", "difference_roll_count", "system_qty",
+            "actual_qty", "difference_qty", "stock_uom", "difference_reason", "remarks",
+        },
+    },
     "Production Flow Card Progress Query": {
         "key": "production_flow_card_progress_query_report_layout",
         "user_key": "dyeing_finishing_production_flow_card_progress_query_layout",
@@ -43,6 +53,19 @@ REPORT_CONFIGS = {
         "key": "grey_fabric_stock_report_column_widths",
         "user_key": "dyeing_finishing_grey_fabric_stock_layout",
         "fields": {"customer_name", "stock_source", "source_flow_card", "source_transfer", "source_batch_no", "batch_no", "item_name", "width", "gsm", "color", "stock_roll_count", "stock_qty", "receipt_roll_count", "receipt_qty", "issue_roll_count", "issue_qty", "stock_uom", "location", "warehouse", "receipt_date"},
+    },
+    "Grey Fabric Stock Ledger": {
+        "key": "grey_fabric_stock_ledger_report_layout",
+        "user_key": "dyeing_finishing_grey_fabric_stock_ledger_layout",
+        "fields": {
+            "posting_date", "posting_time", "movement_type", "business_type", "business_doctype",
+            "business_document", "customer", "customer_name", "batch_no", "item_code", "item_name",
+            "color", "width", "gsm", "warehouse", "counterparty_warehouse", "s_warehouse", "t_warehouse",
+            "receipt_roll_count", "issue_roll_count", "balance_roll_count", "receipt_qty", "issue_qty",
+            "balance_qty", "stock_uom", "source_batch_no", "target_batch_no", "production_flow_card",
+            "difference_reason", "stock_voucher_type", "stock_voucher", "voucher_detail_no", "created_by",
+            "remarks", "company",
+        },
     },
     "Production Transit Warehouse Stock": {
         "key": "production_transit_warehouse_stock_report_column_widths",
@@ -89,11 +112,18 @@ def _clean_layout(report_name, layout):
                 result.append(fieldname)
         return result
 
+    cleaned_order = clean_field_list(layout.get("order", []))
+    cleaned_hidden = clean_field_list(layout.get("hidden", []))
+    cleaned_sticky = clean_field_list(layout.get("sticky", []))
+    sticky_indexes = [cleaned_order.index(fieldname) for fieldname in cleaned_sticky if fieldname in cleaned_order]
+    if cleaned_order:
+        cleaned_sticky = cleaned_order[: max(sticky_indexes) + 1] if sticky_indexes else []
+
     return {
         "widths": cleaned_widths,
-        "order": clean_field_list(layout.get("order", [])),
-        "hidden": clean_field_list(layout.get("hidden", [])),
-        "sticky": clean_field_list(layout.get("sticky", [])),
+        "order": cleaned_order,
+        "hidden": cleaned_hidden,
+        "sticky": cleaned_sticky,
     }
 
 
@@ -134,6 +164,10 @@ def set_global_report_layout(report_name, layout):
     config = _get_config(report_name)
     cleaned_layout = _clean_layout(report_name, layout)
     frappe.db.set_global(config["key"], frappe.as_json(cleaned_layout))
+    # A personal layout takes precedence over the global layout. When the
+    # current user explicitly saves a global layout, remove only this user's
+    # personal override so the newly saved default is immediately visible.
+    frappe.defaults.clear_user_default(config["user_key"])
     return cleaned_layout
 
 

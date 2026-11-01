@@ -21,7 +21,7 @@ def _section(label, icon, workspace, links):
 
 
 ITEMS = [
-    {"child": 0, "icon": "home", "label": "印染整理首页", "link_type": "Workspace", "link_to": "印染整理", "type": "Link"},
+    {"child": 0, "icon": "home", "label": "印染管理首页", "link_type": "Workspace", "link_to": "印染管理", "type": "Link"},
     *_section("基础资料", "settings", "印染基础资料", [
         ("客户资料", "DocType", "Customer"), ("供应商资料", "DocType", "Supplier"),
         ("员工资料", "DocType", "Employee"), ("仓库资料", "DocType", "Warehouse"),
@@ -36,8 +36,11 @@ ITEMS = [
     ]),
     *_section("胚布管理", "stock", "胚布管理", [
         ("客户胚布入库", "DocType", "Customer Grey Fabric Receipt"), ("胚布出库单", "DocType", "Grey Fabric Issue"),
-        ("胚布库存", "Report", "Grey Fabric Stock"), ("胚布过户单", "DocType", "Grey Fabric Customer Transfer"),
+		("胚布盘点表", "DocType", "Grey Fabric Inventory Count"), ("胚布盘点差异", "Report", "Grey Fabric Inventory Count Difference"),
+        ("胚布库存", "Report", "Grey Fabric Stock"), ("胚布收发存流水", "Report", "Grey Fabric Stock Ledger"),
+        ("胚布过户单", "DocType", "Grey Fabric Customer Transfer"),
         ("客户胚布退货单", "DocType", "Customer Grey Fabric Return"),
+        ("胚布报损单", "DocType", "Grey Fabric Loss"),
         ("生产中转仓库存", "Report", "Production Transit Warehouse Stock"),
     ]),
     *_section("生产管理", "manufacturing", "生产管理", [
@@ -46,10 +49,28 @@ ITEMS = [
         ("生产进度大屏", "Page", "production-progress-screen"), ("生产工序扫码报工", "Page", "shop-floor-reporting"),
         ("生产流转卡进度查询", "Report", "Production Flow Card Progress Query"),
         ("生产工序报工记录", "DocType", "Production Operation Report"),
+        ("生产异常处置单", "DocType", "Production Exception Disposition"),
         ("员工工序设置", "DocType", "Employee Operation Permission"),
         ("设备停机记录", "DocType", "Machine Production Calendar"),
         ("排程记录", "DocType", "Dyeing Production Schedule"),
         ("现场染色料单", "DocType", "Site Dyeing Material Sheet"),
+    ]),
+    *_section("委外管理", "truck", "委外管理", [
+        ("委外加工单", "DocType", "Outsourcing Processing Order"),
+        ("生产流转卡", "Page", "production-flow-card-normal"),
+        ("供应商资料", "DocType", "Supplier"),
+        ("采购订单", "DocType", "Purchase Order"),
+        ("生产异常处置单", "DocType", "Production Exception Disposition"),
+    ]),
+    *_section("成本管理", "accounting", "成本管理", [
+        ("成本要素档案", "DocType", "Dyeing Cost Element"),
+        ("染整成本测算单", "DocType", "Dyeing Cost Estimate"),
+        ("染整成本费率标准", "DocType", "Dyeing Cost Rate Standard"),
+        ("染色生产实绩单", "DocType", "Dyeing Production Actual"),
+        ("能源表计档案", "DocType", "Dyeing Energy Meter"),
+        ("能源抄表单", "DocType", "Dyeing Energy Meter Reading"),
+        ("生产能源分摊单", "DocType", "Dyeing Energy Allocation"),
+        ("流转卡成本结算单", "DocType", "Dyeing Flow Card Cost Settlement"),
     ]),
     *_section("染料管理", "dye", "染料管理", [
         ("染料采购入库单", "DocType", "Purchase Receipt"), ("现场染色领料单", "DocType", "Site Dyeing Material Issue"),
@@ -69,10 +90,13 @@ ITEMS = [
     *_section("系统管理", "settings", "系统管理", [
         ("公司资料设置", "DocType", "Company"), ("公司名称变更", "DocType", "Company Name Change"),
         ("系统设置", "DocType", "Dyeing System Settings"),
-        ("授权管理", "DocType", "Dyeing Finishing License"),
-        ("报表设计中心", "Page", "dyeing-print-template-manager"),
-        ("纸张规格", "DocType", "Dyeing Paper Format"),
-        ("报表引擎诊断", "Page", "dyeing-report-engine-diagnostics"),
+        ("软件许可证", "DocType", "Software License"),
+        ("可视化打印设计", "Page", "visual-print-template-manager"),
+        ("纸张规格", "DocType", "Visual Print Paper Format"),
+        ("打印集成设置", "DocType", "Visual Print Integration Settings"),
+        ("打印关联", "DocType", "Visual Print Binding"),
+        ("已安装打印包", "DocType", "Visual Print Package"),
+        ("打印引擎诊断", "Page", "visual-print-diagnostics"),
     ]),
 ]
 

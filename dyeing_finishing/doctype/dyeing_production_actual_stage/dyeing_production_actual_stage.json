@@ -1,0 +1,14 @@
+{
+ "doctype":"DocType","name":"Dyeing Production Actual Stage","module":"dyeing_finishing","istable":1,"editable_grid":1,
+ "field_order":["stage_name","actual_start","actual_end","duration_minutes","target_temperature","actual_temperature","ph_value","remarks"],
+ "fields":[
+  {"fieldname":"stage_name","label":"工艺阶段","fieldtype":"Data","reqd":1,"in_list_view":1},
+  {"fieldname":"actual_start","label":"开始时间","fieldtype":"Datetime","reqd":1,"in_list_view":1},
+  {"fieldname":"actual_end","label":"结束时间","fieldtype":"Datetime","reqd":1,"in_list_view":1},
+  {"fieldname":"duration_minutes","label":"持续分钟","fieldtype":"Float","precision":"1","read_only":1,"in_list_view":1},
+  {"fieldname":"target_temperature","label":"目标温度(℃)","fieldtype":"Float","precision":"1"},
+  {"fieldname":"actual_temperature","label":"实际温度(℃)","fieldtype":"Float","precision":"1","in_list_view":1},
+  {"fieldname":"ph_value","label":"pH值","fieldtype":"Float","precision":"2"},
+  {"fieldname":"remarks","label":"阶段说明","fieldtype":"Small Text"}
+ ],"permissions":[]
+}

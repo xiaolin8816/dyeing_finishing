@@ -1,0 +1,24 @@
+{
+ "doctype":"DocType","name":"Dyeing Flow Card Cost Exception","module":"dyeing_finishing","istable":1,"editable_grid":1,
+ "field_order":["disposition","exception_type","production_operation_report","dyeing_production_actual","affected_qty","impact_scope","trace_summary","batch_no","roll_no","decision","cost_bearer","material_issue","energy_allocation","rework_flow_card","estimated_extra_cost","reviewed_by","reviewed_at","reason"],
+ "fields":[
+  {"fieldname":"disposition","label":"已审核处置单","fieldtype":"Link","options":"Production Exception Disposition","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"exception_type","label":"异常类型","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"production_operation_report","label":"工序报工单","fieldtype":"Link","options":"Production Operation Report","read_only":1,"in_list_view":1,"columns":2},
+  {"fieldname":"dyeing_production_actual","label":"染色生产实绩单","fieldtype":"Link","options":"Dyeing Production Actual","read_only":1},
+  {"fieldname":"affected_qty","label":"影响数量","fieldtype":"Float","precision":"3","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"impact_scope","label":"影响范围","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"trace_summary","label":"受影响批次/匹号","fieldtype":"Small Text","read_only":1},
+  {"fieldname":"batch_no","label":"胚布批次","fieldtype":"Link","options":"Batch","read_only":1},
+  {"fieldname":"roll_no","label":"匹号","fieldtype":"Data","read_only":1},
+  {"fieldname":"decision","label":"处置方式","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"cost_bearer","label":"成本承担方","fieldtype":"Data","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"material_issue","label":"异常领料单","fieldtype":"Link","options":"Site Dyeing Material Issue","read_only":1},
+  {"fieldname":"energy_allocation","label":"异常能源分摊单","fieldtype":"Link","options":"Dyeing Energy Allocation","read_only":1},
+  {"fieldname":"rework_flow_card","label":"独立回修卡","fieldtype":"Link","options":"Production Flow Card","read_only":1},
+  {"fieldname":"estimated_extra_cost","label":"预计追加成本(不计合计)","fieldtype":"Currency","read_only":1},
+  {"fieldname":"reviewed_by","label":"审核人","fieldtype":"Link","options":"User","read_only":1},
+  {"fieldname":"reviewed_at","label":"审核时间","fieldtype":"Datetime","read_only":1},
+  {"fieldname":"reason","label":"异常原因","fieldtype":"Small Text","read_only":1}
+ ],"permissions":[]
+}

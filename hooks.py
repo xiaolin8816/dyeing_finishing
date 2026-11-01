@@ -1,5 +1,5 @@
 app_name = "dyeing_finishing"
-app_title = "印染整理"
+app_title = "印染行业 ERP 系统"
 app_publisher = "Xiaolin Hang"
 app_description = "印染与后整理业务管理"
 app_email = "674199886@qq.com"
@@ -10,7 +10,10 @@ app_logo_url = "/assets/dyeing_finishing/images/dyeing_finishing-logo.svg"
 # Apps
 # ------------------
 
-required_apps = ["erpnext", "crispy_print"]
+required_apps = ["erpnext", "license_core", "visual_print"]
+
+# Register one time-based product with the reusable License Core APP.
+license_product_providers = ["dyeing_finishing.dyeing_finishing.licensing.get_license_product"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -27,16 +30,14 @@ required_apps = ["erpnext", "crispy_print"]
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css?v=20261017-5"
+app_include_css = "/assets/dyeing_finishing/css/dyeing_finishing.css?v=20261024-3"
 app_include_js = [
-    "/assets/dyeing_finishing/js/report_layout.js?v=20261017-2",
-    "/assets/dyeing_finishing/js/list_layout.js?v=20261017-2",
-    "/assets/dyeing_finishing/js/dyeing_workspace_breadcrumbs.js?v=20261018-4",
+    "/assets/dyeing_finishing/js/report_layout.js?v=20261024-2",
+    "/assets/dyeing_finishing/js/list_layout.js?v=20261030-contractor1",
+    "/assets/dyeing_finishing/js/grey_fabric_inventory_count_fallback.js?v=20261023-22",
+    "/assets/dyeing_finishing/js/dyeing_workspace_breadcrumbs.js?v=20261030-contractor1",
     "/assets/dyeing_finishing/js/stock_ledger_handling_unit.js",
     "/assets/dyeing_finishing/js/stock_balance_finished_product.js",
-    "/assets/dyeing_finishing/js/license.js",
-    "/assets/dyeing_finishing/js/crispy_print_preview_close.js?v=20261019-2",
-    "/assets/dyeing_finishing/js/document_report_print.js?v=20261019-4",
 ]
 
 extend_bootinfo = "dyeing_finishing.dyeing_finishing.settings.add_dyeing_settings_to_boot"
@@ -297,11 +298,6 @@ doctype_js = {
     "Purchase Receipt": "public/js/purchase_receipt.js",
 }
 doc_events = {
-    "*": {
-        "before_save": "dyeing_finishing.license.enforce_document_write",
-        "before_submit": "dyeing_finishing.license.enforce_document_write",
-        "on_trash": "dyeing_finishing.license.enforce_document_write",
-    },
     "Item": {
         "autoname": "dyeing_finishing.dyeing_finishing.item.autoname",
         "validate": "dyeing_finishing.dyeing_finishing.item.validate",
@@ -313,8 +309,33 @@ doc_events = {
         "autoname": "dyeing_finishing.dyeing_finishing.purchase_receipt.autoname",
         "validate": "dyeing_finishing.dyeing_finishing.purchase_receipt.validate",
     },
+    "Production Operation Report": {
+        "before_submit": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.guard_confirmed_settlement_source",
+        "before_cancel": [
+            "dyeing_finishing.dyeing_finishing.doctype.production_exception_disposition.production_exception_disposition.guard_disposition_source",
+            "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.guard_confirmed_settlement_source",
+        ],
+        "on_cancel": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.sync_settlement_from_source",
+    },
+    "Dyeing Cost Rate Standard": {
+        "before_cancel": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.guard_confirmed_settlement_source",
+    },
+    **{
+        doctype: {
+            "before_submit": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.guard_confirmed_settlement_source",
+            "on_submit": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.sync_settlement_from_source",
+            "before_cancel": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.guard_confirmed_settlement_source",
+            "on_cancel": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.sync_settlement_from_source",
+        }
+        for doctype in (
+            "Grey Fabric Issue", "Site Dyeing Material Issue", "Finished Product Packing Receipt",
+            "Dyeing Production Actual", "Dyeing Energy Allocation",
+        )
+    },
     "Stock Entry": {
         "before_cancel": [
+            "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.guard_confirmed_settlement_source",
+            "dyeing_finishing.dyeing_finishing.doctype.production_exception_disposition.production_exception_disposition.guard_disposition_stock_entry",
             "dyeing_finishing.dyeing_finishing.doctype.dye_material_other_issue.dye_material_other_issue.clear_other_issue_link_before_stock_entry_cancel",
             "dyeing_finishing.dyeing_finishing.doctype.finished_product_packing_receipt.finished_product_packing_receipt.handle_stock_entry_cancel",
             "dyeing_finishing.dyeing_finishing.doctype.finished_product_delivery.finished_product_delivery.handle_stock_entry_cancel",
@@ -324,17 +345,26 @@ doc_events = {
             "dyeing_finishing.dyeing_finishing.doctype.finished_product_customer_transfer.finished_product_customer_transfer.handle_stock_entry_cancel",
             "dyeing_finishing.dyeing_finishing.doctype.grey_fabric_customer_transfer.grey_fabric_customer_transfer.handle_stock_entry_cancel",
             "dyeing_finishing.dyeing_finishing.doctype.customer_grey_fabric_return.customer_grey_fabric_return.handle_stock_entry_cancel",
+            "dyeing_finishing.dyeing_finishing.doctype.grey_fabric_loss.grey_fabric_loss.handle_stock_entry_cancel",
         ],
+        "on_cancel": "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement.sync_settlement_from_source",
     },
 }
+for _exception_source in ("Dyeing Production Actual", "Site Dyeing Material Issue", "Dyeing Energy Allocation"):
+    _source_hooks = doc_events[_exception_source]
+    _source_hooks["before_cancel"] = [
+        _source_hooks["before_cancel"],
+        "dyeing_finishing.dyeing_finishing.doctype.production_exception_disposition.production_exception_disposition.guard_disposition_source",
+    ]
 
 # 胚布出库匹数历史数据补齐
 after_migrate = [
-    "dyeing_finishing.license.initialize_license_transition",
     "dyeing_finishing.dyeing_finishing.settings.initialize_dyeing_system_settings",
     "dyeing_finishing.patches.v1_0.backfill_grey_fabric_issue_roll_counts.execute",
     "dyeing_finishing.patches.v1_0.delete_child_workspace_desktop_icons.execute",
     "dyeing_finishing.patches.v1_0.consolidate_dyeing_workspace_sidebar.execute",
+    "dyeing_finishing.patches.v1_0.sync_cost_workspace_navigation.execute",
+    "dyeing_finishing.patches.v1_0.add_production_exception_disposition.execute",
     "dyeing_finishing.patches.v1_0.normalize_production_flow_card_layout.execute",
-    "dyeing_finishing.dyeing_finishing.report_engine.initialize_report_engine",
+    "dyeing_finishing.dyeing_finishing.branding.sync_public_branding",
 ]

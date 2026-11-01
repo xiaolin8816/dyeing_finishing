@@ -1,0 +1,12 @@
+{
+ "app":"dyeing_finishing","charts":[],
+ "content":"[{\"id\":\"outsourcing-management-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>委外管理</b></span>\",\"col\":12}},{\"id\":\"outsourcing-execution-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>委外计划与执行</b></span>\",\"col\":12}},{\"id\":\"outsourcing-order-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"委外加工单\",\"col\":4}},{\"id\":\"outsourcing-reference-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>关联资料</b></span>\",\"col\":12}},{\"id\":\"outsourcing-flow-card-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"生产流转卡\",\"col\":4}},{\"id\":\"outsourcing-contractor-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"加工商档案\",\"col\":4}},{\"id\":\"outsourcing-purchase-order-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"采购订单\",\"col\":4}},{\"id\":\"outsourcing-exception-shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"生产异常处置单\",\"col\":4}}]",
+ "creation":"2026-10-30 00:00:00.000000","custom_blocks":[],"docstatus":0,"doctype":"Workspace","for_user":"","hide_custom":0,"icon":"truck","idx":0,"is_hidden":0,"label":"委外管理","links":[],"module":"dyeing_finishing","name":"委外管理","number_cards":[],"parent_page":"印染管理","public":1,"quick_lists":[],"roles":[],"sequence_id":50,
+ "shortcuts":[
+  {"color":"Blue","doc_view":"List","label":"委外加工单","link_to":"Outsourcing Processing Order","type":"DocType"},
+  {"color":"Grey","doc_view":"List","label":"生产流转卡","link_to":"Production Flow Card","type":"DocType"},
+  {"color":"Grey","doc_view":"List","label":"加工商档案","link_to":"Processing Contractor","type":"DocType"},
+  {"color":"Orange","doc_view":"List","label":"采购订单","link_to":"Purchase Order","type":"DocType"},
+  {"color":"Red","doc_view":"List","label":"生产异常处置单","link_to":"Production Exception Disposition","type":"DocType"}
+ ],"title":"委外管理","type":"Workspace"
+}

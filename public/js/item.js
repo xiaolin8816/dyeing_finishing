@@ -1,5 +1,5 @@
 (() => {
-    const ROOT_WORKSPACE = "印染整理";
+    const ROOT_WORKSPACE = "印染管理";
     const PROFILE_KEY = "dyeing_finishing.item_profile";
     const settings = frappe.boot.dyeing_system_settings || {};
     const FINISHED_ITEM_GROUP = settings.finished_product_item_group || "成品";

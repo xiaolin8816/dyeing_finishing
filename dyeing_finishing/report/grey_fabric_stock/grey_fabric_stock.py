@@ -49,7 +49,8 @@ def execute(filters=None):
                 WHEN sle.warehouse = %(transit_warehouse)s THEN GREATEST(COALESCE(MAX(transfer_rolls.roll_delta), 0), 0)
                 ELSE GREATEST(
                     COALESCE(MAX(receipt_rolls.stock_roll_count), 0)
-                    + COALESCE(MAX(transfer_rolls.roll_delta), 0),
+                    + COALESCE(MAX(transfer_rolls.roll_delta), 0)
+                    + COALESCE(MAX(inventory_counts.roll_delta), 0),
                     0
                 )
             END AS stock_roll_count,
@@ -169,6 +170,17 @@ def execute(filters=None):
             ON transfer_rolls.item_code = sle.item_code
             AND transfer_rolls.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
             AND transfer_rolls.warehouse = sle.warehouse
+        LEFT JOIN (
+            SELECT detail.item_code, detail.batch_no, detail.stock_warehouse AS warehouse,
+                SUM(detail.difference_roll_count) AS roll_delta
+            FROM `tabGrey Fabric Inventory Count Item` detail
+            INNER JOIN `tabGrey Fabric Inventory Count` count_doc
+                ON count_doc.name = detail.parent AND count_doc.docstatus = 1
+            GROUP BY detail.item_code, detail.batch_no, detail.stock_warehouse
+        ) inventory_counts
+            ON inventory_counts.item_code = sle.item_code
+            AND inventory_counts.batch_no = COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no)
+            AND inventory_counts.warehouse = sle.warehouse
         WHERE sle.is_cancelled = 0
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) IS NOT NULL
           AND COALESCE(NULLIF(sle.batch_no, ''), bundle_entry.batch_no) != ''

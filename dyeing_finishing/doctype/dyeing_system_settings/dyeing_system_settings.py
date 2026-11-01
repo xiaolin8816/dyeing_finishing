@@ -6,6 +6,7 @@ from frappe.model.document import Document
 class DyeingSystemSettings(Document):
 	def validate(self):
 		warehouse_fields = (
+			"grey_fabric_warehouse",
 			"production_transit_warehouse",
 			"dye_material_warehouse",
 			"finished_product_warehouse",
@@ -31,5 +32,3 @@ class DyeingSystemSettings(Document):
 			frappe.throw(_("染料物料组和助剂物料组不能相同"))
 		if self.packing_weight_tolerance_percent < 0:
 			frappe.throw(_("包装重量差异预警范围不能小于 0"))
-		if not 1 <= self.license_reminder_days <= 180:
-			frappe.throw(_("授权到期提醒天数应在 1 至 180 天之间"))

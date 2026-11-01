@@ -6,14 +6,14 @@ frappe.ui.form.on("Finished Product Blank Label", {
  },
  refresh(frm) {
   if (frappe.user_roles.includes("System Manager")) {
-   frm.add_custom_button("设计标签", () => {
-    window.open(`/desk/dyeing-visual-report-designer/${encodeURIComponent("成品空白标签 60×80mm")}`, "_blank");
-   }, "操作");
+   frm.page.add_action_item("设计标签", () => {
+    window.open("/app/visual-print-template-manager", "_blank");
+   });
   }
   if (!frm.is_new() && frm.doc.print_status !== "已作废") {
-   frm.add_custom_button("作废", () => frappe.confirm("确认作废这张空白标签打印单？", () => {
+   frm.page.add_action_item("作废", () => frappe.confirm("确认作废这张空白标签打印单？", () => {
     frappe.call({method: `${blankLabelMethod}.void_blank_label_print`, args: {name: frm.doc.name}, freeze: true}).then(() => frm.reload_doc());
-   }), "操作");
+   }));
   }
  },
  production_flow_card(frm) {

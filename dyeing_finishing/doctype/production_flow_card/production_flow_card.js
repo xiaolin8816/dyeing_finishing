@@ -2,6 +2,23 @@ function get_flow_card_method(method) {
     return "dyeing_finishing.dyeing_finishing.doctype.production_flow_card.production_flow_card." + method;
 }
 
+function apply_flow_card_layout(frm) {
+    [
+        "document_info_section", "document_row_2", "document_row_3", "closure_info_section",
+        "finished_product_section", "scheduling_section", "order_source_section",
+        "production_progress_section", "packing_progress_summary_section",
+        "packing_summary_row_2", "relation_section",
+    ].forEach((fieldname) => frm.get_field(fieldname)?.wrapper?.addClass("dyeing-flow-card-grid"));
+}
+
+function set_flow_card_page_title(frm) {
+    const title = frm.doc.flow_card_type === "回修" ? "生产流转卡回修" : "生产流转卡";
+    const displayTitle = frm.is_new() ? `新建${title}` : title;
+    frm.page.set_title(__(displayTitle));
+    frm.page.set_title_sub(frm.is_new() ? "" : frm.doc.name);
+    frappe.utils.set_title(frm.is_new() ? displayTitle : `${title} - ${frm.doc.name}`);
+}
+
 function clear_flow_card_order_data(frm) {
     ["sales_order_item", "customer", "customer_order_no", "order_date", "delivery_date", "order_type", "process_type", "color_no", "color", "finished_product_name", "finished_width", "finished_gsm", "finished_uom", "finished_specification", "order_qty", "order_remarks"].forEach((fieldname) => frm.set_value(fieldname, ""));
     frm.set_value("finished_gsm_uom", "g/㎡");
@@ -369,6 +386,36 @@ function setup_production_close_actions(frm) {
     }, "生产操作");
 }
 
+function setup_cost_settlement_action(frm) {
+    if (frm.doc.docstatus !== 1) return;
+    const path = "dyeing_finishing.dyeing_finishing.doctype.dyeing_flow_card_cost_settlement.dyeing_flow_card_cost_settlement";
+    frappe.call({
+        method: `${path}.get_flow_card_cost_settlement`,
+        args: { flow_card: frm.doc.name },
+        callback(response) {
+            if (!response.message || frm.doc.docstatus !== 1) return;
+            if (response.message.name) {
+                frm.add_custom_button("查看成本结算单", () => {
+                    frappe.set_route("Form", "Dyeing Flow Card Cost Settlement", response.message.name);
+                }, "生产操作");
+                return;
+            }
+            if (!response.message.can_create) return;
+            frm.add_custom_button("补建成本结算单", () => {
+                frappe.call({
+                    method: `${path}.create_from_flow_card`,
+                    args: { flow_card: frm.doc.name },
+                    freeze: true,
+                    freeze_message: "正在归集成本来源…",
+                    callback(result) {
+                        if (result.message) frappe.set_route("Form", "Dyeing Flow Card Cost Settlement", result.message);
+                    },
+                });
+            }, "生产操作");
+        },
+    });
+}
+
 frappe.ui.form.on("Production Flow Card", {
     setup(frm) {
         if (frm.is_new() && new URLSearchParams(window.location.search).get("rework") === "1") {
@@ -377,15 +424,19 @@ frappe.ui.form.on("Production Flow Card", {
         set_flow_card_queries(frm);
     },
     refresh(frm) {
+        apply_flow_card_layout(frm);
+        set_flow_card_page_title(frm);
         set_flow_card_queries(frm);
         setup_requirement_tabs(frm);
         setup_production_close_actions(frm);
+        setup_cost_settlement_action(frm);
         sort_production_progress_log(frm);
     },
     after_cancel(frm) {
         frappe.show_alert({ message: "流转卡已恢复为保存状态，可直接修改后重新提交", indicator: "green" });
         frm.reload_doc();
     },
+    flow_card_type(frm) { set_flow_card_page_title(frm); },
     sales_order(frm) {
         clear_flow_card_order_data(frm);
         set_flow_card_queries(frm);
@@ -419,7 +470,7 @@ frappe.ui.form.on("Production Flow Card Grey Fabric Issue", {
             callback(response) {
                 const detail = response.message;
                 if (!detail) return;
-                ["grey_fabric_name", "color", "stock_roll_count", "stock_qty", "warehouse", "location"].forEach((fieldname) => frappe.model.set_value(cdt, cdn, fieldname, detail[fieldname] || ""));
+                ["grey_fabric_name", "color", "stock_roll_count", "stock_qty", "reserved_roll_count", "reserved_qty", "reserved_by", "available_roll_count", "available_qty", "warehouse", "location"].forEach((fieldname) => frappe.model.set_value(cdt, cdn, fieldname, detail[fieldname] ?? ""));
             },
         });
     },

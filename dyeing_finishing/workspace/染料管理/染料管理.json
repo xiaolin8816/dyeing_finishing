@@ -14,7 +14,7 @@
   {"dependencies":"","hidden":0,"is_query_report":1,"label":"染料库存","link_count":0,"link_to":"Dye Material Stock","link_type":"Report","onboard":0,"type":"Link"},
   {"dependencies":"","hidden":0,"is_query_report":0,"label":"染料物料档案","link_count":0,"link_to":"Item","link_type":"DocType","onboard":0,"type":"Link"}
  ],
- "module":"dyeing_finishing","name":"染料管理","number_cards":[],"parent_page":"印染整理","public":1,"quick_lists":[],"roles":[],"sequence_id":10,
+ "module":"dyeing_finishing","name":"染料管理","number_cards":[],"parent_page":"印染管理","public":1,"quick_lists":[],"roles":[],"sequence_id":10,
  "shortcuts":[{"color":"Blue","doc_view":"List","format":"{} 种染料","label":"染料物料档案","link_to":"Item","stats_filter":"[[\"Item\",\"item_group\",\"in\",[\"染料\",\"助剂\"]]]","type":"DocType"}],
  "title":"染料管理","type":"Workspace"
 }

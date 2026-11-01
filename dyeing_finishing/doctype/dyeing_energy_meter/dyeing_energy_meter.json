@@ -1,0 +1,41 @@
+{
+ "doctype":"DocType","name":"Dyeing Energy Meter","module":"dyeing_finishing","autoname":"field:meter_code","allow_rename":0,"track_changes":1,"title_field":"meter_name","sort_field":"meter_code","sort_order":"ASC","search_fields":"meter_code,meter_name,energy_type,scope_type",
+ "field_order":["details_tab","basic_section","meter_code","basic_col_2","meter_name","basic_col_3","energy_type","basic_col_4","is_active","scope_section","scope_type","scope_col_2","work_center","scope_col_3","production_resource","scope_col_4","uom","register_section","opening_time","register_col_2","opening_reading","register_col_3","multiplier","register_col_4","rollover_capacity","company","remarks_tab","remarks_section","remarks"],
+ "fields":[
+  {"fieldname":"details_tab","label":"详细信息","fieldtype":"Tab Break"},
+  {"fieldname":"basic_section","label":"表计资料","fieldtype":"Section Break"},
+  {"fieldname":"meter_code","label":"表计编码","fieldtype":"Data","reqd":1,"unique":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"basic_col_2","fieldtype":"Column Break"},
+  {"fieldname":"meter_name","label":"表计名称","fieldtype":"Data","reqd":1,"in_list_view":1},
+  {"fieldname":"basic_col_3","fieldtype":"Column Break"},
+  {"fieldname":"energy_type","label":"能源类型","fieldtype":"Select","options":"水\n电\n蒸汽\n天然气\n污水处理","reqd":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"basic_col_4","fieldtype":"Column Break"},
+  {"fieldname":"is_active","label":"启用","fieldtype":"Check","default":"1","in_list_view":1},
+  {"fieldname":"scope_section","label":"计量范围","fieldtype":"Section Break"},
+  {"fieldname":"scope_type","label":"计量范围","fieldtype":"Select","options":"总表\n工段\n机台","reqd":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"scope_col_2","fieldtype":"Column Break"},
+  {"fieldname":"work_center","label":"生产工段","fieldtype":"Link","options":"Production Work Center","depends_on":"eval:doc.scope_type!='总表'"},
+  {"fieldname":"scope_col_3","fieldtype":"Column Break"},
+  {"fieldname":"production_resource","label":"生产机台","fieldtype":"Link","options":"Production Resource","depends_on":"eval:doc.scope_type=='机台'"},
+  {"fieldname":"scope_col_4","fieldtype":"Column Break"},
+  {"fieldname":"uom","label":"计量单位","fieldtype":"Link","options":"UOM","reqd":1,"in_list_view":1},
+  {"fieldname":"register_section","label":"表计读数","fieldtype":"Section Break"},
+  {"fieldname":"opening_time","label":"启用时间","fieldtype":"Datetime","default":"Now","reqd":1},
+  {"fieldname":"register_col_2","fieldtype":"Column Break"},
+  {"fieldname":"opening_reading","label":"启用读数","fieldtype":"Float","precision":"3","default":"0","reqd":1},
+  {"fieldname":"register_col_3","fieldtype":"Column Break"},
+  {"fieldname":"multiplier","label":"表计倍率","fieldtype":"Float","precision":"6","default":"1","reqd":1},
+  {"fieldname":"register_col_4","fieldtype":"Column Break"},
+  {"fieldname":"rollover_capacity","label":"翻表容量","fieldtype":"Float","precision":"3"},
+  {"fieldname":"company","label":"公司","fieldtype":"Link","options":"Company","reqd":1,"hidden":1},
+  {"fieldname":"remarks_tab","label":"备注","fieldtype":"Tab Break"},
+  {"fieldname":"remarks_section","label":"备注资料","fieldtype":"Section Break"},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],
+ "permissions":[
+  {"role":"System Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1},
+  {"role":"Manufacturing Manager","read":1,"write":1,"create":1,"delete":1,"report":1,"export":1,"print":1},
+  {"role":"Manufacturing User","read":1,"report":1,"print":1},
+  {"role":"Accounts Manager","read":1,"report":1,"export":1,"print":1}
+ ]
+}

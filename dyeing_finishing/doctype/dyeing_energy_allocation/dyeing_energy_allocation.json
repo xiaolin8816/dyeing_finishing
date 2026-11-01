@@ -1,0 +1,39 @@
+{
+ "doctype":"DocType","name":"Dyeing Energy Allocation","module":"dyeing_finishing","autoname":"NYFT.YY.MM.DD.###","is_submittable":1,"track_changes":1,"title_field":"allocation_no","sort_field":"allocation_date","sort_order":"DESC","search_fields":"allocation_no,source_reading,remarks",
+ "field_order":["details_tab","document_section","allocation_no","document_col_2","allocation_date","document_col_3","allocation_status","document_col_4","source_reading","basis_section","allocation_basis","basis_col_2","rate_standard","basis_col_3","meter_count","basis_col_4","line_count","total_amount","currency","company","amended_from","items_tab","items_section","items","remarks_tab","remarks_section","remarks"],
+ "fields":[
+  {"fieldname":"details_tab","label":"详细信息","fieldtype":"Tab Break"},
+  {"fieldname":"document_section","label":"单据信息","fieldtype":"Section Break"},
+  {"fieldname":"allocation_no","label":"分摊编号","fieldtype":"Data","read_only":1,"in_list_view":1},
+  {"fieldname":"document_col_2","fieldtype":"Column Break"},
+  {"fieldname":"allocation_date","label":"分摊日期","fieldtype":"Date","default":"Today","reqd":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"document_col_3","fieldtype":"Column Break"},
+  {"fieldname":"allocation_status","label":"状态","fieldtype":"Select","options":"草稿\n已提交\n已取消","default":"草稿","read_only":1,"in_list_view":1},
+  {"fieldname":"document_col_4","fieldtype":"Column Break"},
+  {"fieldname":"source_reading","label":"来源抄表单","fieldtype":"Link","options":"Dyeing Energy Meter Reading","reqd":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"basis_section","label":"分摊设置","fieldtype":"Section Break"},
+  {"fieldname":"allocation_basis","label":"分摊依据","fieldtype":"Select","options":"按实际工时\n按合格重量","default":"按实际工时","reqd":1,"in_list_view":1},
+  {"fieldname":"basis_col_2","fieldtype":"Column Break"},
+  {"fieldname":"rate_standard","label":"成本费率标准","fieldtype":"Link","options":"Dyeing Cost Rate Standard"},
+  {"fieldname":"basis_col_3","fieldtype":"Column Break"},
+  {"fieldname":"meter_count","label":"表计数量","fieldtype":"Int","read_only":1,"in_list_view":1},
+  {"fieldname":"basis_col_4","fieldtype":"Column Break"},
+  {"fieldname":"line_count","label":"分摊行数","fieldtype":"Int","read_only":1},
+  {"fieldname":"total_amount","label":"测算金额","fieldtype":"Currency","options":"currency","read_only":1,"in_list_view":1},
+  {"fieldname":"currency","label":"币种","fieldtype":"Link","options":"Currency","read_only":1,"hidden":1},
+  {"fieldname":"company","label":"公司","fieldtype":"Link","options":"Company","read_only":1,"hidden":1},
+  {"fieldname":"amended_from","label":"修订自","fieldtype":"Link","options":"Dyeing Energy Allocation","read_only":1,"no_copy":1,"hidden":1},
+  {"fieldname":"items_tab","label":"分摊明细","fieldtype":"Tab Break"},
+  {"fieldname":"items_section","label":"能源分摊明细","fieldtype":"Section Break"},
+  {"fieldname":"items","label":"能源分摊明细","fieldtype":"Table","options":"Dyeing Energy Allocation Item"},
+  {"fieldname":"remarks_tab","label":"备注","fieldtype":"Tab Break"},
+  {"fieldname":"remarks_section","label":"备注资料","fieldtype":"Section Break"},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],"grid_page_length":50,
+ "permissions":[
+  {"role":"System Manager","read":1,"write":1,"create":1,"delete":1,"submit":1,"cancel":1,"amend":1,"report":1,"export":1,"print":1},
+  {"role":"Manufacturing Manager","read":1,"write":1,"create":1,"delete":1,"submit":1,"cancel":1,"amend":1,"report":1,"export":1,"print":1},
+  {"role":"Manufacturing User","read":1,"write":1,"create":1,"report":1,"print":1},
+  {"role":"Accounts Manager","read":1,"report":1,"export":1,"print":1}
+ ]
+}

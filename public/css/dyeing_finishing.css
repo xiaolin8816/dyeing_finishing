@@ -19,6 +19,45 @@
     --dyeing-row-selected-bg: #294766;
 }
 
+/* Keep the outer result-container as the only horizontal scroll ancestor. */
+.list-view .frappe-list .result-container .result.dyeing-finishing-striped-list {
+    overflow: visible;
+}
+
+.list-view .frappe-list .result.dyeing-finishing-striped-list .list-row > .level-left.ellipsis {
+    overflow: visible;
+    max-width: none;
+}
+
+.frappe-list .result.dyeing-finishing-striped-list .list-row-col.dyeing-sticky-col {
+    overflow: visible;
+    background-color: var(--bg-color);
+}
+
+.frappe-list .result.dyeing-finishing-striped-list .list-row-head .dyeing-sticky-col {
+    background-color: var(--subtle-fg);
+}
+
+.frappe-list .result.dyeing-finishing-striped-list .list-row:not(.list-row-head):hover .dyeing-sticky-col {
+    background-color: var(--dyeing-row-hover-bg);
+}
+
+.frappe-list .result.dyeing-finishing-striped-list .list-row.checked .dyeing-sticky-col,
+.frappe-list .result.dyeing-finishing-striped-list .list-row-container.list-row--selected .dyeing-sticky-col {
+    background-color: var(--dyeing-row-selected-bg);
+}
+
+.frappe-list .result.dyeing-finishing-striped-list .dyeing-sticky-col::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    width: 15px;
+    background-color: inherit;
+    pointer-events: none;
+}
+
 .frappe-list .result.dyeing-finishing-striped-list > .list-row-container:nth-child(even) > .list-row:not(.list-row-head),
 .dyeing-finishing-striped-list .frappe-list .result > .list-row-container:nth-child(even) > .list-row:not(.list-row-head) {
     background-color: var(--dyeing-row-alt-bg);
@@ -79,6 +118,69 @@ body.dyeing-finishing-ui .dt-scrollable .dt-row:not(.dt-row-header):nth-child(ev
 
 body.dyeing-finishing-ui .dt-scrollable .dt-row:not(.dt-row-header):hover .dt-cell {
     background-color: var(--dyeing-row-hover-bg);
+}
+
+/* 业务单据字段网格：宽屏 4 列、中屏 3 列、手机单列。 */
+.form-section.dyeing-flow-card-grid {
+    container-type: inline-size;
+}
+
+.form-section.dyeing-flow-card-grid > .section-body {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-section.dyeing-flow-card-grid > .section-body > .form-column {
+    flex: 0 0 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+@container (min-width: 480px) {
+    .form-section.dyeing-flow-card-grid > .section-body > .form-column {
+        flex-basis: 50%;
+        max-width: 50%;
+    }
+}
+
+@container (min-width: 720px) {
+    .form-section.dyeing-flow-card-grid > .section-body > .form-column {
+        flex-basis: 33.333333%;
+        max-width: 33.333333%;
+    }
+}
+
+@container (min-width: 940px) {
+    .form-section.dyeing-flow-card-grid > .section-body > .form-column {
+        flex-basis: 25%;
+        max-width: 25%;
+    }
+}
+
+.form-section.dyeing-responsive-form-grid > .section-body > .form-column {
+    flex: 0 0 25%;
+    max-width: 25%;
+    min-width: 0;
+}
+
+.form-section.dyeing-responsive-form-grid.dyeing-responsive-form-grid-3 > .section-body > .form-column {
+    flex-basis: 33.333333%;
+    max-width: 33.333333%;
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+    .form-section.dyeing-responsive-form-grid > .section-body > .form-column {
+        flex-basis: 33.333333%;
+        max-width: 33.333333%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .form-section.dyeing-responsive-form-grid > .section-body > .form-column,
+    .form-section.dyeing-responsive-form-grid.dyeing-responsive-form-grid-3 > .section-body > .form-column {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
 }
 
 /* 印染整理列表文字：提高淡蓝背景上的可读性。 */

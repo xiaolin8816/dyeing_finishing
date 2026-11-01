@@ -1,0 +1,29 @@
+{
+ "actions": [],
+ "creation": "2026-10-25 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["cost_element","cost_category","item_code","description","calculation_basis","quantity","uom","unit_rate","amount","source_type","source_reference","remarks"],
+ "fields": [
+  {"fieldname":"cost_element","label":"成本要素","fieldtype":"Link","options":"Dyeing Cost Element","in_list_view":1,"columns":2},
+  {"fieldname":"cost_category","label":"成本类别","fieldtype":"Select","options":"胚布\n染料\n助剂\n水\n电\n蒸汽\n天然气\n污水处理\n人工\n机台\n包装\n委外\n间接费用\n其他","reqd":1,"in_list_view":1,"columns":1},
+  {"fieldname":"item_code","label":"物料编码","fieldtype":"Link","options":"Item","in_list_view":1,"columns":2},
+  {"fieldname":"description","label":"成本项目","fieldtype":"Data","reqd":1,"in_list_view":1,"columns":2},
+  {"fieldname":"calculation_basis","label":"计算依据","fieldtype":"Select","options":"配方用量\n每公斤\n每批\n每小时\n固定金额\n库存估值\n手工录入","default":"手工录入","in_list_view":1,"columns":1},
+  {"fieldname":"quantity","label":"预计用量","fieldtype":"Float","precision":"6","default":"0","in_list_view":1,"columns":1},
+  {"fieldname":"uom","label":"单位","fieldtype":"Link","options":"UOM","in_list_view":1,"columns":1},
+  {"fieldname":"unit_rate","label":"预计单价","fieldtype":"Currency","options":"currency","default":"0","in_list_view":1,"columns":1},
+  {"fieldname":"amount","label":"预计金额","fieldtype":"Currency","options":"currency","read_only":1,"in_list_view":1,"columns":1},
+  {"fieldname":"source_type","label":"数据来源","fieldtype":"Select","options":"订单\n化验室配方\n库存估值\n成本费率标准\n手工录入","default":"手工录入","read_only":1},
+  {"fieldname":"source_reference","label":"来源记录","fieldtype":"Data","read_only":1},
+  {"fieldname":"remarks","label":"备注","fieldtype":"Small Text"}
+ ],
+ "istable": 1,
+ "modified": "2026-10-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "dyeing_finishing",
+ "name": "Dyeing Cost Estimate Item",
+ "owner": "Administrator",
+ "permissions": []
+}
